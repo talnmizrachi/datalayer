@@ -5,7 +5,7 @@ from uuid import uuid4
 class JobReadyStudentModel(db.Model):
     __tablename__ = 'job_ready_students'
     
-    id = db.Column(db.String, primary_key=True, default=lambda: str(uuid4().hex))
+    id = db.Column(db.String, primary_key=True, unique=True, default=lambda: str(uuid4().hex))
     masterschool_id = db.Column(db.String, nullable=False, unique=True)
     hubspot_id = db.Column(db.Integer, nullable=False, unique=True)
     

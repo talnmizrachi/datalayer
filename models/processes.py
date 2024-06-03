@@ -3,6 +3,10 @@ from uuid import uuid4
 
 
 class Process(db.Model):
+    """
+    A process object is the unique combination of company-title-student
+
+    """
     __tablename__ = 'processes'
     
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid4().hex))
@@ -23,6 +27,6 @@ class Process(db.Model):
     process_end_date = db.Column(db.DateTime, nullable=True)
     
     is_process_active = db.Column(db.Boolean, nullable=False, default=True)
-    is_closed_won = db.Column(db.Boolean, nullable=False, default=False)
+    is_closed_won = db.Column(db.Boolean, nullable=True)
     
 
