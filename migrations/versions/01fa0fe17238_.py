@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 983118d18a95
+Revision ID: 01fa0fe17238
 Revises: 
-Create Date: 2024-06-03 12:33:39.166315
+Create Date: 2024-06-03 22:34:18.729682
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '983118d18a95'
+revision = '01fa0fe17238'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -44,10 +44,11 @@ def upgrade():
     sa.Column('job_title', sa.String(), nullable=False),
     sa.Column('job_description', sa.String(), nullable=False),
     sa.Column('drive_url', sa.String(), nullable=False),
+    sa.Column('cv_url', sa.String(), nullable=False),
     sa.Column('process_start_date', sa.DateTime(), nullable=False),
     sa.Column('process_end_date', sa.DateTime(), nullable=True),
     sa.Column('is_process_active', sa.Boolean(), nullable=False),
-    sa.Column('is_closed_won', sa.Boolean(), nullable=False),
+    sa.Column('is_closed_won', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('job_ready_students',
@@ -71,6 +72,7 @@ def upgrade():
     sa.Column('is_employed', sa.Boolean(), nullable=False),
     sa.Column('csa_hs_id', sa.String(), nullable=True),
     sa.Column('timestamp', sa.DateTime(), nullable=False),
+    sa.Column('updated_timestamp', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['csa_hs_id'], ['career_success_advisors.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('hubspot_id'),
