@@ -23,13 +23,13 @@ class JobReadyStudent(MethodView):
         job_ready_student_dict = payload_to_job_ready_student_dict(data)
         job_ready_student_object = JobReadyStudentModel(**job_ready_student_dict)
         
-        # try:
-        #     db.session.add(job_ready_student_object)
-        #     db.session.commit()
-        # except SQLAlchemyError as e:
-        #     db.session.rollback()
-        #     # logger.error(e)
-        #     abort(500, message=str(e))
+        try:
+            db.session.add(job_ready_student_object)
+            db.session.commit()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            # logger.error(e)
+            abort(500, message=str(e))
         
         return job_ready_student_dict['id'], 201
 
@@ -44,13 +44,13 @@ class JobReadyStudent(MethodView):
             job_ready_student_dict = payload_to_job_ready_student_dict(student)
             job_ready_student_object = JobReadyStudentModel(**job_ready_student_dict)
             student_ids.append(job_ready_student_object.id)
-            # try:
-            #     db.session.add(job_ready_student_object)
-            #     db.session.commit()
-            #     student_ids.append(job_ready_student_object.id)
-            # except SQLAlchemyError as e:
-            #     db.session.rollback()
-            #     # logger.error(e)
-            #     abort(500, message=str(e))
+            try:
+                db.session.add(job_ready_student_object)
+                db.session.commit()
+                student_ids.append(job_ready_student_object.id)
+            except SQLAlchemyError as e:
+                db.session.rollback()
+                logger.error(e)
+                abort(500, message=str(e))
         
         return {"ids": student_ids}, 201
