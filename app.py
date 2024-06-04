@@ -4,11 +4,12 @@ from db import db
 from flask_smorest import Api
 from resources.job_ready_students_onboarding import blueprint as jr_students_blp
 from flask_migrate import Migrate
-
+from dotenv import load_dotenv
 
 
 def create_app(db_url=None):
     app = Flask(__name__)
+    load_dotenv()
     app.config["API_TITLE"] = "Template for flask API with flask-smorest"
     app.config["API_VERSION"] = "v1"
     app.config["OPENAPI_VERSION"] = "3.0.3"
@@ -29,5 +30,6 @@ def create_app(db_url=None):
     
     
 if __name__ == '__main__':
+    print(os.getenv("DATABASE_URL"))
     app = create_app()
     app.run()
