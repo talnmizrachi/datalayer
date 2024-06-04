@@ -16,3 +16,4 @@ class Stage(db.Model):
     home_assignment_answers = db.Column(db.String, nullable=True)
     is_pass = db.Column(db.String, nullable=False, default="PENDING")
     stage_date = db.Column(db.Date, nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())

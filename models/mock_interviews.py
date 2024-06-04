@@ -14,3 +14,4 @@ class MockInterview(db.Model):
     mock_interview_feedback_id = db.Column(db.String, nullable=True)
     mock_interview_recording_link = db.Column(db.String, nullable=True)
     student_nps = db.Column(db.Integer, nullable=True)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())

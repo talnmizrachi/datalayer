@@ -9,5 +9,5 @@ class RealQuestion(db.Model):
     stage_id = db.Column(db.String, db.ForeignKey('process_stage.id'), nullable=False)
     question = db.Column(db.String, nullable=False)
     tags = db.Column(db.String, nullable=True)
-    date_asked = db.Column(db.DateTime, default=db.func.current_timestamp())
-    
+    date_asked = db.Column(db.Date, nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())

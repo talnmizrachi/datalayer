@@ -31,7 +31,7 @@ class JobReadyStudentModel(db.Model):
     is_employed = db.Column(db.Boolean, nullable=False, default=False)
     
     csa_hs_id = db.Column(db.String, db.ForeignKey('career_success_advisors.id'), nullable=True)
-    timestamp = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_timestamp = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     
     
