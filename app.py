@@ -2,7 +2,7 @@ from flask import Flask, request
 import os
 from db import db
 from flask_smorest import Api
-from resources.job_ready_students_functions import blueprint as jr_students_blp
+from resources.job_ready_students_onboarding import blueprint as jr_students_blp
 from flask_migrate import Migrate
 
 

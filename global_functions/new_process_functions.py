@@ -4,6 +4,7 @@ from models import Process, Stage
 from db import db
 from sqlalchemy.exc import SQLAlchemyError
 from flask_smorest import abort
+from general_functions import read_typeform_answers
 
 
 def rename_key(d, old_key, new_key):
@@ -35,6 +36,7 @@ def parse_and_write_to_db_new_processes(incoming_data, source='direct'):
         process_dict, stage_dict = typeform_payload_to_new_process_dict(incoming_data)
     else:
         abort(400, message="source must be 'direct' or 'typeform'")
+    
     new_process_object = Process(**process_dict)
     new_stage_object = Stage(**stage_dict)
 
@@ -101,18 +103,7 @@ def typeform_payload_to_new_process_dict(typeform_payload):
             "ysVEuC3W9lKV": "source_2",
     }
     
-    new_dict = {}
-    for answer in typeform_payload['form_response']['answers']:
-        key = typeform_questions_ids_.get(answer['field']['id'])
-        if key is None:
-            continue
-        if key == 'full_name':
-            name_parts = answer['text'].split(" ")
-            new_dict['student_firstname'] = " ".join(name_parts[:-1])
-            new_dict['student_lastname'] = name_parts[-1]
-            continue
-        value = answer.get('choice', {}).get('other') or answer.get('choice', {}).get('label', answer.get(answer['type']))
-        new_dict[key] = value
+    new_dict = read_typeform_answers(typeform_payload, typeform_questions_ids_)
     
     new_dict['id'] = str(uuid4().hex)
     new_dict['drive_url'] = "drive_url"
@@ -124,50 +115,4 @@ def typeform_payload_to_new_process_dict(typeform_payload):
 
 
 if __name__ == '__main__':
-    import json
-    
-    direct_payload = {
-    "job_id": "job_id",
-    "student_id": "student_id",
-    "email_address": "email_address",
-    "student_firstname": "student_firstname",
-    "student_lastname": "student_lastname",
-    "domain": "domain",
-    "company_name": "company_name",
-    "job_title": "job_title",
-    "job_description": "job_description",
-    "drive_url": "drive_url",
-    "process_start_date": "process_start_date",
-    "stage_in_funnel": "stage_in_funnel",
-    "type_of_stage": "type_of_stage",
-    "had_home_assignment": "had_home_assignment",
-    "home_assignment_questions": "home_assignment_questions",
-    "home_assignment_answers": "home_assignment_answers",
-    "stage_date": "stage_date",
-    
-    
-    }
-    job_ready_student_dict = {
-            "id": str(uuid4().hex),
-            "job_id": direct_payload.get("job_id"),
-            "student_id": direct_payload.get("student_id"),
-            "email_address": direct_payload.get("email_address"),
-            "student_firstname": direct_payload.get("student_firstname"),
-            "student_lastname": direct_payload.get("student_lastname"),
-            "domain": direct_payload.get("domain"),
-            "company_name": direct_payload.get("company_name"),
-            "job_title": direct_payload.get("job_title"),
-            "job_description": direct_payload.get("job_description"),
-            "drive_url": direct_payload.get("drive_url"),
-            "process_start_date": date.today(),
-            "stage_in_funnel": direct_payload.get("stage_in_funnel"),
-            "type_of_stage": direct_payload.get("type_of_stage"),
-            "had_home_assignment": direct_payload.get("had_home_assignment"),
-            "home_assignment_questions": direct_payload.get("home_assignment_questions"),
-            "home_assignment_answers": direct_payload.get("home_assignment_answers"),
-            "stage_date": direct_payload.get("stage_date"),
-    }
-    a,b = direct_payload_to_new_process_dict(job_ready_student_dict)
-    
     ...
-   
