@@ -2,7 +2,7 @@ from db import db
 from uuid import uuid4
 
 
-class Mentor(db.Model):
+class MentorModel(db.Model):
     __tablename__ = 'mentors'
     
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid4().hex))
