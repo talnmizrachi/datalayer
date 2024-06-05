@@ -2,7 +2,7 @@ from db import db
 from uuid import uuid4
 
 
-class Process(db.Model):
+class ProcessModel(db.Model):
     """
     A process object is the unique combination of company-title-student
 
@@ -12,6 +12,7 @@ class Process(db.Model):
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid4().hex))
     job_id = db.Column(db.String, nullable=False, default=lambda: str(uuid4().hex))
     # add constraint to make sure student_id is either student_id or job_ready or regular student
+    student_ms_id = db.Column(db.String, nullable=True)
     student_id = db.Column(db.String,  nullable=False)
     
     student_firstname = db.Column(db.String, nullable=False)

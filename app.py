@@ -3,6 +3,8 @@ import os
 from db import db
 from flask_smorest import Api
 from resources.job_ready_students_onboarding import blueprint as jr_students_blp
+from resources.new_process_initiation import blueprint as new_process_init_blp
+from resources.continue_process import blueprint as continue_process_blp
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 
@@ -25,6 +27,8 @@ def create_app(db_url=None):
     migrate = Migrate(app, db)
     
     api.register_blueprint(jr_students_blp)
+    api.register_blueprint(new_process_init_blp)
+    api.register_blueprint(continue_process_blp)
     
     return app
     

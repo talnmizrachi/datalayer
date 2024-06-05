@@ -1,10 +1,9 @@
 import os
 from global_functions.LoggingGenerator import Logger
-from models import Process, Stage
-from db import db
-from sqlalchemy.exc import SQLAlchemyError
+from global_functions.create_mock_interview import create_mock_interview_line_for_stage_continue
+from global_functions.general_functions import write_object_to_db
+from models import ProcessModel, StageModel, MockInterviewModel
 from flask_smorest import abort
-import json
 from general_functions import read_typeform_answers
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
@@ -13,7 +12,7 @@ logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 def direct_payload_to_new_stage_in_process_dict(data):
     interim_stage_dict = {'process_id': data['process_id']}
     
-    process = Process.query.filter_by(id=interim_stage_dict['process_id']).first()
+    process = ProcessModel.query.filter_by(id=interim_stage_dict['process_id']).first()
     if not process:
         abort(404, message="Process not found")
     
@@ -64,16 +63,14 @@ def parse_and_write_to_db_new_stage_in_process(data, source):
         stage_dict = typeform_payload_to_new_stage_in_process_dict(data)
     else:
         abort(400, message="Invalid source")
-        
-    new_stage_dict = Stage(**stage_dict)
-    try:
-        db.session.add(new_stage_dict)
-        db.session.commit()
-    except SQLAlchemyError as e:
-        db.session.rollback()
-        logger.error(e)
-        abort(500, message=str(e))
-    return new_stage_dict
+    mock_int_dict = create_mock_interview_line_for_stage_continue(stage_dict)
+    
+    new_stage_obj = StageModel(**stage_dict)
+    new_mock_obj = MockInterviewModel(**mock_int_dict)
+    write_object_to_db(new_stage_obj)
+    write_object_to_db(new_mock_obj)
+    
+    return stage_dict
 
 
 if __name__ == '__main__':

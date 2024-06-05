@@ -18,11 +18,11 @@ class ContinueProcessInitiation(MethodView):
     def post(self):
         data = request.get_json()
         logger.info(data)
-        new_stage_dict = parse_and_write_to_db_new_stage_in_process(data)
+        new_stage_dict = parse_and_write_to_db_new_stage_in_process(data, source='direct')
         return new_stage_dict['id'], 201
 
 
-@blueprint.route('/continue_process_direct', methods=['POST'])
+@blueprint.route('/continue_process_typeform', methods=['POST'])
 class ContinueProcessInitiation(MethodView):
     """
     This class handles the initiation of a new process via typeform (to be legacy).
@@ -30,7 +30,7 @@ class ContinueProcessInitiation(MethodView):
     def post(self):
         data = request.get_json()
         logger.info(data)
-        new_process_dict = parse_and_write_to_db_new_processes(data, source='typeform')
+        new_process_dict = parse_and_write_to_db_new_stage_in_process(data, source='typeform')
         
         return new_process_dict['id'], 201
 

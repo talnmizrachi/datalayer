@@ -2,7 +2,7 @@ from db import db
 from uuid import uuid4
 
 
-class Stage(db.Model):
+class StageModel(db.Model):
     __tablename__ = 'process_stage'
     
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid4().hex))
