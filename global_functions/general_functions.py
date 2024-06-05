@@ -1,3 +1,7 @@
+from db import db
+from sqlalchemy.exc import SQLAlchemyError
+from flask_smorest import abort
+
 
 def read_typeform_answers(typeform_payload, typeform_questions_ids_dict):
     new_dict = {}
@@ -13,3 +17,12 @@ def read_typeform_answers(typeform_payload, typeform_questions_ids_dict):
         value = answer.get('choice', {}).get('other') or answer.get('choice', {}).get('label', answer.get(answer['type']))
         new_dict[key] = value
     return new_dict
+
+
+def write_object_to_db(object_to_write):
+    try:
+        db.session.add(object_to_write)
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        abort(500, message=str(e))
