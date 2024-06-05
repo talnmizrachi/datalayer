@@ -3,7 +3,7 @@ from uuid import uuid4
 
 def payload_to_job_ready_student_dict(payload):
     job_ready_student_dict = {'id': str(uuid4().hex),
-                              "masterschool_id": payload.get('masterschool_id'),
+                              "student_ms_id": payload.get('masterschool_id'),
                               "hubspot_id": payload.get('hubspot_id'),
                               "domain": payload.get('domain'),
                               'student_firstname': payload.get('student_firstname'),
