@@ -2,7 +2,7 @@ from db import db
 from uuid import uuid4
 
 
-class MockInterviewFeedback(db.Model):
+class MockInterviewFeedbackModel(db.Model):
     __tablename__ = 'mock_interview_feedback'
     
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid4().hex))
