@@ -26,7 +26,7 @@ class JobReadyStudentModel(db.Model):
     
     tags = db.Column(db.String, nullable=True)
     jaq = db.Column(db.String, nullable=False, default='JAQ5')
-    school_master_name = db.Column(db.String, nullable=False)
+    school_master_name = db.Column(db.String, nullable=True)
     
     is_employed = db.Column(db.Boolean, nullable=False, default=False)
     
