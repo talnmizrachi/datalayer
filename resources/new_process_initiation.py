@@ -7,7 +7,9 @@ import os
 
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
-blueprint = Blueprint('new_process_init', __name__, description="A new job process")
+blueprint = Blueprint('Initiate a Process', __name__, description="A process is the combination of "
+                                                                  "Company-Job-Student, and will include at least one"
+                                                                  " process event")
 
 
 @blueprint.route('/new_process_start', methods=['POST'])
