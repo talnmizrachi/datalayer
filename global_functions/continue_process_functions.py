@@ -4,7 +4,7 @@ from global_functions.create_mock_interview import create_mock_interview_line_fo
 from global_functions.general_functions import write_object_to_db
 from models import ProcessModel, StageModel, MockInterviewModel
 from flask_smorest import abort
-from general_functions import read_typeform_answers
+from global_functions.general_functions import read_typeform_answers
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 
