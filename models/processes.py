@@ -34,5 +34,7 @@ class ProcessModel(db.Model):
     
     source_1 = db.Column(db.String, nullable=True)
     source_2 = db.Column(db.String, nullable=True)
-
+    
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    job_secured_date = db.Column(db.DateTime, nullable=True)
+    
