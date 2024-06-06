@@ -11,6 +11,7 @@ class ProcessModel(db.Model):
     
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid4().hex))
     job_id = db.Column(db.String, nullable=False, default=lambda: str(uuid4().hex))
+    hubspot_id = db.Column(db.Integer, nullable=True)
     # add constraint to make sure student_id is either student_id or job_ready or regular student
     student_ms_id = db.Column(db.String, nullable=True)
     student_id = db.Column(db.String,  nullable=False)

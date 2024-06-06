@@ -39,5 +39,14 @@ class ProcessInitiation(MethodView):
         return new_process_dict['id'], 201
 
 
+@blueprint.route('/close_process', methods=['POST'])
+class ProcessInitiation(MethodView):
+    """ Close process through hubspot workflow
+    https://app.hubspot.com/workflows/9484219/platform/flow/584835155/edit
+    """
+    def post(self):
+        data = request.get_json()
+        logger.info(data)
+
 if __name__ == '__main__':
     pass
