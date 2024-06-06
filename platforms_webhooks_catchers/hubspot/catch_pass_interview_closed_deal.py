@@ -2,7 +2,7 @@ def v3_pass_close_deal_webhook_catcher(_data):
     identifying_dict = dict(company=_data.get("company"),
                             dealname=_data.get("dealname").replace(chr(127881), ""),
                             job_title=_data.get("job_title"),
-                            hs_object_id=_data.get("hs_object_id"),
+                            hs_object_id=str(_data.get("hs_object_id")),
                             hs_is_closed_won=_data.get("hs_is_closed_won"))
     
     return identifying_dict
