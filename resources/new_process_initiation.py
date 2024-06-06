@@ -4,6 +4,8 @@ from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint
 import os
+from models import ProcessModel
+from platforms_webhooks_catchers.hubspot.catch_pass_interview_closed_deal import v3_pass_close_deal_webhook_catcher
 
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
@@ -43,11 +45,40 @@ class ProcessInitiation(MethodView):
 class ProcessTermination(MethodView):
     """ Close process through hubspot workflow
     https://app.hubspot.com/workflows/9484219/platform/flow/584835155/edit
+    
+    Once a deal is closed (either closed won or closed lost, the process is terminated.
+    
+    #todo - if closed won -> make sure that the last stage in this process is marked as passed
+    #todo - if closed lost -> make sure that the last stage in this process is marked as failed
     """
     def post(self):
-        data = request.get_json()
-        logger.info(data)
         
+        data = request.get_json()
+        identifying_dict = v3_pass_close_deal_webhook_catcher(data)
+        
+        if identifying_dict['hs_is_closed_won']:
+            win_deal = ProcessModel.query.filter_by(hubspot_id=identifying_dict['hs_object_id'],
+                                         company_name=identifying_dict['company'],
+                                         job_title=identifying_dict['job_title']
+                                         ).first()
+            if win_deal is None:
+                abort(404, message='no deal found')
+            win_deal.is_closed_won = True
+            win_deal.is_process_active = False
+            win_deal.process_end_date = date.today()
+            db.session.commit()
+        else:
+            lose_deal = ProcessModel.query.filter_by(hubspot_id=identifying_dict['hs_object_id'],
+                                         company_name=identifying_dict['company'],
+                                         job_title=identifying_dict['job_title']
+                                         ).first()
+            if lose_deal is None:
+                abort(404, message='no deal found')
+            lose_deal.is_closed_won = False
+            lose_deal.is_process_active = False
+            lose_deal.process_end_date = date.today()
+            db.session.commit()
+            
         return data
 
 if __name__ == '__main__':
