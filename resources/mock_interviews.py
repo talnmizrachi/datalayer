@@ -16,9 +16,9 @@ class MockInterviewSetting(MethodView):
     Right now we have 2 options - from continuing a process or starting a new process.
     (+ask RnD to make sure that the calendly UTMs are the same)
     New process UTMS:
-    utm_source=student_full_name&utm_medium=company_name&utm_content=stage_of_interview
+    utm_source=email&utm_medium=company_name&utm_content=job_title&utm_term=new_process
     Continue process UTMS:
-    utm_source=process_id&utm_medium=type_of_stage&utm_content=stage_of_interview
+    utm_source=process_id&utm_medium=type_of_stage&utm_content=stage_of_interview&utm_term=continue
     """
     def post(self):
         data = request.get_json()
