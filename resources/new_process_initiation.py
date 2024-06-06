@@ -54,8 +54,9 @@ class ProcessTermination(MethodView):
     def post(self):
         
         data = request.get_json()
+        logger.info(f"incoming data from hubspot: {data}")
         identifying_dict = v3_pass_close_deal_webhook_catcher(data)
-        
+        logger.info(f"processed data from hubspot: {identifying_dict}")
         if identifying_dict['hs_is_closed_won']:
             win_deal = ProcessModel.query.filter_by(hubspot_id=identifying_dict['hs_object_id'],
                                          company_name=identifying_dict['company'],
