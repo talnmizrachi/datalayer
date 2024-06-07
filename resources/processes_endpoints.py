@@ -56,28 +56,25 @@ class ProcessTermination(MethodView):
         data = request.get_json()
         logger.info(f"incoming data from hubspot: {data}")
         identifying_dict = v3_pass_close_deal_webhook_catcher(data)
-        logger.info(f"processed data from hubspot: {identifying_dict}")
+        this_deal = ProcessModel.query.filter_by(hubspot_id=identifying_dict['hs_object_id'],
+                                                company_name=identifying_dict['company'],
+                                                job_title=identifying_dict['job_title']
+                                                ).first()
+        if this_deal is None:
+            logger.error(f"Deal with details: {identifying_dict} is not matching")
+            abort(404, message='no deal found')
+        
         if identifying_dict['hs_is_closed_won']:
-            win_deal = ProcessModel.query.filter_by(hubspot_id=identifying_dict['hs_object_id'],
-                                         company_name=identifying_dict['company'],
-                                         job_title=identifying_dict['job_title']
-                                         ).first()
-            if win_deal is None:
-                abort(404, message='no deal found')
-            win_deal.is_closed_won = True
-            win_deal.is_process_active = False
-            win_deal.process_end_date = date.today()
+            logger.debug(f"win_deal object : {this_deal}")
+            this_deal.is_closed_won = True
+            this_deal.is_process_active = False
+            this_deal.process_end_date = date.today()
             db.session.commit()
         else:
-            lose_deal = ProcessModel.query.filter_by(hubspot_id=identifying_dict['hs_object_id'],
-                                         company_name=identifying_dict['company'],
-                                         job_title=identifying_dict['job_title']
-                                         ).first()
-            if lose_deal is None:
-                abort(404, message='no deal found')
-            lose_deal.is_closed_won = False
-            lose_deal.is_process_active = False
-            lose_deal.process_end_date = date.today()
+            logger.debug(f"lose_deal object : {this_deal}")
+            this_deal.is_closed_won = False
+            this_deal.is_process_active = False
+            this_deal.process_end_date = date.today()
             db.session.commit()
             
         return data
