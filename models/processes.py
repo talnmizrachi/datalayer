@@ -28,7 +28,7 @@ class ProcessModel(db.Model):
     drive_url = db.Column(db.String, nullable=True)
     cv_url = db.Column(db.String, nullable=False)
     process_start_date = db.Column(db.DateTime, nullable=False)
-    process_end_date = db.Column(db.DateTime, nullable=True)
+    process_end_date = db.Column(db.Date, nullable=True)
     
     is_process_active = db.Column(db.Boolean, nullable=False, default=True)
     is_closed_won = db.Column(db.Boolean, nullable=True)
@@ -37,5 +37,5 @@ class ProcessModel(db.Model):
     source_2 = db.Column(db.String, nullable=True)
     
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    job_secured_date = db.Column(db.DateTime, nullable=True)
+    job_secured_date = db.Column(db.Date, nullable=True)
     

@@ -7,7 +7,6 @@ def v3_pass_close_deal_webhook_catcher(_data):
     
     return identifying_dict
     
-    
 
 if __name__ == '__main__':
     data = {'company': 'Cognosante', 'dealname': '🎉Ranga Hande', 'job_title': 'DOL-NCC Junior Reports Analyst',

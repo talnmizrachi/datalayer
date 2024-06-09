@@ -19,7 +19,7 @@ class ProcessInitiation(MethodView):
     """
     This class handles the initiation of a new process.
     It listens for a POST request at the '/new_process_start' endpoint open for the MS RnD team
-        """
+    """
     def post(self):
         data = request.get_json()
         logger.info(data)
@@ -78,6 +78,7 @@ class ProcessTermination(MethodView):
             db.session.commit()
             
         return data
+
 
 if __name__ == '__main__':
     pass
