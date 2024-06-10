@@ -9,7 +9,7 @@ from models import JobReadyStudentModel
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 
-blueprint = Blueprint('templated_blp', __name__, description="This_is_a_templated_blueprint")
+blueprint = Blueprint('Onboard a student', __name__, description="This_is_a_templated_blueprint")
 
 
 @blueprint.route('/onboard_student', methods=['POST'])
