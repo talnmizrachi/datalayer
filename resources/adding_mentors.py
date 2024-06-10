@@ -1,4 +1,4 @@
-import uuid
+from global_functions.general_functions import write_object_to_db
 from flask import request
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
@@ -23,11 +23,4 @@ class MethodTemplate(MethodView):
                        'created_at': data.get('created_at')}
 
         mentor_obj = MentorModel(**mentor_dict)
-
-        try:
-            db.session.add(mentor_obj)
-            db.session.commit()
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            logger.error(e)
-            abort(500, message=str(e))
+        write_object_to_db(mentor_obj)
