@@ -20,7 +20,7 @@ def split_process_and_stage_dict(payload_dict):
                     "email_address", "company_name", "job_title", "job_description", 'cv_url', 'process_start_date',
                     'source_1', 'source_2'}
     
-    stage_keys = {"id", "stage_in_funnel",'student_firstname', 'student_lastname', "type_of_stage",
+    stage_keys = {"id", "stage_in_funnel", 'student_firstname', 'student_lastname', "type_of_stage",
                   "had_home_assignment", 'home_assignment_questions', 'home_assignment_answers', 'stage_date'}
     
     process_dict = {k: v for k, v in payload_dict.items() if k in process_keys}
