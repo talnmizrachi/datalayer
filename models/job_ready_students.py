@@ -22,7 +22,7 @@ class JobReadyStudentModel(db.Model):
     student_github_link = db.Column(db.String, nullable=True)
     student_linkedin_link = db.Column(db.String, nullable=True)
     student_cv_link = db.Column(db.String, nullable=True)
-    languages_fluency = db.Column(db.String, nullable=False)
+    languages_fluency = db.Column(db.String, nullable=True)
     
     tags = db.Column(db.String, nullable=True)
     jaq = db.Column(db.String, nullable=False, default='JAQ5')
