@@ -108,7 +108,7 @@ def typeform_payload_to_new_process_dict(typeform_payload):
             "qgbW21oTd1mO": "home_assignment_questions",
             "BzKp7H4TwZxn": "home_assignment_answers",
             "BVIHyvpqVsNS": "type_of_stage",
-            "YIXeDQWMVqLr": "resume_url",
+            "YIXeDQWMVqLr": "cv_url",
             "06oyTS92IyDZ": "job_description",
             "n6j9MkBtbqcF": "source_1",
             "ysVEuC3W9lKV": "source_2",
@@ -121,7 +121,7 @@ def typeform_payload_to_new_process_dict(typeform_payload):
             "I6rmXpvTBdcL": "stage_date",
             "vHThsj2tIryq": "stage_in_funnel",
             "EwRF9XrUF5TV": "type_of_stage",
-            "x8mzI8oTaxSf": "resume_url",
+            "x8mzI8oTaxSf": "cv_url",
             "uPCVXBbisxbA": "job_description",
             "zLrnwv7yoTFO": "source_1"
     }
