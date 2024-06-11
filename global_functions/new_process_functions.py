@@ -28,6 +28,9 @@ def split_process_and_stage_dict(payload_dict):
     rename_key(stage_dict, 'id', 'process_id')
     stage_dict['id'] = str(uuid4().hex)
     
+    if "student_id" not in process_dict:
+        process_dict['student_id'] = f"temp_+{str(uuid4().hex)}"
+    
     return process_dict, stage_dict
 
 
@@ -130,6 +133,9 @@ def typeform_payload_to_new_process_dict(typeform_payload):
     new_dict['process_start_date'] = new_dict['stage_date']
     
     process_dict, stage_dict = split_process_and_stage_dict(new_dict)
+    
+    logger.info(f"process_dict: {process_dict}")
+    logger.info(f"stage_dict: {stage_dict}")
     
     return process_dict, stage_dict
 
