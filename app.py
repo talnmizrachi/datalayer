@@ -5,6 +5,7 @@ from flask_smorest import Api
 from resources.job_ready_students_onboarding import blueprint as jr_students_blp
 from resources.processes_endpoints import blueprint as new_process_init_blp
 from resources.continue_process import blueprint as continue_process_blp
+from resources.mock_interviews import blueprint as mock_interview_details_blp
 from resources.adding_mentors import blueprint as add_mentors_blp
 from flask_migrate import Migrate
 from dotenv import load_dotenv
@@ -13,7 +14,7 @@ from dotenv import load_dotenv
 def create_app(db_url=None):
     app = Flask(__name__)
     load_dotenv()
-    app.config["API_TITLE"] = "Template for flask API with flask-smorest"
+    app.config["API_TITLE"] = "Datalayer endpoints V3"
     app.config["API_VERSION"] = "v1"
     app.config["OPENAPI_VERSION"] = "3.0.3"
     app.config["OPENAPI_URL_PREFIX"] = "/"
@@ -31,6 +32,7 @@ def create_app(db_url=None):
     api.register_blueprint(new_process_init_blp)
     api.register_blueprint(continue_process_blp)
     api.register_blueprint(add_mentors_blp)
+    api.register_blueprint(mock_interview_details_blp)
     
     return app
     

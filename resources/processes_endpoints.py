@@ -3,6 +3,7 @@ from global_functions.new_process_functions import *
 from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint
+from db import db
 import os
 from models import ProcessModel
 from platforms_webhooks_catchers.hubspot.catch_pass_interview_closed_deal import v3_pass_close_deal_webhook_catcher
@@ -20,6 +21,7 @@ class ProcessInitiation(MethodView):
     This class handles the initiation of a new process.
     It listens for a POST request at the '/new_process_start' endpoint open for the MS RnD team
     """
+    
     def post(self):
         data = request.get_json()
         logger.info(data)
@@ -35,11 +37,24 @@ class ProcessInitiation(MethodView):
     """
     def post(self):
         data = request.get_json()
-        logger.info(data)
         new_process_dict = parse_and_write_to_db_new_processes(data, source='typeform')
         
         return new_process_dict['id'], 201
 
+
+@blueprint.route('/new_process_typeform_old', methods=['POST'])
+class ProcessInitiation(MethodView):
+    """
+    This class handles the initiation of a new process via typeform (to be legacy).
+    This is the old version of the typeform initiation endpoint.
+    """
+    
+    def post(self):
+        data = request.get_json()
+        logger.info(data)
+        new_process_dict = parse_and_write_to_db_new_processes(data, source='old_typeform')
+        
+        return new_process_dict['id'], 201
 
 @blueprint.route('/close_process', methods=['POST'])
 class ProcessTermination(MethodView):
@@ -48,8 +63,6 @@ class ProcessTermination(MethodView):
     
     Once a deal is closed (either closed won or closed lost, the process is terminated.
     
-    #todo - if closed won -> make sure that the last stage in this process is marked as passed
-    #todo - if closed lost -> make sure that the last stage in this process is marked as failed
     """
     def post(self):
         
@@ -64,17 +77,25 @@ class ProcessTermination(MethodView):
             logger.error(f"Deal with details: {identifying_dict} is not matching")
             abort(404, message='no deal found')
         
+        process_id = this_deal.process_id
+        latest_stage = StageModel.query.filter_by(process_id=process_id).order_by(StageModel.created_at.desc()).first()
         if identifying_dict['hs_is_closed_won']:
             logger.debug(f"win_deal object : {this_deal}")
             this_deal.is_closed_won = True
             this_deal.is_process_active = False
             this_deal.process_end_date = date.today()
+
+            if latest_stage:
+                latest_stage.is_pass = "TRUE"
             db.session.commit()
+        
         else:
             logger.debug(f"lose_deal object : {this_deal}")
             this_deal.is_closed_won = False
             this_deal.is_process_active = False
             this_deal.process_end_date = date.today()
+            if latest_stage:
+                latest_stage.is_pass = "FALSE"
             db.session.commit()
             
         return data

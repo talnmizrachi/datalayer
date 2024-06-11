@@ -34,8 +34,10 @@ def split_process_and_stage_dict(payload_dict):
 def parse_and_write_to_db_new_processes(incoming_data, source='direct'):
     if source == 'direct':
         process_dict, stage_dict = direct_payload_to_new_process_dict(incoming_data)
-    elif source == 'typeform':
+    elif source.find('typeform') > -1:
+        logger.info("typeform data")
         process_dict, stage_dict = typeform_payload_to_new_process_dict(incoming_data)
+    
     else:
         abort(400, message="source must be 'direct' or 'typeform'")
     new_mock_interview_dict = create_mock_interview_line_for_stage(process_dict, stage_dict)
@@ -74,7 +76,8 @@ def direct_payload_to_new_process_dict(direct_payload):
             "stage_date": direct_payload.get("stage_date"),
     }
     
-    student_is_listed_as_jr = JobReadyStudentModel.query.filter_by(student_ms_id=new_process_for_student_dict.get("student_ms_id")).first()
+    student_is_listed_as_jr = JobReadyStudentModel.query.filter_by(
+        student_ms_id=new_process_for_student_dict.get("student_ms_id")).first()
     logger.info(f"student_is_listed_as_jr: {student_is_listed_as_jr},"
                 f" student_ms_id: {new_process_for_student_dict.get('student_ms_id')}")
     if student_is_listed_as_jr is None:
@@ -83,9 +86,9 @@ def direct_payload_to_new_process_dict(direct_payload):
         new_process_for_student_dict['student_id'] = new_process_for_student_dict.get("student_ms_id")
     else:
         new_process_for_student_dict['student_id'] = student_is_listed_as_jr.id
-        
+    
     process_dict, stage_dict = split_process_and_stage_dict(new_process_for_student_dict)
-
+    
     return process_dict, stage_dict
 
 
@@ -106,10 +109,22 @@ def typeform_payload_to_new_process_dict(typeform_payload):
             "06oyTS92IyDZ": "job_description",
             "n6j9MkBtbqcF": "source_1",
             "ysVEuC3W9lKV": "source_2",
+            # start legacy old typeform questions
+            "uvAp6UdsBo6t": "domain",
+            "lovnA3yOgQvh": "email_address",
+            "jOtZui7dWULc": "full_name",
+            "xG46N5VUGkhU": "company_name",
+            "oX0jd0hBxJ9W": "job_title",
+            "I6rmXpvTBdcL": "stage_date",
+            "vHThsj2tIryq": "stage_in_funnel",
+            "EwRF9XrUF5TV": "type_of_stage",
+            "x8mzI8oTaxSf": "resume_url",
+            "uPCVXBbisxbA": "job_description",
+            "zLrnwv7yoTFO": "source_1"
     }
     
     new_dict = read_typeform_answers(typeform_payload, typeform_questions_ids_)
-    
+    logger.info(f"new_dict: {new_dict}")
     new_dict['id'] = str(uuid4().hex)
     new_dict['drive_url'] = "drive_url"
     new_dict['process_start_date'] = new_dict['stage_date']
