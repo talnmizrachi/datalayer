@@ -40,3 +40,19 @@ class JobReadyStudent(MethodView):
             write_object_to_db(job_ready_student_object)
         
         return {"ids": student_ids}, 201
+
+
+@blueprint.route('/auto_onboard_student_from_hubspot', methods=['POST'])
+class JobReadyStudent(MethodView):
+    
+    def post(self):
+        data = request.get_json()
+        student_ids = []
+        for student in data:
+            job_ready_student_dict = payload_to_job_ready_student_dict(student)
+            job_ready_student_object = JobReadyStudentModel(**job_ready_student_dict)
+            student_ids.append(job_ready_student_object.id)
+            
+            write_object_to_db(job_ready_student_object)
+        
+        return {"ids": student_ids}, 201
