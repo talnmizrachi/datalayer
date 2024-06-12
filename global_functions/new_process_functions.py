@@ -41,6 +41,7 @@ def parse_and_write_to_db_new_processes(incoming_data, source='direct'):
         logger.info("typeform data")
         process_dict, stage_dict = typeform_payload_to_new_process_dict(incoming_data)
     elif source == 'smart_matcher':
+        logger.info("smart matcher data")
         process_dict, stage_dict = new_process_from_smart_matcher_payload(incoming_data)
     else:
         abort(400, message="source must be 'direct' or 'typeform'")
@@ -146,22 +147,42 @@ def typeform_payload_to_new_process_dict(typeform_payload):
 
 
 def new_process_from_smart_matcher_payload(smart_matcher_payload):
-    sm_dictionary = {"job_id": smart_matcher_payload.get("job_event_id"),
-                     "student_id": smart_matcher_payload.get("token"),
-                     "student_firstname": smart_matcher_payload.get(""),
-                     "student_lastname": smart_matcher_payload.get("name"),
-                     "domain": "Data",
-                     "email_address": smart_matcher_payload.get("email"),
-                     "company_name": smart_matcher_payload.get("company"),
-                     "job_title": smart_matcher_payload.get("job_title"),
-                     "job_description": smart_matcher_payload.get("job_description", ""),
-                     "process_start_date": date.today(),
-                     "is_process_active": True,
-                     "source_1": "Smart Matching",
-                     "source_2": "Smart Matching emails",
-                     "created_at": datetime.now()}
+    def extract_interview_details(data):
+        # Extracting the hidden fields
+        hidden_fields = data['form_response']['hidden']
+        answers = data['form_response']['answers']
+        
+        extracted_data = {
+                "job_id": hidden_fields['job_id'],
+                "student_id": data['form_response']['token'],  # student_id is called token in the data
+                "student_firstname": hidden_fields['student_name'].split()[0],
+                "student_lastname": hidden_fields['student_name'].split()[-1],
+                "domain": hidden_fields['domain'],
+                "email_address": hidden_fields['email'],
+                "company_name": hidden_fields['comany_name'],
+                "job_title": hidden_fields['job_title'],
+                "stage_date": next((answer['date'] for answer in answers if answer['field']['type'] == 'date'),
+                                          None),
+                "type_of_stage": next(
+                    (answer['choice']['label'] for answer in answers if answer['field']['type'] == 'multiple_choice'),
+                    None),
+                "stage_in_funnel":"1st Interview",
+                "cv_url": next((answer['file_url'] for answer in answers if answer['field']['type'] == 'file_upload'), None),
+                "is_process_active": True,
+                "source_1": "Smart Matching",
+                "source_2": "Smart Matching emails",
+        }
+        
+        return extracted_data
     
-    return smart_matcher_payload
+    this_dictionary = extract_interview_details(smart_matcher_payload)
+    this_dictionary['id'] = str(uuid4().hex)
+    this_dictionary['process_id'] = this_dictionary['id']
+    this_dictionary['process_start_date'] = this_dictionary['stage_date']
+    this_dictionary['job_description'] = ""
+    
+    process_dict, stage_dict = split_process_and_stage_dict(this_dictionary)
+    
     return process_dict, stage_dict
 
 

@@ -67,9 +67,9 @@ class ProcessInitiation(MethodView):
     def post(self):
         data = request.get_json()
         logger.info(data)
-        # new_process_dict = parse_and_write_to_db_new_processes(data, source='smart_matcher')
+        new_process_dict = parse_and_write_to_db_new_processes(data, source='smart_matcher')
         
-        return "good", 201
+        return new_process_dict['id'], 201
 
 @blueprint.route('/close_process', methods=['POST'])
 class ProcessTermination(MethodView):
