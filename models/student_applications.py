@@ -15,6 +15,4 @@ class JobReadyStudentModel(db.Model):
     student_response_timestamp = db.Column(db.DateTime, nullable=True)
     no_apply_reason = db.Column(db.String, nullable=True)
     student_location_search = db.Column(db.String, nullable=True)
-
-    
-
+    source = db.Column(db.String, nullable=False)
