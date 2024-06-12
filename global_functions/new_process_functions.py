@@ -1,5 +1,5 @@
 from uuid import uuid4
-from datetime import date
+from datetime import date, datetime
 from models import ProcessModel, StageModel, MockInterviewModel, JobReadyStudentModel
 from global_functions.general_functions import *
 from global_functions.create_mock_interview import create_mock_interview_line_for_stage
@@ -29,7 +29,7 @@ def split_process_and_stage_dict(payload_dict):
     stage_dict['id'] = str(uuid4().hex)
     
     if "student_id" not in process_dict:
-        process_dict['student_id'] = f"temp_+{str(uuid4().hex)}"
+        process_dict['student_id'] = f"temp_{str(uuid4().hex)}"
     
     return process_dict, stage_dict
 
@@ -40,7 +40,8 @@ def parse_and_write_to_db_new_processes(incoming_data, source='direct'):
     elif source.find('typeform') > -1:
         logger.info("typeform data")
         process_dict, stage_dict = typeform_payload_to_new_process_dict(incoming_data)
-    
+    elif source == 'smart_matcher':
+        process_dict, stage_dict = new_process_from_smart_matcher_payload(incoming_data)
     else:
         abort(400, message="source must be 'direct' or 'typeform'")
     new_mock_interview_dict = create_mock_interview_line_for_stage(process_dict, stage_dict)
@@ -123,7 +124,11 @@ def typeform_payload_to_new_process_dict(typeform_payload):
             "EwRF9XrUF5TV": "type_of_stage",
             "x8mzI8oTaxSf": "cv_url",
             "uPCVXBbisxbA": "job_description",
-            "zLrnwv7yoTFO": "source_1"
+            "zLrnwv7yoTFO": "source_1",
+            # start legacy of smart matcher
+            "ak6f7SBAmjeV": "cv_url",
+            "ho7Zc8mJVDM0": "type_of_stage",
+            "PXdz2BkjAwWR": "stage_date",
     }
     
     new_dict = read_typeform_answers(typeform_payload, typeform_questions_ids_)
@@ -137,6 +142,26 @@ def typeform_payload_to_new_process_dict(typeform_payload):
     logger.info(f"process_dict: {process_dict}")
     logger.info(f"stage_dict: {stage_dict}")
     
+    return process_dict, stage_dict
+
+
+def new_process_from_smart_matcher_payload(smart_matcher_payload):
+    sm_dictionary = {"job_id": smart_matcher_payload.get("job_event_id"),
+                     "student_id": smart_matcher_payload.get("token"),
+                     "student_firstname": smart_matcher_payload.get(""),
+                     "student_lastname": smart_matcher_payload.get("name"),
+                     "domain": "Data",
+                     "email_address": smart_matcher_payload.get("email"),
+                     "company_name": smart_matcher_payload.get("company"),
+                     "job_title": smart_matcher_payload.get("job_title"),
+                     "job_description": smart_matcher_payload.get("job_description", ""),
+                     "process_start_date": date.today(),
+                     "is_process_active": True,
+                     "source_1": "Smart Matching",
+                     "source_2": "Smart Matching emails",
+                     "created_at": datetime.now()}
+    
+    return smart_matcher_payload
     return process_dict, stage_dict
 
 

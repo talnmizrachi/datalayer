@@ -56,6 +56,21 @@ class ProcessInitiation(MethodView):
         
         return new_process_dict['id'], 201
 
+
+@blueprint.route('/new_process_smart_matcher', methods=['POST'])
+class ProcessInitiation(MethodView):
+    """
+    This class handles the initiation of a new process via typeform (to be legacy).
+    This is the old version of the typeform initiation endpoint.
+    """
+    
+    def post(self):
+        data = request.get_json()
+        logger.info(data)
+        # new_process_dict = parse_and_write_to_db_new_processes(data, source='smart_matcher')
+        
+        return "good", 201
+
 @blueprint.route('/close_process', methods=['POST'])
 class ProcessTermination(MethodView):
     """ Close process through hubspot workflow
