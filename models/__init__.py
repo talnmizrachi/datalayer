@@ -6,3 +6,4 @@ from models.process_stage import StageModel
 from models.mock_interviews import MockInterviewModel
 from models.mock_interview_feedback import MockInterviewFeedbackModel
 from models.process_stage_questions import RealQuestion
+from models.student_applications import StudentToJobApplication
