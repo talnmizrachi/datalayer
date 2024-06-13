@@ -11,7 +11,7 @@ def catch_student_application_from_zapier(payload, source):
                  "student_id": payload.get("student_id"),
                  "job_published_timestamp": payload.get("job_published_timestamp"),
                  "job_offered_to_student_timestamp": payload.get('job_offered_to_student_timestamp'),
-                 "student_applied": payload.get("student_applied"),
+                 "student_applied": True if payload.get("student_applied")=='applied' else False,
                  "student_response_timestamp": datetime.datetime.now(),
                  "no_apply_reason": payload.get("no_apply_reason"),
                  "student_location_search": payload.get("location"),
