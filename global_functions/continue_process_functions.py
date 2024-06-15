@@ -83,12 +83,11 @@ def typeform_payload_to_new_stage_in_process_dict(data):
     parsed_typeform = read_typeform_answers(data, typeform_questions_ids_)
     interim_stage_dict |= parsed_typeform
     
-    logger.critical(f"interim_stage_dict: {interim_stage_dict}" )
-    
+    logger.critical(f"interim_stage_dict: {interim_stage_dict}")
     
     attrs = {c.key: getattr(current_success_stage, c.key) for c in
              inspect(current_success_stage).mapper.column_attrs}
-    logger.critical(f"attrs: {attrs}" )
+    logger.critical(f"attrs: {attrs}")
     # mark the passed stage as done
     current_success_stage.is_pass = "TRUE"
     current_success_stage.updated_at = datetime.now()
@@ -135,7 +134,7 @@ def parse_and_write_to_db_new_stage_in_process(data, source):
     write_object_to_db(new_stage_obj)
     write_object_to_db(new_mock_obj)
     
-    return stage_dict
+    return {"stage_id": stage_dict['id'], "process_id": new_stage_obj.process_id}, 201
 
 
 if __name__ == '__main__':
