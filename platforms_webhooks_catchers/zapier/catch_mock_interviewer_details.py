@@ -1,3 +1,9 @@
+import os
+from global_functions.LoggingGenerator import Logger
+
+logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
+
+
 def get_mock_interviewer_data_from_zapier(incoming_webhook_data: dict) -> dict:
     """
     An incoming webhook from Zapier is used to get the interviewer data from calendly
@@ -14,18 +20,42 @@ def get_mock_interviewer_data_from_zapier(incoming_webhook_data: dict) -> dict:
     
     This Zap:
     https://zapier.com/editor/243216601/draft/243216602/fields
+    
+    student_email - sent through the UTMs from typeform to the calendly and
+     forwarded to the calendly invite url
+     calendly_reg_email is the email the student registered with
     :return:
     """
     
-    return_dict = {"additional_details": incoming_webhook_data.get('additional_details'),
-                   "mentor_email": incoming_webhook_data.get('mentor_email'),
-                   "mentor_name": incoming_webhook_data.get('mentor_name'),
-                   "mock_interview_datetime": incoming_webhook_data.get('mock_interview_datetime'),
-                   "process_id": incoming_webhook_data.get('process_id'),
-                   "stage_in_funnel": incoming_webhook_data.get('stage_in_funnel'),
-                   "type_of_process": incoming_webhook_data.get('type_of_process'),
-                   "type_of_stage": incoming_webhook_data.get('type_of_stage')
-                   }
+    process_type = incoming_webhook_data.get('is_new_process')
+    
+    if process_type == "new_process":
+        return_dict = {
+                "calendly_reg_email": incoming_webhook_data.get('email'),
+                "student_email": incoming_webhook_data.get('utm_source'),
+                "company_name": incoming_webhook_data.get('utm_medium'),
+                "job_title": incoming_webhook_data.get('utm_content'),
+                "is_new_process": process_type,
+                "student_name": incoming_webhook_data.get('student_name'),
+                "mock_interview_datetime": incoming_webhook_data.get('mock_interview_datetime'),
+                "additional_details": incoming_webhook_data.get('additional_details'),
+                "mentor_email": incoming_webhook_data.get('mentor_email'),
+                "mentor_name": incoming_webhook_data.get('mentor_name'),
+        }
+    elif process_type == "continue_process":
+        return_dict = {
+                "calendly_reg_email": incoming_webhook_data.get('email'),
+                "process_id": incoming_webhook_data.get('utm_source'),
+                "type_of_stage": incoming_webhook_data.get('utm_medium'),
+                "stage_in_funnel": incoming_webhook_data.get('utm_content'),
+                "is_new_process": process_type,
+                "student_name": incoming_webhook_data.get('student_name'),
+                "mock_interview_datetime": incoming_webhook_data.get('mock_interview_datetime'),
+                "additional_details": incoming_webhook_data.get('additional_details'),
+                "mentor_email": incoming_webhook_data.get('mentor_email'),
+                "mentor_name": incoming_webhook_data.get('mentor_name'),
+        }
+    else:
+        return_dict = {"error": "Invalid type of process"}
     
     return return_dict
-
