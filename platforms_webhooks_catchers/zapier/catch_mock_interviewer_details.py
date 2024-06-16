@@ -31,29 +31,29 @@ def get_mock_interviewer_data_from_zapier(incoming_webhook_data: dict) -> dict:
     
     if process_type == "new_process":
         return_dict = {
-                "calendly_reg_email": incoming_webhook_data.get('email'),
-                "student_email": incoming_webhook_data.get('utm_source'),
-                "company_name": incoming_webhook_data.get('utm_medium'),
-                "job_title": incoming_webhook_data.get('utm_content'),
+                "calendly_reg_email": incoming_webhook_data.get('email').lower(),
+                "student_email": incoming_webhook_data.get('utm_source').lower(),
+                "company_name": incoming_webhook_data.get('utm_medium').title(),
+                "job_title": incoming_webhook_data.get('utm_content').title(),
                 "is_new_process": process_type,
-                "student_name": incoming_webhook_data.get('student_name'),
+                "student_name": incoming_webhook_data.get('student_name').title(),
                 "mock_interview_datetime": incoming_webhook_data.get('mock_interview_datetime'),
                 "additional_details": incoming_webhook_data.get('additional_details'),
-                "mentor_email": incoming_webhook_data.get('mentor_email'),
-                "mentor_name": incoming_webhook_data.get('mentor_name'),
+                "mentor_email": incoming_webhook_data.get('mentor_email').lower(),
+                "mentor_name": incoming_webhook_data.get('mentor_name').title(),
         }
     elif process_type == "continue_process":
         return_dict = {
-                "calendly_reg_email": incoming_webhook_data.get('email'),
+                "calendly_reg_email": incoming_webhook_data.get('email').lower(),
                 "process_id": incoming_webhook_data.get('utm_source'),
                 "type_of_stage": incoming_webhook_data.get('utm_medium'),
                 "stage_in_funnel": incoming_webhook_data.get('utm_content'),
                 "is_new_process": process_type,
-                "student_name": incoming_webhook_data.get('student_name'),
+                "student_name": incoming_webhook_data.get('student_name').title(),
                 "mock_interview_datetime": incoming_webhook_data.get('mock_interview_datetime'),
                 "additional_details": incoming_webhook_data.get('additional_details'),
-                "mentor_email": incoming_webhook_data.get('mentor_email'),
-                "mentor_name": incoming_webhook_data.get('mentor_name'),
+                "mentor_email": incoming_webhook_data.get('mentor_email').lower(),
+                "mentor_name": incoming_webhook_data.get('mentor_name').title(),
         }
     else:
         return_dict = {"error": "Invalid type of process"}
