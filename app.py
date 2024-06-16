@@ -8,6 +8,7 @@ from resources.continue_process import blueprint as continue_process_blp
 from resources.mock_interviews import blueprint as mock_interview_details_blp
 from resources.adding_mentors import blueprint as add_mentors_blp
 from resources.student_applications import blueprint as student_applications_blp
+from resources.job_ready_students_deals import blueprint as job_ready_students_deals_blp
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 
@@ -35,6 +36,7 @@ def create_app(db_url=None):
     api.register_blueprint(add_mentors_blp)
     api.register_blueprint(mock_interview_details_blp)
     api.register_blueprint(student_applications_blp)
+    api.register_blueprint(job_ready_students_deals_blp)
     
     return app
     

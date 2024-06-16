@@ -36,3 +36,4 @@ class JobReadyStudentModel(db.Model):
     student_affiliation_project = db.Column(db.String, nullable=True)
     smart_matcher_notification = db.Column(db.Boolean, nullable=False, default=True)
 
+    hubspot_current_deal_stage = db.Column(db.String, nullable=True)
