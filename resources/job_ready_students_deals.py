@@ -29,5 +29,5 @@ class JobReadyStudent(MethodView):
         
         db.session.commit()
         
-        return job_ready_student_dict['id'], 201
+        return job_ready_student_dict['hubspot_id'], 201
 

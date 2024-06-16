@@ -1,7 +1,7 @@
 def job_ready_catch_deal_stage(_data):
     """ Whewnever a deal (student) changes their deal stage, we need to update the deal stage in the database."""
     identifying_dict = dict(hubspot_id=str(_data.get("hs_object_id")),
-                            hubspot_current_deal_stage=_data.get("dealstage")
+                            hubspot_current_deal_stage = _data.get("dealname")
                            )
     
     return identifying_dict
