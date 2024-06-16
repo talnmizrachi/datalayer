@@ -19,8 +19,9 @@ def payload_to_job_ready_student_dict(payload):
                               "tags": None,
                               "jaq": payload.get('jaq'),
                               "school_master_name": payload.get('school_master_name'),
-                              "csa_hs_id": payload.get('csa_hs_id'),
+                              "csa_fullname": payload.get('csa_name'),
                               "created_at": payload.get('created_at'),
                               "smart_matcher_notification": payload.get('smart_matcher_notification'),
+                              "is_employed":payload.get('is_employed'),
                               }
     return job_ready_student_dict
