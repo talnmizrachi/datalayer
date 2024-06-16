@@ -1,10 +1,20 @@
 import datetime
 
 
-def catch_student_application_from_zapier(payload, source):
+def catch_student_application_from_campus(payload, source):
     """
-    Catch student application from zapier -  https://zapier.com/editor/217954973/published
-    This is stricctly from the smart matcher
+    Catch student application from the campus
+    
+    payload looks like this:
+    {"job_id": "123456",
+    "student_id": ""
+    "job_published_timestamp": ""
+    "job_offered_to_student_timestamp": ""
+    "student_applied": ""
+    "no_apply_reason": ""
+    "location": ""
+    }
+    
     """
     
     this_dict = {"job_id": payload.get("job_id"),

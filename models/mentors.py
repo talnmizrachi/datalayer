@@ -11,5 +11,6 @@ class MentorModel(db.Model):
     mentor_email = db.Column(db.String, nullable=False)
     mentor_languages = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    test = db.Column(db.String, nullable=True)
 
 
