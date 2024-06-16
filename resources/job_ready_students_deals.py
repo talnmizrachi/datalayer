@@ -27,7 +27,7 @@ class JobReadyStudent(MethodView):
                     f" {job_ready_student_dict.get('hubspot_current_deal_stage')}")
         this_student.hubspot_current_deal_stage = job_ready_student_dict.get('hubspot_current_deal_stage')
         
-        db.session.commit(this_student)
+        db.session.commit()
         
         return job_ready_student_dict['id'], 201
 
