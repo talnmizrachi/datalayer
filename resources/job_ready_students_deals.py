@@ -17,9 +17,12 @@ class JobReadyStudent(MethodView):
     
     def post(self):
         data = request.get_json()
-        logger.info(f"Onboarding new student:\t{data}")
+        logger.info(f"Got a deal change:\t{data}")
         job_ready_student_dict = job_ready_catch_deal_stage(data)
         this_student = JobReadyStudentModel.query.filter_by(hubspot_id=job_ready_student_dict['hubspot_id']).first()
+        if this_student is None:
+            logger.info(f"{this_student} id is missing from the job ready students.")
+            return 404, f"{this_student} id is missing from the job ready students."
         logger.info(f"Th student {this_student} changed from {this_student.hubspot_current_deal_stage} to"
                     f" {job_ready_student_dict.get('hubspot_current_deal_stage')}")
         this_student.hubspot_current_deal_stage = job_ready_student_dict.get('hubspot_current_deal_stage')
