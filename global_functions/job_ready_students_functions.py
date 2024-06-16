@@ -1,11 +1,21 @@
 from uuid import uuid4
 
 
+def domain_mapper(domain):
+
+    if domain.lower().find('data')>-1:
+        return "data"
+    elif domain.lower().find('cyber')>-1:
+        return "cyber"
+    else:
+        return domain
+
+
 def payload_to_job_ready_student_dict(payload):
     job_ready_student_dict = {'id': payload.get('id') or str(uuid4().hex),
                               "student_ms_id": payload.get('student_ms_id'),
                               "hubspot_id": payload.get('hs_object_id'),
-                              "domain": payload.get('domain'),
+                              "domain": domain_mapper(payload.get('domain')),
                               'student_firstname': payload.get('student_firstname'),
                               'student_lastname': payload.get('student_lastname'),
                               'student_email': payload.get('email__deal_'),

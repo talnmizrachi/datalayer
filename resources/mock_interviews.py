@@ -30,14 +30,17 @@ class MockInterviewSetting(MethodView):
         logger.info(data)
         mock_int_dict = get_mock_interviewer_data_from_zapier(data)
         logger.info(mock_int_dict)
-        
-        if mock_int_dict.get('is_new_process') == "new_process":
-            this_mock_object = add_mock_interview_details_for_new_processes(mock_int_dict)
-        elif mock_int_dict.get('is_new_process') == "continue_process":
-            ...
-        else:
+
+        if data.get('is_new_process') not in ("new_process", "continue_process"):
             abort(400, message="is_new_process must be 'new_process' or 'continue_process'")
-        
+
+        if data.get('is_new_process') == "new_process":
+            this_mock_object = add_mock_interview_details_for_new_processes(mock_int_dict)
+        else:
+            #only for continue process
+            # data.get('is_new_process') == "continue_process"
+            ...
+
         db.session.commit()
         
         return mock_int_dict, 201

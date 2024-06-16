@@ -17,7 +17,7 @@ class JobReadyStudent(MethodView):
     
     def post(self):
         data = request.get_json()
-        logger.info(f"Onboarding new student:\t:{data}")
+        logger.info(f"Onboarding new student:\t{data}")
         job_ready_student_dict = payload_to_job_ready_student_dict(data)
         job_ready_student_object = JobReadyStudentModel(**job_ready_student_dict)
         
