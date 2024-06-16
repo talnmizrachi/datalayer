@@ -4,11 +4,11 @@ from uuid import uuid4
 def payload_to_job_ready_student_dict(payload):
     job_ready_student_dict = {'id': payload.get('id') or str(uuid4().hex),
                               "student_ms_id": payload.get('student_ms_id'),
-                              "hubspot_id": payload.get('hubspot_id'),
+                              "hubspot_id": payload.get('hs_object_id'),
                               "domain": payload.get('domain'),
                               'student_firstname': payload.get('student_firstname'),
                               'student_lastname': payload.get('student_lastname'),
-                              'student_email': payload.get('student_email'),
+                              'student_email': payload.get('email__deal_'),
                               "student_country": payload.get('student_country'),
                               "student_state": payload.get('student_state'),
                               "student_city": payload.get('student_city'),

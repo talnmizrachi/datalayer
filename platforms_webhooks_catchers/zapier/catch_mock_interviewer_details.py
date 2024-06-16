@@ -56,6 +56,6 @@ def get_mock_interviewer_data_from_zapier(incoming_webhook_data: dict) -> dict:
                 "mentor_name": incoming_webhook_data.get('mentor_name').title(),
         }
     else:
-        return_dict = {"error": "Invalid type of process"}
+        return_dict = {"error": "Invalid type of process", "payload": incoming_webhook_data}
     
     return return_dict
