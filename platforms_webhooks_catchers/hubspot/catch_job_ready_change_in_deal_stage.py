@@ -1,6 +1,6 @@
 from global_functions.LoggingGenerator import Logger
 import os
-from flask import abort
+from flask_smorest import abort
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 
@@ -21,7 +21,11 @@ def job_ready_catch_deal_stage(_data):
     if _data.get("dealstage") not  in id_to_name.keys():
         logger.error(f"Deal with details: {_data} is not matching")
         abort(404, message='no deal stage found')
-        
+
+    if str(_data.get('hs_object_id')) == '210181603':
+        logger.error(f"Deal with details: {_data} is not matching")
+        abort(404, message='no deal stage found')
+
     identifying_dict = dict(hubspot_id=id_to_name[_data.get("hs_object_id")],
                             hubspot_current_deal_stage=_data.get("dealstage"))
   
