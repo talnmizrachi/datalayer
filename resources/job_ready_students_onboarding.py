@@ -18,9 +18,7 @@ class JobReadyStudent(MethodView):
     def post(self):
 
         data = request.get_json()
-        if data.get('email__deal_', "test").lower().find("test") == -1:
-            abort(404, message='no email found')
-            
+        
         logger.info(f"Onboarding new student:\t{data}")
 
         job_ready_student_dict = payload_to_job_ready_student_dict(data)
