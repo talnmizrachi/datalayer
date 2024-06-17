@@ -13,7 +13,7 @@ def domain_mapper(domain):
 
 
 def payload_to_job_ready_student_dict(payload):
-    if payload.get('domain') is None:
+    if payload.get('domain') is None or payload.get('email__deal_') is None:
         abort(404, message="Domain was not found")
     job_ready_student_dict = {'id': payload.get('id') or str(uuid4().hex),
                               "student_ms_id": payload.get('student_ms_id'),
