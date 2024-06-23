@@ -24,7 +24,7 @@ def payload_to_job_ready_student_dict(payload):
                               }
     
     stage_dict = {
-            "student_id":job_ready_student_dict['id'],
+            "student_id": job_ready_student_dict['id'],
             "hubspot_id": job_ready_student_dict['hubspot_id'],
             "stage": job_ready_student_dict['hubspot_current_deal_stage']
     }
