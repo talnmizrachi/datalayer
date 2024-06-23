@@ -24,6 +24,7 @@ class JobReadyStudent(MethodView):
         
         job_ready_student_object = JobReadyStudentModel(**job_ready_student_dict)
         student_stage_obj = StudentStagesV3(**stage_dict)
+        
         write_object_to_db(job_ready_student_object)
         write_object_to_db(student_stage_obj)
         
