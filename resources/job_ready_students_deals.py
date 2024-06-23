@@ -29,14 +29,12 @@ class JobReadyStudent(MethodView):
         
         this_student.hubspot_current_deal_stage = job_ready_student_dict.get('hubspot_current_deal_stage')
         
-        stage_dict = {"student_id" : this_student.student_id,
-                      "hubspot_id" : this_student.hubspot_id,
-                       "stage" : this_student.hubspot_current_deal_stage,
-                      
+        stage_dict = {"student_id": this_student.id,
+                      "hubspot_id": this_student.hubspot_id,
+                      "stage": this_student.hubspot_current_deal_stage,
+                      }
         
-        }
         student_stage_obj = StudentStagesV3(**stage_dict)
         write_object_to_db(student_stage_obj)
         
         return str(job_ready_student_dict['hubspot_id']), 201
-
