@@ -14,8 +14,18 @@ def job_ready_catch_deal_stage(_data):
             175176968: "Material Ready",
             175176969: "Job Seeking",
             175176970: "Contacted by Employer",
-            175176971: "Closed Won",
-            175176972: "Closed Lost"
+            175176971: "Closed Won - Got an Interview",
+            175176972: "Closed Lost - Ghost",
+            175248403: "First Interview Scheduled",
+            175248405: "First Interview",
+            175248404: "Additional Interview",
+            189491265: "Final Interview",
+            175248406: "Job Offer Received",
+            175248408: "Closed Won - Job Secured",
+            175248409: "Closed Lost - Job Not Secured",
+            198705823: "Double",
+            202186266: "Fraudulent",
+            
     }
     
     if _data.get("dealstage") not in id_to_name.keys():
