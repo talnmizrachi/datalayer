@@ -15,26 +15,26 @@ def domain_mapper(domain):
 def payload_to_job_ready_student_dict(payload):
     if payload.get('domain') is None or payload.get('email__deal_') is None:
         abort(404, message="Domain was not found")
+    
     job_ready_student_dict = {'id': payload.get('id') or str(uuid4().hex),
                               "student_ms_id": payload.get('student_ms_id'),
                               "hubspot_id": payload.get('hs_object_id'),
                               "domain": domain_mapper(payload.get('domain')),
-                              'student_firstname': payload.get('student_firstname'),
-                              'student_lastname': payload.get('student_lastname'),
-                              'student_email': payload.get('email__deal_'),
                               "student_country": payload.get('student_country'),
                               "student_state": payload.get('student_state'),
                               "student_city": payload.get('student_city'),
-                              "student_affiliation_project": payload.get('student_affiliation_project'),
-                              "student_linkedin_link": payload.get('student_linkedin_link'),
-                              "student_cv_link": payload.get('student_cv_link'),
-                              "languages_fluency": payload.get('languages_fluency'),
                               "tags": None,
                               "jaq": payload.get('jaq'),
                               "school_master_name": payload.get('school_master_name'),
-                              "csa_fullname": payload.get('csa_name'),
+                              "csa_fullname": payload.get('hubspot_owner_id'),
                               "created_at": payload.get('created_at'),
-                              "smart_matcher_notification": payload.get('smart_matcher_notification'),
-                              "is_employed":payload.get('is_employed'),
+                              "is_employed": payload.get('is_employed', False),
+                              "hubspot_current_deal_stage": "Job Ready"
                               }
-    return job_ready_student_dict
+    
+    stage_dict = {
+            "student_id":job_ready_student_dict['id'],
+            "hubspot_id": job_ready_student_dict['hubspot_id'],
+            "stage": job_ready_student_dict['hubspot_current_deal_stage']
+    }
+    return job_ready_student_dict, stage_dict

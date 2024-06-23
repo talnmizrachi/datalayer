@@ -5,7 +5,7 @@ from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 import os
-from models import JobReadyStudentModel
+from models import JobReadyStudentModel, StudentStagesV3
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 
@@ -20,11 +20,12 @@ class JobReadyStudent(MethodView):
         data = request.get_json()
         
         logger.info(f"Onboarding new student:\t{data}")
-
-        job_ready_student_dict = payload_to_job_ready_student_dict(data)
-        job_ready_student_object = JobReadyStudentModel(**job_ready_student_dict)
+        job_ready_student_dict, stage_dict = payload_to_job_ready_student_dict(data)
         
+        job_ready_student_object = JobReadyStudentModel(**job_ready_student_dict)
+        student_stage_obj = StudentStagesV3(**stage_dict)
         write_object_to_db(job_ready_student_object)
+        write_object_to_db(student_stage_obj)
         
         return job_ready_student_dict['id'], 201
 
@@ -52,10 +53,12 @@ class JobReadyStudent(MethodView):
         data = request.get_json()
         student_ids = []
         for student in data:
-            job_ready_student_dict = payload_to_job_ready_student_dict(student)
+            job_ready_student_dict, stage_dict = payload_to_job_ready_student_dict(student)
             job_ready_student_object = JobReadyStudentModel(**job_ready_student_dict)
+            student_stage_obj = StudentStagesV3(**stage_dict)
             student_ids.append(job_ready_student_object.id)
             
             write_object_to_db(job_ready_student_object)
+            write_object_to_db(student_stage_obj)
         
         return {"ids": student_ids}, 201

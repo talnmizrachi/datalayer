@@ -24,6 +24,7 @@ class JobReadyStudent(MethodView):
             return  f"{this_student} id is missing from the job ready students.", 404
         logger.info(f"Th student {this_student} changed from {this_student.hubspot_current_deal_stage} to"
                     f" {job_ready_student_dict.get('hubspot_current_deal_stage')}")
+        
         this_student.hubspot_current_deal_stage = job_ready_student_dict.get('hubspot_current_deal_stage')
         
         db.session.commit()
