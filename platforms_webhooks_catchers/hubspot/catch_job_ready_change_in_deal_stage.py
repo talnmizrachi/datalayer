@@ -11,7 +11,7 @@ def job_ready_catch_deal_stage(_data):
     id_to_name = {
             175176966: "Job Ready",
             175176967: "1st CSA Meeting Conducted",
-            175175968: "Material Ready",
+            175176968: "Material Ready",
             175176969: "Job Seeking",
             175176970: "Contacted by Employer",
             175176971: "Closed Won",
@@ -19,10 +19,6 @@ def job_ready_catch_deal_stage(_data):
     }
     
     if _data.get("dealstage") not in id_to_name.keys():
-        logger.error(f"Deal with details: {_data} is not matching")
-        abort(404, message='no deal stage found')
-
-    if str(_data.get('hs_object_id')) == '210181603':
         logger.error(f"Deal with details: {_data} is not matching")
         abort(404, message='no deal stage found')
 
