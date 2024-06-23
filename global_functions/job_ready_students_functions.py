@@ -2,24 +2,15 @@ from uuid import uuid4
 from flask_smorest import abort
 
 
-def domain_mapper(domain):
-
-    if domain.lower().find('data')>-1:
-        return "data"
-    elif domain.lower().find('cyber')>-1:
-        return "cyber"
-    else:
-        return domain
-
 
 def payload_to_job_ready_student_dict(payload):
-    if payload.get('domain') is None or payload.get('email__deal_') is None:
+    if payload.get('domain') is None:
         abort(404, message="Domain was not found")
     
     job_ready_student_dict = {'id': payload.get('id') or str(uuid4().hex),
                               "student_ms_id": payload.get('student_ms_id'),
                               "hubspot_id": payload.get('hs_object_id'),
-                              "domain": domain_mapper(payload.get('domain')),
+                              "domain": payload.get('domain'),
                               "student_country": payload.get('student_country'),
                               "student_state": payload.get('student_state'),
                               "student_city": payload.get('student_city'),
