@@ -22,11 +22,17 @@ class JobReadyStudent(MethodView):
         logger.info(f"Onboarding new student:\t{data}")
         job_ready_student_dict, stage_dict = payload_to_job_ready_student_dict(data)
         
+        logger.debug(f"Onboarding new student:\t{job_ready_student_dict}")
+        logger.debug(f"New student stage:\t{stage_dict}")
+        
         job_ready_student_object = JobReadyStudentModel(**job_ready_student_dict)
         student_stage_obj = StudentStagesV3(**stage_dict)
         
         write_object_to_db(job_ready_student_object)
+        logger.debug(f"wrote {job_ready_student_dict['id']} to db")
         write_object_to_db(student_stage_obj)
+        logger.debug(f"wrote stage {stage_dict['id']} to db")
+        logger.info(f"Onboarded new student:\t{job_ready_student_dict['id']}")
         
         return job_ready_student_dict['id'], 201
 
