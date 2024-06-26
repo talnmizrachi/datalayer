@@ -7,7 +7,7 @@ def payload_to_job_ready_student_dict(payload):
         abort(404, message="Domain was not found")
     
     job_ready_student_dict = {'id': payload.get('id') or str(uuid4().hex),
-                              "student_ms_id": str(payload.get('student_ms_id')),
+                              "student_ms_id": payload.get('student_ms_id'),
                               "hubspot_id": str(payload.get('hs_object_id')),
                               "domain": payload.get('domain'),
                               "student_country": payload.get('student_country'),
