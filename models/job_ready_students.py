@@ -21,7 +21,7 @@ class JobReadyStudentModel(db.Model):
     
     is_employed = db.Column(db.Boolean, nullable=False, default=False)
     
-    csa_fullname = db.Column(db.String, nullable=True)
+    csa_hubspot_id = db.Column(db.String, nullable=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_timestamp = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     

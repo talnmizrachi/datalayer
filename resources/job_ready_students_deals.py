@@ -28,6 +28,7 @@ class JobReadyStudent(MethodView):
                     f" {job_ready_student_dict.get('hubspot_current_deal_stage')}")
         
         this_student.hubspot_current_deal_stage = job_ready_student_dict.get('hubspot_current_deal_stage')
+        this_student.csa_hubspot_id = job_ready_student_dict.get('csa_fullname')
         
         stage_dict = {"student_id": this_student.id,
                       "hubspot_id": this_student.hubspot_id,
