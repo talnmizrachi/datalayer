@@ -19,7 +19,7 @@ def payload_to_job_ready_student_dict(payload):
                               "csa_fullname": payload.get('hubspot_owner_id'),
                               "created_at": payload.get('created_at'),
                               "is_employed": payload.get('is_employed', False),
-                              "hubspot_current_deal_stage": "Job Ready"
+                              "hubspot_current_deal_stage": payload.get("hubspot_current_deal_stage", "Job Ready")
                               }
     
     stage_dict = {
