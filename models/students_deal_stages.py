@@ -9,6 +9,6 @@ class StudentStagesV3(db.Model):
     student_id = db.Column(db.String, nullable=False)
     hubspot_id = db.Column(db.String, nullable=False)
     stage = db.Column(db.String, nullable=False)
-    timestamp = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
+    created_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     
 
