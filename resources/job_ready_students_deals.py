@@ -13,8 +13,35 @@ logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 blueprint = Blueprint("deals' change from hubspot", __name__, description="This_is_a_templated_blueprint")
 
 
+def change_last_deal_to_deal_with_relevance(this_student_id, current_deal):
+    valid_stages = ("First Interview Scheduled", "First Interview",
+                    "Additional Interview", "Final Interview", "Job Offer Received")
+    stages = StudentStagesV3.query.filter_by(student_id=this_student_id).order_by(
+        StudentStagesV3.created_at.desc()).all()
+    
+    if current_deal in ("Fraudulent", "Closed Lost - Job Not Secured"):
+        for stage in stages:
+            if stage.stage in valid_stages:
+                return stage.stage
+            else:
+                return "Job Seeking"
+    
+    if current_deal in ("Double"):
+        return "Closed Won - Got an Interview"
+    
+    return current_deal
+
+
 @blueprint.route('/deal_stage_change', methods=['POST'])
 class JobReadyStudent(MethodView):
+    """
+    
+    incoming payload -
+    {"dealstage":
+    "hs_object_id":
+    "hubspot_owner_id":
+    }
+    """
     
     def post(self):
         data = request.get_json()
@@ -24,17 +51,16 @@ class JobReadyStudent(MethodView):
         if this_student is None:
             return f"{this_student} id is missing from the job ready students.", 404
         
-        logger.info(f"Th student {this_student} changed from {this_student.hubspot_current_deal_stage} to"
-                    f" {job_ready_student_dict.get('hubspot_current_deal_stage')}")
+        this_stage = job_ready_student_dict.get("hubspot_current_deal_stage")
+        correct_stage = change_last_deal_to_deal_with_relevance(this_student.id, this_stage)
         
-        this_student.hubspot_current_deal_stage = job_ready_student_dict.get('hubspot_current_deal_stage')
+        this_student.hubspot_current_deal_stage = correct_stage
         this_student.csa_hubspot_id = job_ready_student_dict.get('csa_fullname')
         
         stage_dict = {"student_id": this_student.id,
                       "hubspot_id": this_student.hubspot_id,
-                      "stage": this_student.hubspot_current_deal_stage,
+                      "stage": this_stage,
                       }
-        
         student_stage_obj = StudentStagesV3(**stage_dict)
         write_object_to_db(student_stage_obj)
         
