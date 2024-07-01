@@ -19,7 +19,7 @@ def payload_to_job_ready_student_dict(payload):
                               "student_country": payload.get('student_country'),
                               "student_state": payload.get('student_state'),
                               "student_city": payload.get('student_city'),
-                              "school_master_id": payload.get('school_master_name'),
+                              "schoolmaster_id": payload.get('school_master_name'),
                               "csa_hubspot_id": payload.get('hubspot_owner_id'),
                               "created_at": payload.get('created_at'),
                               "is_employed": payload.get('is_employed', False),

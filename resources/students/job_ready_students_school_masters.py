@@ -23,13 +23,13 @@ class JobReadyStudent(MethodView):
     incoming payload -
     {
     "hs_object_id":
-    "hubspot_owner_id":
+    "students_school_masters_blp":
     }
     """
     
     def post(self):
         data = request.get_json()
-        logger.info(f"Got a owner change:\t{data}")
+        logger.info(f"Got a Schoolmasters change:\t{data}")
         this_student = JobReadyStudentModel.query.filter_by(hubspot_id=str(data['hs_object_id'])).first()
         if this_student is None:
             return f"{this_student} id is missing from the job ready students.", 202
@@ -46,8 +46,8 @@ class JobReadyStudent(MethodView):
         this_student.schoolmaster_id = new_contact_schoolmaster['student_hubspot_schoolmaster_id']
         this_student.updated_timestamp = datetime.datetime.now()
         
-        student_owner_change = StudentSchoolMasterChangesModel(**new_contact_schoolmaster)
-        write_object_to_db(student_owner_change)
+        student_schholmaster_change = StudentSchoolMasterChangesModel(**new_contact_schoolmaster)
+        write_object_to_db(student_schholmaster_change)
         
         return str(new_contact_schoolmaster['student_hubspot_id']), 201
 
