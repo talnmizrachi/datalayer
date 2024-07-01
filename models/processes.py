@@ -16,17 +16,12 @@ class ProcessModel(db.Model):
     student_ms_id = db.Column(db.String, nullable=True)
     student_id = db.Column(db.String,  nullable=False)
     
-    student_firstname = db.Column(db.String, nullable=False)
-    student_lastname = db.Column(db.String, nullable=False)
     domain = db.Column(db.String, nullable=False)
-    email_address = db.Column(db.String, nullable=False)
     
     company_name = db.Column(db.String, nullable=False)
     job_title = db.Column(db.String, nullable=False)
     job_description = db.Column(db.String, nullable=False)
     
-    drive_url = db.Column(db.String, nullable=True)
-    cv_url = db.Column(db.String, nullable=False)
     process_start_date = db.Column(db.DateTime, nullable=False)
     process_end_date = db.Column(db.Date, nullable=True)
     

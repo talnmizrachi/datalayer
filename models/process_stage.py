@@ -7,8 +7,6 @@ class StageModel(db.Model):
     
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid4().hex))
     process_id = db.Column(db.String, db.ForeignKey('processes.id'), nullable=False)
-    student_firstname = db.Column(db.String, nullable=False)
-    student_lastname = db.Column(db.String, nullable=False)
     stage_in_funnel = db.Column(db.String, nullable=False)
     type_of_stage = db.Column(db.String, nullable=False)
     had_home_assignment = db.Column(db.Boolean, nullable=False, default=False)
