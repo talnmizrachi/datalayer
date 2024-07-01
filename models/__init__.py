@@ -6,3 +6,4 @@ from models.students_deal_stages import StudentStagesV3
 from models.processes import ProcessModel
 from models.process_stage import StageModel
 from models.student_owner_changes import StudentOwnerChangesModel
+from models.student_school_masters_changes import StudentSchoolMasterChangesModel

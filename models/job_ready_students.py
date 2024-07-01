@@ -15,7 +15,7 @@ class JobReadyStudentModel(db.Model):
     student_state = db.Column(db.String, nullable=True)
     student_city = db.Column(db.String, nullable=False)
     
-    school_master_id = db.Column(db.String, nullable=True)
+    schoolmaster_id = db.Column(db.String, nullable=True)
     
     is_employed = db.Column(db.Boolean, nullable=False, default=False)
     
