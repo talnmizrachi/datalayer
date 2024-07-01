@@ -40,4 +40,4 @@ class JobReadyStudent(MethodView):
         student_owner_change = StudentOwnerChangesModel(**new_contact_owner)
         write_object_to_db(student_owner_change)
         
-        return str(new_contact_owner['hubspot_id']), 201
+        return str(new_contact_owner['student_hubspot_id']), 201
