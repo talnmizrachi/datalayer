@@ -2,7 +2,7 @@ from db import db
 from uuid import uuid4
 
 
-class StudentOwnerChanges(db.Model):
+class StudentOwnerChangesModel(db.Model):
     __tablename__ = 'student_owner_changes'
     
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid4().hex))
