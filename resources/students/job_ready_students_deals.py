@@ -63,7 +63,7 @@ class JobReadyStudent(MethodView):
             this_student.is_employed = True
         
         this_student.hubspot_current_deal_stage = correct_stage
-        this_student.csa_hubspot_id = job_ready_student_dict.get('csa_fullname')
+        this_student.student_owner = job_ready_student_dict.get('csa_fullname')
         this_student.updated_timestamp = datetime.datetime.now()
         
         stage_dict = {"student_id": this_student.id,
