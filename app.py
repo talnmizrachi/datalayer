@@ -2,13 +2,14 @@ from flask import Flask
 import os
 from db import db
 from flask_smorest import Api
-from resources.job_ready_students_onboarding import blueprint as jr_students_blp
-from resources.processes_endpoints import blueprint as new_process_init_blp
-from resources.continue_process import blueprint as continue_process_blp
-from resources.mock_interviews import blueprint as mock_interview_details_blp
+from resources.students.job_ready_students_onboarding import blueprint as jr_students_blp
+from resources.v3.processes_endpoints import blueprint as new_process_init_blp
+from resources.v3.continue_process import blueprint as continue_process_blp
+from resources.v3.mock_interviews import blueprint as mock_interview_details_blp
 from resources.adding_mentors import blueprint as add_mentors_blp
 from resources.student_applications import blueprint as student_applications_blp
-from resources.job_ready_students_deals import blueprint as job_ready_students_deals_blp
+from resources.students.job_ready_students_deals import blueprint as job_ready_students_deals_blp
+from resources.students.job_ready_students_owners import blueprint as student_owners_change_blp
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 
@@ -37,6 +38,7 @@ def create_app(db_url=None):
     api.register_blueprint(mock_interview_details_blp)
     api.register_blueprint(student_applications_blp)
     api.register_blueprint(job_ready_students_deals_blp)
+    api.register_blueprint(student_owners_change_blp)
     
     return app
     

@@ -35,6 +35,9 @@ def change_last_deal_to_deal_with_relevance(this_student_id, current_deal):
 @blueprint.route('/deal_stage_change', methods=['POST'])
 class JobReadyStudent(MethodView):
     """
+    Workflow URL - https://app.hubspot.com/workflows/9484219/platform/flow/587156903/edit
+    
+    Included deals - Getting Interviews, Passing Interviews
     
     incoming payload -
     {"dealstage":
