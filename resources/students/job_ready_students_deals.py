@@ -1,3 +1,5 @@
+import datetime
+
 from global_functions.LoggingGenerator import Logger
 from db import db
 from global_functions.general_functions import write_object_to_db
@@ -57,8 +59,12 @@ class JobReadyStudent(MethodView):
         this_stage = job_ready_student_dict.get("hubspot_current_deal_stage")
         correct_stage = change_last_deal_to_deal_with_relevance(this_student.id, this_stage)
         
+        if this_stage == "Closed Won - Job Secured":
+            this_student.is_employed = True
+        
         this_student.hubspot_current_deal_stage = correct_stage
         this_student.csa_hubspot_id = job_ready_student_dict.get('csa_fullname')
+        this_student.updated_timestamp = datetime.datetime.now()
         
         stage_dict = {"student_id": this_student.id,
                       "hubspot_id": this_student.hubspot_id,

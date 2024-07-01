@@ -1,4 +1,3 @@
-from models.career_advisors import CareerSuccessAdvisorModel
 from models.job_ready_students import JobReadyStudentModel
 from models.mock_interviews import MockInterviewModel
 from models.process_stage_questions import RealQuestion
