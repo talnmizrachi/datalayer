@@ -43,7 +43,7 @@ class JobReadyStudent(MethodView):
                 new_contact_owner['student_hubspot_owner_id'] == "None"):
             new_contact_owner['student_hubspot_owner_id'] = None
             
-        this_student.student_owner = new_contact_owner['student_hubspot_id']
+        this_student.student_owner = new_contact_owner['student_hubspot_owner_id']
         this_student.updated_timestamp = datetime.datetime.now()
         
         student_owner_change = StudentOwnerChangesModel(**new_contact_owner)
