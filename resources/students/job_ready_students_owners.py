@@ -1,3 +1,5 @@
+import datetime
+
 from global_functions.LoggingGenerator import Logger
 from global_functions.general_functions import write_object_to_db
 from flask import request
@@ -36,8 +38,20 @@ class JobReadyStudent(MethodView):
                 "student_hubspot_id": str(data['hs_object_id']),
                 "student_hubspot_owner_id": str(data['hubspot_owner_id']),
                       }
+        
+        if (new_contact_owner['student_hubspot_owner_id'].isspace() or
+                new_contact_owner['student_hubspot_owner_id'] == "None"):
+            new_contact_owner['student_hubspot_owner_id'] = None
+            
         this_student.csa_hubspot_id = new_contact_owner['student_hubspot_id']
+        this_student.updated_timestamp = datetime.datetime.now()
+        
         student_owner_change = StudentOwnerChangesModel(**new_contact_owner)
         write_object_to_db(student_owner_change)
         
         return str(new_contact_owner['student_hubspot_id']), 201
+
+
+if __name__ == '__main__':
+    
+    print(datetime.datetime.now())
