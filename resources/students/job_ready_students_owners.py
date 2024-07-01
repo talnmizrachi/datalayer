@@ -33,10 +33,10 @@ class JobReadyStudent(MethodView):
             return f"{this_student} id is missing from the job ready students.", 202
         
         new_contact_owner = {
-                "student_hubspot_id": data['hs_object_id'],
-                "student_hubspot_owner_id": data['hubspot_owner_id'],
+                "student_hubspot_id": str(data['hs_object_id']),
+                "student_hubspot_owner_id": str(data['hubspot_owner_id']),
                       }
-        this_student.csa_hubspot_id = data['hubspot_owner_id']
+        this_student.csa_hubspot_id = new_contact_owner['student_hubspot_id']
         student_owner_change = StudentOwnerChangesModel(**new_contact_owner)
         write_object_to_db(student_owner_change)
         
