@@ -37,6 +37,11 @@ def payload_to_job_ready_student_dict(payload):
 def onboard_function(data):
     job_ready_student_dict, stage_dict = payload_to_job_ready_student_dict(data)
     
+    is_existing = JobReadyStudentModel.query.filter_by(hubspot_id = job_ready_student_dict['hubspot_id'])
+    
+    if is_existing is not None:
+        return f"{job_ready_student_dict['hubspot_id']} is already onboarded.", 202
+    
     job_ready_student_object = JobReadyStudentModel(**job_ready_student_dict)
     student_stage_obj = StudentStagesV3(**stage_dict)
     
