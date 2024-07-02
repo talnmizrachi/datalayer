@@ -14,7 +14,11 @@ blueprint = Blueprint('Onboard a student', __name__, description="This_is_a_temp
 class JobReadyStudent(MethodView):
     
     def post(self):
-
+        """
+        workflow url = https://app.hubspot.com/workflows/9484219/platform/flow/585666594
+        
+        :return:
+        """
         data = request.get_json()
         job_ready_student_dict = onboard_function(data)
         return job_ready_student_dict['id'], 201
