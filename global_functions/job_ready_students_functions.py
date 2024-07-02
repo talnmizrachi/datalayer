@@ -1,6 +1,6 @@
 from uuid import uuid4
 from flask_smorest import abort
-from models import JobReadyStudentModel, StudentStagesV3
+from models import JobReadyStudentModel, StudentStagesV3, ProcessModel
 from global_functions.general_functions import write_object_to_db
 from global_functions.LoggingGenerator import Logger
 import os
@@ -11,8 +11,9 @@ logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 def payload_to_job_ready_student_dict(payload):
     if payload.get('domain') is None:
         abort(404, message="Domain was not found")
+    test_for_open_process = ProcessModel.query.filter_by(hubspot_id=str(payload.get('hs_object_id'))).first()
     
-    job_ready_student_dict = {'id': payload.get('id') or str(uuid4().hex),
+    job_ready_student_dict = {'id': test_for_open_process.student_id if test_for_open_process else str(uuid4().hex),
                               "student_ms_id": payload.get('student_ms_id'),
                               "hubspot_id": str(payload.get('hs_object_id')),
                               "domain": payload.get('domain'),
@@ -37,7 +38,7 @@ def payload_to_job_ready_student_dict(payload):
 def onboard_function(data):
     job_ready_student_dict, stage_dict = payload_to_job_ready_student_dict(data)
     
-    is_existing = JobReadyStudentModel.query.filter_by(hubspot_id = job_ready_student_dict['hubspot_id'])
+    is_existing = JobReadyStudentModel.query.filter_by(hubspot_id = job_ready_student_dict['hubspot_id']).first()
     
     if is_existing is not None:
         return f"{job_ready_student_dict['hubspot_id']} is already onboarded.", 202
