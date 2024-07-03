@@ -10,7 +10,7 @@ from models import JobReadyStudentModel, StudentCohortChangesModel
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 
-blueprint = Blueprint("owners' change from hubspot", __name__, description="This_is_a_templated_blueprint")
+blueprint = Blueprint("cohorts' change from hubspot", __name__, description="This_is_a_templated_blueprint")
 
 
 @blueprint.route('/cohort_change', methods=['POST'])
