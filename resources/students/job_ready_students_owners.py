@@ -41,7 +41,7 @@ class JobReadyStudent(MethodView):
                       }
         
         if (new_contact_owner['student_hubspot_owner_id'].isspace() or
-                new_contact_owner['student_hubspot_owner_id'] == "None"):
+                new_contact_owner['student_hubspot_owner_id'] in ("None", "undefined")):
             new_contact_owner['student_hubspot_owner_id'] = None
             
         this_student.student_owner = new_contact_owner['student_hubspot_owner_id']

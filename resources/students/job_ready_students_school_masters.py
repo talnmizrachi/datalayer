@@ -40,7 +40,7 @@ class JobReadyStudent(MethodView):
                       }
         
         if (new_contact_schoolmaster['student_hubspot_schoolmaster_id'].isspace() or
-                new_contact_schoolmaster['student_hubspot_schoolmaster_id'] == "None"):
+                new_contact_schoolmaster['student_hubspot_schoolmaster_id'] in ("None", "undefined")):
             new_contact_schoolmaster['student_hubspot_schoolmaster_id'] = None
             
         this_student.schoolmaster_id = new_contact_schoolmaster['student_hubspot_schoolmaster_id']
