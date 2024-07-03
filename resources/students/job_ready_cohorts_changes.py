@@ -45,7 +45,7 @@ class JobReadyStudent(MethodView):
                 new_student_cohort['student_cohort'] in ("None", "undefined")):
             new_student_cohort['student_cohort'] = None
             
-        this_student.active_cohort = new_student_cohort['hubspot_id']
+        this_student.active_cohort = new_student_cohort['student_cohort']
         this_student.updated_timestamp = datetime.datetime.now()
         
         student_cohort_change = StudentCohortChangesModel(**new_student_cohort)
