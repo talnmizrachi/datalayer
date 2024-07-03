@@ -33,6 +33,7 @@ class JobReadyStudent(MethodView):
         this_student = JobReadyStudentModel.query.filter_by(hubspot_id=str(data['hs_object_id'])).first()
         if this_student is None:
             return f"{this_student} id is missing from the job ready students.", 202
+
         logger.info(f"Got a owner change:\t{data}")
         
         new_contact_owner = {

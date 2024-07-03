@@ -1,6 +1,6 @@
 from uuid import uuid4
 from flask_smorest import abort
-from models import JobReadyStudentModel, StudentStagesV3, ProcessModel
+from models import JobReadyStudentModel, StudentStagesV3, ProcessModel, StudentCohortChangesModel
 from global_functions.general_functions import write_object_to_db
 from global_functions.LoggingGenerator import Logger
 import os
@@ -29,7 +29,8 @@ def payload_to_job_ready_student_dict(payload):
                               "student_owner": payload.get('hubspot_owner_id'),
                               "created_at": payload.get('created_at'),
                               "is_employed": payload.get('is_employed', False),
-                              "hubspot_current_deal_stage": payload.get("hubspot_current_deal_stage", "Job Ready")
+                              "hubspot_current_deal_stage": payload.get("hubspot_current_deal_stage", "Job Ready"),
+                              "active_cohort": payload.get("current_enrollment_cohort")
                               }
     
     stage_dict = {
@@ -37,11 +38,17 @@ def payload_to_job_ready_student_dict(payload):
             "hubspot_id": job_ready_student_dict['hubspot_id'],
             "stage": job_ready_student_dict['hubspot_current_deal_stage']
     }
-    return job_ready_student_dict, stage_dict
+
+    cohort_dict = {
+        "hubspot_id": job_ready_student_dict['hubspot_id'],
+        "student_cohort": job_ready_student_dict['active_cohort']
+
+    }
+    return job_ready_student_dict, stage_dict, cohort_dict
 
 
 def onboard_function(data):
-    job_ready_student_dict, stage_dict = payload_to_job_ready_student_dict(data)
+    job_ready_student_dict, stage_dict, cohort_dict = payload_to_job_ready_student_dict(data)
     
     is_existing = JobReadyStudentModel.query.filter_by(hubspot_id = job_ready_student_dict['hubspot_id']).first()
     
@@ -50,9 +57,11 @@ def onboard_function(data):
     
     job_ready_student_object = JobReadyStudentModel(**job_ready_student_dict)
     student_stage_obj = StudentStagesV3(**stage_dict)
-    
+    student_cohort_obj = StudentCohortChangesModel(**cohort_dict)
+
     write_object_to_db(job_ready_student_object)
     write_object_to_db(student_stage_obj)
-    
+    write_object_to_db(student_cohort_obj)
+
     logger.info(f"Onboarded new student:\t{job_ready_student_dict['id']}")
     return job_ready_student_dict
