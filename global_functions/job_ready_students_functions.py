@@ -8,12 +8,17 @@ import os
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 
 
+def check_if_student_has_id_from_legacy_mocks(_payload):
+    return ProcessModel.query.filter_by(hubspot_id=str(_payload.get('hs_object_id'))).first()
+
+
 def payload_to_job_ready_student_dict(payload):
     if payload.get('domain') is None:
         abort(404, message="Domain was not found")
-    test_for_open_process = ProcessModel.query.filter_by(hubspot_id=str(payload.get('hs_object_id'))).first()
     
-    job_ready_student_dict = {'id': test_for_open_process.student_id if test_for_open_process else str(uuid4().hex),
+    existing_id = check_if_student_has_id_from_legacy_mocks(payload)
+    
+    job_ready_student_dict = {'id': existing_id.student_id if existing_id else str(uuid4().hex),
                               "student_ms_id": payload.get('student_ms_id'),
                               "hubspot_id": str(payload.get('hs_object_id')),
                               "domain": payload.get('domain'),

@@ -116,5 +116,26 @@ class ProcessTermination(MethodView):
         return data
 
 
+@blueprint.route('/open_process_legacy', methods=['POST'])
+class ProcessInitiation(MethodView):
+    """
+    This is for manual uploading, this will open the process, and after that the loading of stages and mocks should
+    be done seperatlely.
+    """
+    
+    def post(self):
+        data = request.get_json()
+        logger.info(data)
+        
+        process_exists = ProcessModel.query.filter_by(id= data['id']).first()
+        if process_exists is not None:
+            logger.debug(f"{process_exists} id already exists in the processes.")
+            return f"{process_exists} id is missing from the job ready students.", 208
+        new_process_obj = ProcessModel(**data)
+        
+        write_object_to_db(new_process_obj)
+        
+        return new_process_obj.id, 201
+
 if __name__ == '__main__':
     pass

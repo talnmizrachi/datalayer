@@ -16,12 +16,12 @@ def rename_key(d, old_key, new_key):
 
 
 def split_process_and_stage_dict(payload_dict):
-    process_keys = {"id", "student_id", "student_firstname", "student_ms_id", "student_lastname", "domain",
-                    "email_address", "company_name", "job_title", "job_description", 'cv_url', 'process_start_date',
+    process_keys = {"id", "student_id", "student_ms_id", "domain",
+                    "company_name", "job_title", 'process_start_date',
                     'source_1', 'source_2'}
     
-    stage_keys = {"id", "stage_in_funnel", 'student_firstname', 'student_lastname', "type_of_stage",
-                  "had_home_assignment", 'home_assignment_questions', 'home_assignment_answers', 'stage_date'}
+    stage_keys = {"id", "stage_in_funnel",  "type_of_stage",
+                  "had_home_assignment", 'stage_date'}
     
     process_dict = {k: v for k, v in payload_dict.items() if k in process_keys}
     stage_dict = {k: v for k, v in payload_dict.items() if k in stage_keys}
@@ -44,7 +44,7 @@ def parse_and_write_to_db_new_processes(incoming_data, source='direct'):
         logger.info("smart matcher data")
         process_dict, stage_dict = new_process_from_smart_matcher_payload(incoming_data)
     else:
-        abort(400, message="source must be 'direct' or 'typeform'")
+        abort(400, message="source must be 'direct', 'typeform' or smart matcher")
     new_mock_interview_dict = create_mock_interview_line_for_stage(process_dict, stage_dict)
     
     new_process_object = ProcessModel(**process_dict)
@@ -63,21 +63,13 @@ def direct_payload_to_new_process_dict(direct_payload):
             "id": str(uuid4().hex),
             "job_id": direct_payload.get("job_id"),
             "student_ms_id": direct_payload.get("student_ms_id", "not_provided"),
-            "email_address": direct_payload.get("email_address"),
-            "student_firstname": direct_payload.get("student_firstname"),
-            "student_lastname": direct_payload.get("student_lastname"),
             "domain": direct_payload.get("domain"),
             "company_name": direct_payload.get("company_name"),
             "job_title": direct_payload.get("job_title"),
-            "job_description": direct_payload.get("job_description"),
-            "cv_url": direct_payload.get("cv_url"),
-            "drive_url": direct_payload.get("drive_url"),
             "process_start_date": date.today(),
             "stage_in_funnel": direct_payload.get("stage_in_funnel"),
             "type_of_stage": direct_payload.get("type_of_stage"),
             "had_home_assignment": direct_payload.get("had_home_assignment", False),
-            "home_assignment_questions": direct_payload.get("home_assignment_questions"),
-            "home_assignment_answers": direct_payload.get("home_assignment_answers"),
             "stage_date": direct_payload.get("stage_date"),
     }
     

@@ -10,8 +10,6 @@ class StageModel(db.Model):
     stage_in_funnel = db.Column(db.String, nullable=False)
     type_of_stage = db.Column(db.String, nullable=False)
     had_home_assignment = db.Column(db.Boolean, nullable=False, default=False)
-    home_assignment_questions = db.Column(db.String, nullable=True)
-    home_assignment_answers = db.Column(db.String, nullable=True)
     is_pass = db.Column(db.String, nullable=False, default="PENDING")
     stage_date = db.Column(db.Date, nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())

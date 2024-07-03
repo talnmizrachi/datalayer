@@ -20,9 +20,10 @@ class ProcessModel(db.Model):
     
     company_name = db.Column(db.String, nullable=False)
     job_title = db.Column(db.String, nullable=False)
-    job_description = db.Column(db.String, nullable=False)
     
-    process_start_date = db.Column(db.DateTime, nullable=False)
+    #notification of starting a process
+    process_start_date = db.Column(db.Date, nullable=False)
+    #notification of failure / notification of success
     process_end_date = db.Column(db.Date, nullable=True)
     
     is_process_active = db.Column(db.Boolean, nullable=False, default=True)
