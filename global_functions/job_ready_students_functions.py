@@ -53,7 +53,7 @@ def onboard_function(data):
     is_existing = JobReadyStudentModel.query.filter_by(hubspot_id = job_ready_student_dict['hubspot_id']).first()
     
     if is_existing is not None:
-        return f"{job_ready_student_dict['hubspot_id']} is already onboarded.", 202
+        return {"id": job_ready_student_dict['hubspot_id'], "message":"Student is already onboarded"}
     
     job_ready_student_object = JobReadyStudentModel(**job_ready_student_dict)
     student_stage_obj = StudentStagesV3(**stage_dict)
