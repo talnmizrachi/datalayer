@@ -29,7 +29,6 @@ class JobReadyStudent(MethodView):
     
     def post(self):
         data = request.get_json()
-        
         this_student = JobReadyStudentModel.query.filter_by(hubspot_id=str(data['hs_object_id'])).first()
         if this_student is None:
             return f"{this_student} id is missing from the job ready students.", 202
@@ -38,7 +37,7 @@ class JobReadyStudent(MethodView):
         
         new_contact_owner = {
                 "student_hubspot_id": str(data['hs_object_id']),
-                "student_hubspot_owner_id": str(data['current_enrollment_school']),
+                "student_hubspot_owner_id": str(data['hubspot_owner_id']),
                       }
         
         if (new_contact_owner['student_hubspot_owner_id'].isspace() or
