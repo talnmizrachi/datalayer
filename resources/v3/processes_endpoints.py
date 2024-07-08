@@ -5,7 +5,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint
 from db import db
 import os
-from models import ProcessModel
+from models import ProcessModel, JobReadyStudentModel
 from platforms_webhooks_catchers.hubspot.catch_pass_interview_closed_deal import v3_pass_close_deal_webhook_catcher
 
 
@@ -84,6 +84,12 @@ class ProcessTermination(MethodView):
         data = request.get_json()
         logger.info(f"incoming data from hubspot: {data}")
         identifying_dict = v3_pass_close_deal_webhook_catcher(data)
+
+        this_student = JobReadyStudentModel.query.filter_by(hubspot_id=identifying_dict['hs_object_']).first()
+        
+        if this_student is None:
+            logger.error(f"Missing student from Job ready students: {identifying_dict}")
+            
         this_deal = ProcessModel.query.filter_by(hubspot_id=identifying_dict['hs_object_id'],
                                                 company_name=identifying_dict['company'],
                                                 job_title=identifying_dict['job_title']
@@ -99,12 +105,16 @@ class ProcessTermination(MethodView):
             this_deal.is_closed_won = True
             this_deal.is_process_active = False
             this_deal.process_end_date = date.today()
-
+            if this_student is not None:
+                this_student.is_employed = True
+                this_student.hubspot_current_deal_stage = "Closed Won - Job Secured"
             if latest_stage:
                 latest_stage.is_pass = "TRUE"
             db.session.commit()
         
         else:
+            # todo - write the code to get the current status after failre
+            #  (either another process they have or Job seeking)
             logger.debug(f"lose_deal object : {this_deal}")
             this_deal.is_closed_won = False
             this_deal.is_process_active = False
@@ -136,6 +146,7 @@ class ProcessInitiation(MethodView):
         write_object_to_db(new_process_obj)
         
         return new_process_obj.id, 201
+
 
 if __name__ == '__main__':
     pass
