@@ -85,7 +85,7 @@ class ProcessTermination(MethodView):
         logger.info(f"incoming data from hubspot: {data}")
         identifying_dict = v3_pass_close_deal_webhook_catcher(data)
 
-        this_student = JobReadyStudentModel.query.filter_by(hubspot_id=identifying_dict['hs_object_']).first()
+        this_student = JobReadyStudentModel.query.filter_by(hubspot_id=identifying_dict['hs_object_id']).first()
         
         if this_student is None:
             logger.error(f"Missing student from Job ready students: {identifying_dict}")
