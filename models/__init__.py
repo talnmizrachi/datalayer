@@ -1,5 +1,5 @@
 from models.job_ready_students import JobReadyStudentModel
-from models.mock_interviews import MockInterviewModel
+from models.process_stage_mock_interview import MockInterviewModel
 from models.process_stage_questions import RealQuestion
 from models.student_applications import StudentToJobApplication
 from models.students_deal_stages import StudentStagesV3

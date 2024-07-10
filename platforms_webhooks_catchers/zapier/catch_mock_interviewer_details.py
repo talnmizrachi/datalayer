@@ -10,7 +10,7 @@ def get_mock_interviewer_data_from_zapier(incoming_webhook_data: dict) -> dict:
     the data is moved from the url direction in the end of the typeform (when an interview is being set through there)
     (#todo - ask RnD to use the UTMs)
     UTMs can be found here:
-    resources/mock_interviews.py -> mock_interview_setting blueprint
+    resources/process_stage_mock_interview.py -> mock_interview_setting blueprint
     
     and from there the data is moved to calendly's mechanism
     The Zap is catching any invite created in calendly and filters out based on the name of the event (contains "interview")
