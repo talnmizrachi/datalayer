@@ -53,7 +53,7 @@ def direct_payload_to_new_process_dict(direct_payload):
     new_process_for_student_dict = {
             "id": str(uuid4().hex),
             "job_id": direct_payload.get("job_id"),
-            "student_ms_id": direct_payload.get("hs_object_id", "not_provided"),
+            "student_ms_id": str(direct_payload.get("hs_object_id", "not_provided")),
             "domain": direct_payload.get("program_domain"),
             "company_name": direct_payload.get("company"),
             "job_title": direct_payload.get("job_title"),
