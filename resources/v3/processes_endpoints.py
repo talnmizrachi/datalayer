@@ -1,5 +1,6 @@
 from global_functions.LoggingGenerator import Logger
 from global_functions.new_process_functions import *
+from resources.v3.continue_process_functions import parse_payload_and_write_to_db
 from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint
@@ -9,67 +10,44 @@ from models import ProcessModel, JobReadyStudentModel
 from platforms_webhooks_catchers.hubspot.catch_pass_interview_closed_deal import v3_pass_close_deal_webhook_catcher
 
 
+
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 blueprint = Blueprint('Initiate a Process', __name__, description="A process is the combination of "
                                                                   "Company-Job-Student, and will include at least one"
                                                                   " process event")
 
 
-@blueprint.route('/new_process_start', methods=['POST'])
+@blueprint.route('/process_update', methods=['POST'])
 class ProcessInitiation(MethodView):
     """
     This class handles the initiation of a new process.
-    It listens for a POST request at the '/new_process_start' endpoint open for the MS RnD team
+    
+    Workflow URL - https://app.hubspot.com/workflows/9484219/platform/flow/587156903/edit
     """
     
     def post(self):
+        """
+            We need to check if this process already exists in the database. If not, we create a new process,
+            Process is defined as the combination of a company, title and student.
+        """
         data = request.get_json()
-        logger.info(data)
-        new_process_dict = parse_and_write_to_db_new_processes(data, source='direct')
         
-        return new_process_dict['id'], 201
-
-
-@blueprint.route('/new_process_typeform', methods=['POST'])
-class ProcessInitiation(MethodView):
-    """
-    This class handles the initiation of a new process via typeform (to be legacy).
-    """
-    def post(self):
-        data = request.get_json()
-        new_process_dict = parse_and_write_to_db_new_processes(data, source='typeform')
+        existing_process = ProcessModel.query.filter_by(hubspot_id=data['hs_object_id'],
+                                     job_title=data['job_title'],
+                                     company_name=data['company_name'],
+                                     is_process_active=True).first()
+        if existing_process is None:
+            # This is a new process
+            logger.debug(f"New process initiated: {data}")
+            process_id = parse_and_write_to_db_new_processes(data, source='direct')
+        else:
+            # Get process_id and create a new stage
+            process_id = parse_payload_and_write_to_db(data, existing_process.id)
+            
         
-        return new_process_dict['id'], 201
+        return process_id, 201
 
 
-@blueprint.route('/new_process_typeform_old', methods=['POST'])
-class ProcessInitiation(MethodView):
-    """
-    This class handles the initiation of a new process via typeform (to be legacy).
-    This is the old version of the typeform initiation endpoint.
-    """
-    
-    def post(self):
-        data = request.get_json()
-        logger.info(data)
-        new_process_dict = parse_and_write_to_db_new_processes(data, source='old_typeform')
-        
-        return new_process_dict['id'], 201
-
-
-@blueprint.route('/new_process_smart_matcher', methods=['POST'])
-class ProcessInitiation(MethodView):
-    """
-    This class handles the initiation of a new process via typeform (to be legacy).
-    This is the old version of the typeform initiation endpoint.
-    """
-    
-    def post(self):
-        data = request.get_json()
-        logger.info(data)
-        new_process_dict = parse_and_write_to_db_new_processes(data, source='smart_matcher')
-        
-        return new_process_dict['id'], 201
 
 @blueprint.route('/close_process', methods=['POST'])
 class ProcessTermination(MethodView):
