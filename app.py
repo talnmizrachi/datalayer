@@ -4,7 +4,6 @@ from db import db
 from flask_smorest import Api
 from resources.students.job_ready_students_onboarding import blueprint as jr_students_blp
 from resources.v3.processes_endpoints import blueprint as new_process_init_blp
-from resources.v3.continue_process import blueprint as continue_process_blp
 from resources.v3.mock_interviews import blueprint as mock_interview_details_blp
 from resources.student_applications import blueprint as student_applications_blp
 from resources.students.job_ready_students_deals import blueprint as job_ready_students_deals_blp
