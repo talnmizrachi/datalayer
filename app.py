@@ -13,6 +13,9 @@ from resources.students.job_ready_students_school_masters import blueprint as st
 from resources.students.job_ready_cohorts_changes import blueprint as cohorts_changes_blp
 from flask_migrate import Migrate
 from dotenv import load_dotenv
+from global_functions.LoggingGenerator import Logger
+
+logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 
 
 def create_app(db_url=None):
@@ -28,9 +31,15 @@ def create_app(db_url=None):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["PROPAGATE_EXCEPTIONS"] = True
     
+    logger.info("Starting the db initiation...")
     db.init_app(app)
+    logger.info("db initiation completed.")
+    
+    logger.debug(f"db:{db}")
+    logger.info("Starting the migration...")
     api = Api(app)
     migrate = Migrate(app, db)
+    logger.info("migration completed.")
     
     api.register_blueprint(jr_students_blp)
     api.register_blueprint(new_process_init_blp)
