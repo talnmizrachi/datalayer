@@ -53,6 +53,7 @@ class JobReadyStudent(MethodView):
         logger.info(f"Got a deal change:\t{data}")
         job_ready_student_dict = job_ready_catch_deal_stage(data)
         this_student = JobReadyStudentModel.query.filter_by(hubspot_id=job_ready_student_dict['hubspot_id']).first()
+        
         if this_student is None:
             return f"{this_student} id is missing from the job ready students.", 404
         
