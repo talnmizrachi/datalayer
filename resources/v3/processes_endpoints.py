@@ -30,7 +30,7 @@ class ProcessInitiation(MethodView):
         """
         data = request.get_json()
         
-        existing_process = ProcessModel.query.filter_by(hubspot_id=data['hs_object_id'],
+        existing_process = ProcessModel.query.filter_by(hubspot_id=str(data['hs_object_id']),
                                                         job_title=data['job_title'],
                                                         company_name=data['company'],
                                                         is_process_active=True).first()
