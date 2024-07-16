@@ -38,7 +38,6 @@ def create_app(db_url=None):
     
     api.register_blueprint(jr_students_blp)
     api.register_blueprint(new_process_init_blp)
-    api.register_blueprint(continue_process_blp)
     api.register_blueprint(mock_interview_details_blp)
     api.register_blueprint(student_applications_blp)
     api.register_blueprint(job_ready_students_deals_blp)
