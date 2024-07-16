@@ -34,8 +34,8 @@ def create_app(db_url=None):
     db.init_app(app)
     logger.debug(f"db:{db}")
     api = Api(app)
-    # with app.app_context():
-    #     db.create_all()
+    with app.app_context():
+        db.create_all()
     migrate = Migrate(app, db)
     
     api.register_blueprint(jr_students_blp)
