@@ -32,7 +32,6 @@ def create_app(db_url=None):
     app.config["PROPAGATE_EXCEPTIONS"] = True
     
     db.init_app(app)
-    logger.debug(f"db:{db}")
     api = Api(app)
     with app.app_context():
         db.create_all()
