@@ -31,15 +31,12 @@ def create_app(db_url=None):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["PROPAGATE_EXCEPTIONS"] = True
     
-    logger.info("Starting the db initiation...")
     db.init_app(app)
-    logger.info("db initiation completed.")
-    
     logger.debug(f"db:{db}")
-    logger.info("Starting the migration...")
     api = Api(app)
+    # with app.app_context():
+    #     db.create_all()
     migrate = Migrate(app, db)
-    logger.info("migration completed.")
     
     api.register_blueprint(jr_students_blp)
     api.register_blueprint(new_process_init_blp)
