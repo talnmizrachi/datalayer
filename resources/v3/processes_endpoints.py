@@ -32,7 +32,7 @@ class ProcessInitiation(MethodView):
         
         existing_process = ProcessModel.query.filter_by(hubspot_id=data['hs_object_id'],
                                                         job_title=data['job_title'],
-                                                        company_name=data['company_name'],
+                                                        company_name=data['company'],
                                                         is_process_active=True).first()
         if existing_process is None:
             # This is a new process
