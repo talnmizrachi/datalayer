@@ -1,6 +1,10 @@
 from db import db
 from sqlalchemy.exc import SQLAlchemyError
 from flask_smorest import abort
+from global_functions.LoggingGenerator import Logger
+import os
+
+logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 
 
 def read_typeform_answers(typeform_payload, typeform_questions_ids_dict):
@@ -21,6 +25,7 @@ def read_typeform_answers(typeform_payload, typeform_questions_ids_dict):
 
 def write_object_to_db(object_to_write):
     try:
+        logger.debug(f"writing object to db: {object_to_write}")
         db.session.add(object_to_write)
         db.session.commit()
     except SQLAlchemyError as e:
