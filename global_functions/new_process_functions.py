@@ -52,6 +52,7 @@ def parse_and_write_to_db_new_processes(incoming_data):
 
 def direct_payload_to_new_process_dict(direct_payload):
     logger.debug(f"direct_payload_for_new_process: {direct_payload}")
+    
     new_process_dict = {
             "id": str(uuid4().hex),
             "job_id": direct_payload.get("job_id"),
@@ -63,7 +64,7 @@ def direct_payload_to_new_process_dict(direct_payload):
             "stage_in_funnel": "1st Stage",
             "type_of_stage": direct_payload.get("next_recruiting_step_type"),
             "had_home_assignment": direct_payload.get("had_home_assignment", False),
-            "stage_date": direct_payload.get("next_recruiting_step_date"),
+            "stage_date": datetime.utcfromtimestamp(direct_payload.get("next_recruiting_step_date")).date(),
     }
     
     student_is_listed_as_jr = (JobReadyStudentModel.
