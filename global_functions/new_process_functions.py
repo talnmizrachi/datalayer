@@ -14,7 +14,7 @@ def split_process_and_stage_dict(payload_dict):
         if old_key in d:
             d[new_key] = d.pop(old_key)
         return d
-    process_keys = {"id", "student_id", "student_ms_id", "domain",
+    process_keys = {"id", "student_id", "hubspot_id", "domain",
                     "company_name", "job_title", 'process_start_date',
                     'source_1', 'source_2'}
     
@@ -26,9 +26,6 @@ def split_process_and_stage_dict(payload_dict):
     rename_key(stage_dict, 'id', 'process_id')
     stage_dict['id'] = str(uuid4().hex)
     
-    if "student_id" not in process_dict:
-        process_dict['student_id'] = f"temp_{str(uuid4().hex)}"
-    
     return process_dict, stage_dict
 
 
@@ -37,6 +34,10 @@ def parse_and_write_to_db_new_processes(incoming_data):
     process_dict, stage_dict = direct_payload_to_new_process_dict(incoming_data)
  
     new_mock_interview_dict = create_mock_interview_line_for_stage(process_dict, stage_dict)
+    
+    logger.info(f"New process dict: {process_dict}")
+    logger.info(f"New stage dict: {stage_dict}")
+    logger.info(f"New mock interview dict: {new_mock_interview_dict}")
     
     new_process_object = ProcessModel(**process_dict)
     new_stage_object = StageModel(**stage_dict)
@@ -50,10 +51,11 @@ def parse_and_write_to_db_new_processes(incoming_data):
 
 
 def direct_payload_to_new_process_dict(direct_payload):
-    new_process_for_student_dict = {
+    logger.debug(f"direct_payload_for_new_process: {direct_payload}")
+    new_process_dict = {
             "id": str(uuid4().hex),
             "job_id": direct_payload.get("job_id"),
-            "student_ms_id": str(direct_payload.get("hs_object_id", "not_provided")),
+            "hubspot_id": str(direct_payload.get("hs_object_id", "not_provided")),
             "domain": direct_payload.get("program_domain"),
             "company_name": direct_payload.get("company"),
             "job_title": direct_payload.get("job_title"),
@@ -64,19 +66,18 @@ def direct_payload_to_new_process_dict(direct_payload):
             "stage_date": direct_payload.get("stage_date"),
     }
     
-    student_is_listed_as_jr = JobReadyStudentModel.query.filter_by(
-        student_ms_id=new_process_for_student_dict.get("student_ms_id")).first()
-    logger.info(f"student_is_listed_as_jr: {student_is_listed_as_jr},"
-                f" student_ms_id: {new_process_for_student_dict.get('student_ms_id')}")
+    student_is_listed_as_jr = (JobReadyStudentModel.
+                               query.
+                               filter_by(hubspot_id=new_process_dict.get("hubspot_id")).first())
     
     if student_is_listed_as_jr is None:
         # If the student is not listed as Job ready, we need to keep the process, and make sure that the student is
-        # Identifiable for next iterations, based on the process - student_id will be the student_ms_id
-        new_process_for_student_dict['student_id'] = new_process_for_student_dict.get("student_ms_id")
+        # Identifiable for next iterations, based on the process - student_id will be the hubspot_id
+        new_process_dict['student_id'] = new_process_dict.get("hubspot_id")
     else:
-        new_process_for_student_dict['student_id'] = student_is_listed_as_jr.id
+        new_process_dict['student_id'] = student_is_listed_as_jr.id
     
-    process_dict, stage_dict = split_process_and_stage_dict(new_process_for_student_dict)
+    process_dict, stage_dict = split_process_and_stage_dict(new_process_dict)
     
     return process_dict, stage_dict
 
