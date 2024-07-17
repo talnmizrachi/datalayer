@@ -16,7 +16,7 @@ class ProcessModel(db.Model):
     student_ms_id = db.Column(db.String, nullable=True)
     student_id = db.Column(db.String,  nullable=False)
     
-    domain = db.Column(db.String, nullable=False)
+    domain = db.Column(db.String, nullable=True)
     
     company_name = db.Column(db.String, nullable=False)
     job_title = db.Column(db.String, nullable=False)
