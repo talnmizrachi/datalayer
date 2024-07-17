@@ -29,7 +29,7 @@ def parse_payload_and_write_to_db(payload, process_id):
 
     stage_dict = {"process_id": process_id, "stage_in_funnel": next_stage,
                  "type_of_stage": payload.get("next_recruiting_step_type"),
-                 "stage_date": payload.get("next_recruiting_step_date"), 'id': str(uuid4().hex)}
+                 "stage_date": payload.get("stage_date"), 'id': str(uuid4().hex)}
     
     mock_interview_dict = {
             'id': str(uuid4().hex),

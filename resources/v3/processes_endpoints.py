@@ -4,6 +4,7 @@ from resources.v3.continue_process_functions import parse_payload_and_write_to_d
 from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint
+from datetime import datetime, timedelta
 from db import db
 import os
 from models import ProcessModel, JobReadyStudentModel
@@ -28,7 +29,16 @@ class ProcessInitiation(MethodView):
             We need to check if this process already exists in the database. If not, we create a new process,
             Process is defined as the combination of a company, title and student.
         """
+        
+        def utc_to_date(utc_timestamp):
+            if utc_timestamp is not None:
+                utc_timestamp /= 1000
+                return datetime.utcfromtimestamp(data.get("next_recruiting_step_date")).date()
+            else:
+                return datetime.utcnow().date() + timedelta(days=7)
+            
         data = request.get_json()
+        data["stage_date"] = utc_to_date(data.get("next_recruiting_step_date"))
         
         existing_process = ProcessModel.query.filter_by(hubspot_id=str(data['hs_object_id']),
                                                         job_title=data['job_title'],
@@ -39,8 +49,10 @@ class ProcessInitiation(MethodView):
             process_id = parse_and_write_to_db_new_processes(data)
         else:
             # Get process_id and create a new stage
-            process_id = parse_payload_and_write_to_db(data, existing_process.id)
-        
+            # process_id = parse_payload_and_write_to_db(data, existing_process.id)
+            process_id = "Nothing"
+            logger.debug("Passing through to existing process")
+            
         return process_id, 201
 
 

@@ -64,7 +64,7 @@ def direct_payload_to_new_process_dict(direct_payload):
             "stage_in_funnel": "1st Stage",
             "type_of_stage": direct_payload.get("next_recruiting_step_type"),
             "had_home_assignment": direct_payload.get("had_home_assignment", False),
-            "stage_date": datetime.utcfromtimestamp(direct_payload.get("next_recruiting_step_date")).date(),
+            "stage_date": direct_payload.get("stage_date")
     }
     
     student_is_listed_as_jr = (JobReadyStudentModel.
