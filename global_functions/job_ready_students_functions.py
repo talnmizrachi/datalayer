@@ -19,7 +19,7 @@ def payload_to_job_ready_student_dict(payload):
     existing_id = check_if_student_has_id_from_legacy_mocks(payload)
     
     job_ready_student_dict = {'id': existing_id.student_id if existing_id else str(uuid4().hex),
-                              "student_ms_id": payload.get('student_ms_id'),
+                              "student_ms_id": str(payload.get('student_ms_id')),
                               "hubspot_id": str(payload.get('hs_object_id')),
                               "domain": payload.get('domain'),
                               "student_country": payload.get('student_country'),
