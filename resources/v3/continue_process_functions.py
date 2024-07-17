@@ -2,7 +2,7 @@ from uuid import uuid4
 from datetime import date, datetime
 from models import ProcessModel, StageModel, MockInterviewModel, JobReadyStudentModel
 from global_functions.general_functions import *
-from global_functions.create_mock_interview import create_mock_interview_line_for_stage
+from platforms_webhooks_catchers.hubspot.catch_job_ready_change_in_deal_stage import deal_stage_dict
 from global_functions.LoggingGenerator import Logger
 import os
 
@@ -21,15 +21,21 @@ def next_stager(this_stage):
 
 
 def parse_payload_and_write_to_db(payload, process_id):
+    this_process = ProcessModel.query.filter_by(id=process_id).first()
     last_active_stage = StageModel.query.filter_by(process_id=process_id, is_pass="PENDING").first()
+
     last_active_stage.is_pass = "TRUE"
     last_active_stage.updated_at = datetime.now()
+    this_process.updated_at = datetime.now()
     
     next_stage = next_stager(last_active_stage.stage_in_funnel)
 
-    stage_dict = {"process_id": process_id, "stage_in_funnel": next_stage,
+    stage_dict = {"process_id": process_id,
+                  "stage_in_funnel": next_stage,
                  "type_of_stage": payload.get("next_recruiting_step_type"),
-                 "stage_date": payload.get("stage_date"), 'id': str(uuid4().hex)}
+                 "stage_date": payload.get("stage_date"),
+                  'id': str(uuid4().hex),
+                  "deal_stage": deal_stage_dict()[payload.get("dealstage")]}
     
     mock_interview_dict = {
             'id': str(uuid4().hex),

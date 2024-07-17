@@ -40,7 +40,7 @@ class ProcessInitiation(MethodView):
             else:
                 # Return today's date plus 7 days
                 return datetime.utcnow().date() + timedelta(days=7)
-            
+        
         data = request.get_json()
         data["stage_date"] = utc_to_date(data.get("next_recruiting_step_date"))
         
@@ -55,7 +55,7 @@ class ProcessInitiation(MethodView):
             # Get process_id and create a new stage
             process_id = parse_payload_and_write_to_db(data, existing_process.id)
             logger.debug("Passing through to existing process")
-            
+        
         return process_id, 201
 
 
@@ -73,13 +73,13 @@ class ProcessTermination(MethodView):
         data = request.get_json()
         logger.info(f"incoming data from hubspot for a closed process: {data}")
         identifying_dict = v3_pass_close_deal_webhook_catcher(data)
-        
-        this_student = JobReadyStudentModel.query.filter_by(hubspot_id=identifying_dict['hs_object_id']).first()
+        student_hs_id = identifying_dict['hs_object_id']
+        this_student = JobReadyStudentModel.query.filter_by(hubspot_id=student_hs_id).first()
         
         if this_student is None:
             logger.error(f"Missing student from Job ready students: {identifying_dict}")
         
-        this_deal = ProcessModel.query.filter_by(hubspot_id=identifying_dict['hs_object_id'],
+        this_deal = ProcessModel.query.filter_by(hubspot_id=student_hs_id,
                                                  company_name=identifying_dict['company'],
                                                  job_title=identifying_dict['job_title']
                                                  ).first()
@@ -87,7 +87,7 @@ class ProcessTermination(MethodView):
             logger.error(f"Deal with details: {identifying_dict} is not matching")
             abort(404, message='no deal found')
         
-        process_id = this_deal.process_id
+        process_id = this_deal.id
         latest_stage = StageModel.query.filter_by(process_id=process_id).order_by(StageModel.created_at.desc()).first()
         if identifying_dict['hs_is_closed_won']:
             logger.debug(f"win_deal object : {this_deal}")
@@ -102,40 +102,38 @@ class ProcessTermination(MethodView):
             db.session.commit()
         
         else:
-            # todo - write the code to get the current status after failre
-            #  (either another process they have or Job seeking)
             logger.debug(f"lose_deal object : {this_deal}")
             this_deal.is_closed_won = False
             this_deal.is_process_active = False
             this_deal.process_end_date = date.today()
             if latest_stage:
                 latest_stage.is_pass = "FALSE"
+                latest_stage.updated_at = datetime.now()
+            
+            get_other_processes_for_student(student_hs_id, process_id)
+            
             db.session.commit()
         
         return data
 
 
-@blueprint.route('/open_process_legacy', methods=['POST'])
-class ProcessInitiation(MethodView):
-    """
-    This is for manual uploading, this will open the process, and after that the loading of stages and mocks should
-    be done seperatlely.
-    """
+
+def get_other_processes_for_student(student_hubspot_id, this_process_id):
+    process_exists = ProcessModel.query.filter(
+        ProcessModel.hubspot_id == student_hubspot_id,
+        ProcessModel.id != this_process_id,
+        ProcessModel.is_process_active == True).order_by(ProcessModel.updated_at.desc()).first()
     
-    def post(self):
-        data = request.get_json()
-        logger.info(data)
+    this_student = JobReadyStudentModel.query.filter_by(hubspot_id=student_hubspot_id)
+    
+    if process_exists is not None:
+        active_stage = StageModel.query.filter_by(process_id=process_exists.id,
+                                   is_pass="PENDING").order_by(StageModel.updated_at.desc()
+                                                               ).first().deal_stage
+        this_student.hubspot_current_deal_stage = active_stage
+    else:
+        this_student.hubspot_current_deal_stage = "Job Seeking"
         
-        process_exists = ProcessModel.query.filter_by(id=data['id']).first()
-        if process_exists is not None:
-            logger.debug(f"{process_exists} id already exists in the processes.")
-            return f"{process_exists} id is missing from the job ready students.", 208
-        new_process_obj = ProcessModel(**data)
         
-        write_object_to_db(new_process_obj)
-        
-        return new_process_obj.id, 201
-
-
 if __name__ == '__main__':
     pass
