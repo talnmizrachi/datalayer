@@ -4,10 +4,7 @@ from flask_smorest import abort
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 
-
-def job_ready_catch_deal_stage(_data):
-    """ Whewnever a deal (student) changes their deal stage, we need to update the deal stage in the database."""
-    
+def deal_stage_dict():
     id_to_name = {
             175176966: "Job Ready",
             175176967: "1st CSA Meeting Conducted",
@@ -25,8 +22,15 @@ def job_ready_catch_deal_stage(_data):
             175248409: "Closed Lost - Job Not Secured",
             198705823: "Double",
             202186266: "Fraudulent",
-            
+        
     }
+    return id_to_name
+
+
+def job_ready_catch_deal_stage(_data):
+    """ Whewnever a deal (student) changes their deal stage, we need to update the deal stage in the database."""
+    
+    id_to_name = deal_stage_dict()
     
     if _data.get("dealstage") not in id_to_name.keys():
         logger.error(f"Deal with details: {_data} is not matching")
