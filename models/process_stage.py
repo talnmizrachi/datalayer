@@ -12,6 +12,7 @@ class StageModel(db.Model):
     had_home_assignment = db.Column(db.Boolean, nullable=False, default=False)
     is_pass = db.Column(db.String, nullable=False, default="PENDING")
     stage_date = db.Column(db.Date, nullable=False)
+    deal_stage = db.Column(db.String, nullable=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     
