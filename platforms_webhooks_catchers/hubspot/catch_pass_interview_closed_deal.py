@@ -3,7 +3,8 @@ def v3_pass_close_deal_webhook_catcher(_data):
                             dealstage=_data.get("dealstage"),
                             job_title=_data.get("job_title"),
                             hs_object_id=str(_data.get("hs_object_id")),
-                            deal_status=_data.get("deal_status"))
+                            deal_status=_data.get("deal_status"),
+                            hs_is_closed_won=str(_data.get("dealstage")) == "175248408")
     
     return identifying_dict
     
