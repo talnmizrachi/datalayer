@@ -36,10 +36,10 @@ def parse_payload_and_write_to_db(payload, process_id):
             "process_id": process_id,
             "stage_id": stage_dict['id']}
     
-    
     new_stage_object = StageModel(**stage_dict)
     new_mock_obj = MockInterviewModel(**mock_interview_dict)
     
     write_object_to_db(new_stage_object)
     write_object_to_db(new_mock_obj)
     
+    return process_id

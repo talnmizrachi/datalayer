@@ -32,9 +32,13 @@ class ProcessInitiation(MethodView):
         
         def utc_to_date(utc_timestamp):
             if utc_timestamp is not None:
-                utc_timestamp /= 1000
-                return datetime.utcfromtimestamp(data.get("next_recruiting_step_date")).date()
+                # Convert from milliseconds to seconds if necessary
+                # This checks if the timestamp is far greater than typical Unix epoch time in seconds
+                if utc_timestamp > 1e12:
+                    utc_timestamp /= 1000
+                return datetime.utcfromtimestamp(utc_timestamp).date()
             else:
+                # Return today's date plus 7 days
                 return datetime.utcnow().date() + timedelta(days=7)
             
         data = request.get_json()
@@ -49,8 +53,7 @@ class ProcessInitiation(MethodView):
             process_id = parse_and_write_to_db_new_processes(data)
         else:
             # Get process_id and create a new stage
-            # process_id = parse_payload_and_write_to_db(data, existing_process.id)
-            process_id = "Nothing"
+            process_id = parse_payload_and_write_to_db(data, existing_process.id)
             logger.debug("Passing through to existing process")
             
         return process_id, 201
