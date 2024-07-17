@@ -1,9 +1,9 @@
 def v3_pass_close_deal_webhook_catcher(_data):
     identifying_dict = dict(company=_data.get("company"),
-                            dealname=_data.get("dealname").replace(chr(127881), ""),
+                            dealstage=_data.get("dealstage"),
                             job_title=_data.get("job_title"),
                             hs_object_id=str(_data.get("hs_object_id")),
-                            hs_is_closed_won=_data.get("hs_is_closed_won"))
+                            deal_status=_data.get("deal_status"))
     
     return identifying_dict
     

@@ -71,7 +71,7 @@ class ProcessTermination(MethodView):
     def post(self):
         
         data = request.get_json()
-        logger.info(f"incoming data from hubspot: {data}")
+        logger.info(f"incoming data from hubspot for a closed process: {data}")
         identifying_dict = v3_pass_close_deal_webhook_catcher(data)
         
         this_student = JobReadyStudentModel.query.filter_by(hubspot_id=identifying_dict['hs_object_id']).first()
