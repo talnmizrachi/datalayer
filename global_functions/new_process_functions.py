@@ -5,7 +5,7 @@ from global_functions.general_functions import *
 from global_functions.create_mock_interview import create_mock_interview_line_for_stage
 from global_functions.LoggingGenerator import Logger
 import os
-
+from platforms_webhooks_catchers.hubspot.catch_job_ready_change_in_deal_stage import deal_stage_dict
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 
 
@@ -18,7 +18,7 @@ def split_process_and_stage_dict(payload_dict):
                     "company_name", "job_title", 'process_start_date',
                     'source_1', 'source_2'}
     
-    stage_keys = {"id", "stage_in_funnel",  "type_of_stage",
+    stage_keys = {"id", "stage_in_funnel",  "type_of_stage", "deal_stage",
                   "had_home_assignment", 'stage_date'}
     
     process_dict = {k: v for k, v in payload_dict.items() if k in process_keys}
@@ -64,7 +64,8 @@ def direct_payload_to_new_process_dict(direct_payload):
             "stage_in_funnel": "1st Stage",
             "type_of_stage": direct_payload.get("next_recruiting_step_type"),
             "had_home_assignment": direct_payload.get("had_home_assignment", False),
-            "stage_date": direct_payload.get("stage_date")
+            "stage_date": direct_payload.get("stage_date"),
+            "deal_stage": deal_stage_dict()[direct_payload.get("dealstage")]
     }
     
     student_is_listed_as_jr = (JobReadyStudentModel.
