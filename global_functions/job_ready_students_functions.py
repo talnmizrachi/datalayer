@@ -13,15 +13,13 @@ def check_if_student_has_id_from_legacy_mocks(_payload):
 
 
 def payload_to_job_ready_student_dict(payload):
-    if payload.get('domain') is None:
-        abort(404, message="Domain was not found")
-    
+
     existing_id = check_if_student_has_id_from_legacy_mocks(payload)
     
     job_ready_student_dict = {'id': existing_id.student_id if existing_id else str(uuid4().hex),
                               "student_ms_id": str(payload.get('student_ms_id')),
                               "hubspot_id": str(payload.get('hs_object_id')),
-                              "domain": payload.get('domain'),
+                              "domain": payload.get('domain', "TBD"),
                               "student_country": payload.get('student_country'),
                               "student_state": payload.get('student_state'),
                               "student_city": payload.get('student_city'),

@@ -9,7 +9,7 @@ class JobReadyStudentModel(db.Model):
     student_ms_id = db.Column(db.String, nullable=True)
     hubspot_id = db.Column(db.String, nullable=False, unique=True)
     
-    domain = db.Column(db.String, nullable=False)
+    domain = db.Column(db.String, nullable=True)
     active_cohort = db.Column(db.String, nullable=True)
 
     student_country = db.Column(db.String, nullable=False)

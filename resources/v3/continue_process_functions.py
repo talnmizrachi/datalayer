@@ -28,6 +28,7 @@ def parse_payload_and_write_to_db(payload, process_id):
     except AttributeError as e:
         logger.error(f"THIS_PROCESS={this_process}")
         logger.error(f"THIS_STAGE={last_active_stage}")
+
     last_active_stage.updated_at = datetime.now()
     this_process.updated_at = datetime.now()
     
