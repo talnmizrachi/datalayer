@@ -40,7 +40,7 @@ def job_ready_catch_deal_stage(_data):
 	identifying_dict = dict(hubspot_id=str(_data.get("hs_object_id")),
 	                        csa_fullname=_data.get("hubspot_owner_id"),
 	                        hubspot_current_deal_stage=id_to_name[_data.get("dealstage")],
-	                        current_program="BG" if _data.get("bg___program") is not None else "deferred")
+	                        current_program="BG" if _data.get("bg___program","")!="" else "deferred")
 
 	return identifying_dict
 
