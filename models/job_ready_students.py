@@ -23,5 +23,6 @@ class JobReadyStudentModel(db.Model):
     student_owner = db.Column(db.String, nullable=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_timestamp = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
-    
+
+    current_program = db.Column(db.String, default='deferred')
     hubspot_current_deal_stage = db.Column(db.String, nullable=True)

@@ -30,7 +30,8 @@ def payload_to_job_ready_student_dict(payload):
                               "created_at": payload.get('created_at'),
                               "is_employed": payload.get('is_employed', False),
                               "hubspot_current_deal_stage": payload.get("hubspot_current_deal_stage", "Job Ready"),
-                              "active_cohort": payload.get("current_enrollment_cohort")
+                              "active_cohort": payload.get("current_enrollment_cohort"),
+                              "current_program": "BG" if payload.get("bg___program") is not None else "deferred"
                               }
     
     stage_dict = {
