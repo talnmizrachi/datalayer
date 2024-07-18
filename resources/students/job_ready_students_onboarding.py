@@ -20,6 +20,7 @@ class JobReadyStudent(MethodView):
         :return:
         """
         data = request.get_json()
+        logger.debug(f"data type: {type(data)}")
         job_ready_student_dict = onboard_function(data)
         return job_ready_student_dict['id'], 201
 
