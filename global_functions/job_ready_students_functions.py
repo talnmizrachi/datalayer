@@ -47,12 +47,13 @@ def payload_to_job_ready_student_dict(payload):
 
 def onboard_function(data):
 	logger.info(f"Onboarding student - {data}")
-	job_ready_student_dict, stage_dict, cohort_dict = payload_to_job_ready_student_dict(data)
-
-	is_existing = JobReadyStudentModel.query.filter_by(hubspot_id=job_ready_student_dict['hubspot_id']).first()
+	is_existing = JobReadyStudentModel.query.filter_by(hubspot_id=data['hs_object_id']).first()
 
 	if is_existing is not None:
-		return {"id": job_ready_student_dict['hubspot_id'], "message": "Student is already onboarded"}
+		logger.info(f"Student {data['hs_object_id']} is already onboarded")
+		return {"id": data['hs_object_id'], "message": "Student is already onboarded"}
+
+	job_ready_student_dict, stage_dict, cohort_dict = payload_to_job_ready_student_dict(data)
 
 	job_ready_student_object = JobReadyStudentModel(**job_ready_student_dict)
 	student_stage_obj = StudentStagesV3(**stage_dict)
