@@ -23,8 +23,11 @@ def next_stager(this_stage):
 def parse_payload_and_write_to_db(payload, process_id):
     this_process = ProcessModel.query.filter_by(id=process_id).first()
     last_active_stage = StageModel.query.filter_by(process_id=process_id, is_pass="PENDING").first()
-
-    last_active_stage.is_pass = "TRUE"
+    try:
+        last_active_stage.is_pass = "TRUE"
+    except AttributeError as e:
+        logger.error(f"THIS_PROCESS={this_process}")
+        logger.error(f"THIS_STAGE={last_active_stage}")
     last_active_stage.updated_at = datetime.now()
     this_process.updated_at = datetime.now()
     
