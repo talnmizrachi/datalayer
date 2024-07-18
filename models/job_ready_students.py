@@ -6,7 +6,7 @@ class JobReadyStudentModel(db.Model):
     __tablename__ = 'job_ready_students'
     
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid4().hex))
-    student_ms_id = db.Column(db.String, nullable=True, unique=True)
+    student_ms_id = db.Column(db.String, nullable=True)
     hubspot_id = db.Column(db.String, nullable=False, unique=True)
     
     domain = db.Column(db.String, nullable=False)
