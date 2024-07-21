@@ -23,7 +23,14 @@ def deal_stage_dict():
 		175248409: "Closed Lost - Job Not Secured",
 		198705823: "Double",
 		202186266: "Fraudulent",
-		208657809: "Special Cases"
+		208657809: "Special Cases",
+		193085038: "Invoice sent",
+		193007223: "1st payment conducted",
+		193072234: "2nd payment conducted",
+		193072235: "3rd payment conducted",
+		193007226: "Payments completed",
+		193007227: "Closed lost - Payments",
+
 
 	}
 	return id_to_name

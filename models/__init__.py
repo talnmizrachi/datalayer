@@ -9,3 +9,4 @@ from models.student_owner_changes import StudentOwnerChangesModel
 from models.student_school_masters_changes import StudentSchoolMasterChangesModel
 from models.student_cohort_changes import StudentCohortChangesModel
 from models.new_test_table import NewTestTableModel
+from models.student_new_payments import StudentNewPaymentModel
