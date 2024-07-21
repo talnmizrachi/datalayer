@@ -8,3 +8,4 @@ class NewTestTableModel(db.Model):
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid4().hex))
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     some_string = db.Column(db.String, nullable=True)
+    some_float = db.Column(db.Float)
