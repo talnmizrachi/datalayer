@@ -22,7 +22,7 @@ class JobReadyStudent(MethodView):
         data = request.get_json()
         logger.debug(f"data type: {type(data)}")
         job_ready_student_dict = onboard_function(data)
-        return job_ready_student_dict['id'], 201
+        return str(job_ready_student_dict['id']), 201
 
 
 @blueprint.route('/onboard_students', methods=['POST'])
