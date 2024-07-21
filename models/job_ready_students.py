@@ -12,7 +12,7 @@ class JobReadyStudentModel(db.Model):
     domain = db.Column(db.String, nullable=True)
     active_cohort = db.Column(db.String, nullable=True)
 
-    student_country = db.Column(db.String, nullable=False)
+    student_country = db.Column(db.String, nullable=True)
     student_state = db.Column(db.String, nullable=True)
     student_city = db.Column(db.String, nullable=False)
     
