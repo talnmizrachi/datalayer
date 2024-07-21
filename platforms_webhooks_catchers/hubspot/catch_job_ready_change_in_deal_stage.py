@@ -23,6 +23,7 @@ def deal_stage_dict():
 		175248409: "Closed Lost - Job Not Secured",
 		198705823: "Double",
 		202186266: "Fraudulent",
+		208657809: "Special Cases"
 
 	}
 	return id_to_name
