@@ -62,7 +62,7 @@ class ProcessInitiation(MethodView):
 @blueprint.route('/close_process', methods=['POST'])
 class ProcessTermination(MethodView):
     """ Close process through hubspot workflow
-    https://app.hubspot.com/workflows/9484219/platform/flow/584835155/edit
+    https://app.hubspot.com/workflows/9484219/platform/flow/587156903/edit
     
     Once a deal is closed (either closed won or closed lost, the process is terminated.
     

@@ -47,7 +47,7 @@ def payload_to_job_ready_student_dict(payload):
 
 def onboard_function(data):
 	logger.info(f"Onboarding student - {data}")
-	is_existing = JobReadyStudentModel.query.filter_by(hubspot_id=data['hs_object_id']).first()
+	is_existing = JobReadyStudentModel.query.filter_by(hubspot_id=str(data['hs_object_id'])).first()
 
 	if is_existing is not None:
 		logger.info(f"Student {data['hs_object_id']} is already onboarded")

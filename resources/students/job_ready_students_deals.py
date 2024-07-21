@@ -1,9 +1,12 @@
 import datetime
 
+import sqlalchemy
+
 from global_functions.LoggingGenerator import Logger
 from db import db
 from global_functions.general_functions import write_object_to_db
-from platforms_webhooks_catchers.hubspot.catch_job_ready_change_in_deal_stage import job_ready_catch_deal_stage
+from platforms_webhooks_catchers.hubspot.catch_job_ready_change_in_deal_stage import job_ready_catch_deal_stage, \
+    deal_stage_dict
 from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint
@@ -76,3 +79,56 @@ class JobReadyStudent(MethodView):
         write_object_to_db(student_stage_obj)
         
         return str(job_ready_student_dict['hubspot_id']), 201
+
+
+@blueprint.route('/manual_deal_stage_change', methods=['POST'])
+class JobReadyStudent(MethodView):
+    """
+
+    """
+    
+    def post(self):
+        
+        def convert_to_datetime(date_str):
+            # Parse the datetime string to a datetime object
+            dt_with_timezone = datetime.datetime.fromisoformat(date_str)
+            # Remove the timezone info
+            dt_without_timezone = dt_with_timezone.replace(tzinfo=None)
+            return dt_without_timezone
+        
+        
+        data = request.get_json()
+        logger.info(f"Got a manual deal change:\t{data['created_at']}")
+        id_to_name = deal_stage_dict()
+
+        this_student = JobReadyStudentModel.query.filter_by(hubspot_id=str(data['hubspot_id'])).first()
+        
+        if this_student is None:
+            logger.error(f"Student with hubspot_id {data['hubspot_id']} doesn't exist")
+            response = {"message": f"Student doesn't exist", "student": data}
+            return response, 202
+        
+        stage_dict = {"student_id": this_student.id,
+                      "hubspot_id": data['hubspot_id'],
+                      "stage": id_to_name.get(int(data["deal_stage"])),
+                      "created_at": convert_to_datetime(data['created_at']),
+                      }
+        
+        logger.info(f"Stage Created at: {stage_dict['created_at']}")
+        
+        existing_entry = (StudentStagesV3.
+                          query.
+                          filter(StudentStagesV3.hubspot_id == stage_dict['hubspot_id'],
+                                 StudentStagesV3.stage == stage_dict['stage'],
+                                 sqlalchemy.func.date(StudentStagesV3.created_at) == stage_dict['created_at'].date()).
+                          first())
+
+        if existing_entry is None:
+            student_stage_obj = StudentStagesV3(**stage_dict)
+            write_object_to_db(student_stage_obj)
+            response = {"message": f"Success", "student_id": this_student.id, "stage": stage_dict["stage"]}
+        else:
+            logger.info(f"Stage for {stage_dict['hubspot_id']} already listed with {stage_dict['stage']} on {stage_dict['created_at'].date()}")
+            response = {"message": f"Success with hold", "student_id": this_student.id, "stage": stage_dict["stage"]}
+            
+        return response, 201
