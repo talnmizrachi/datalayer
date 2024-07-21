@@ -3,4 +3,5 @@
 *.iml
 venv
 .idea
-migrations/__pycache__
+__pycache__/
+*.pyc
