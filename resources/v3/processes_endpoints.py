@@ -7,7 +7,7 @@ from flask_smorest import Blueprint
 from datetime import datetime, timedelta
 from db import db
 import os
-from models import ProcessModel, JobReadyStudentModel
+from models import ProcessModel, JobReadyStudentModel, StageModel
 from platforms_webhooks_catchers.hubspot.catch_pass_interview_closed_deal import v3_pass_close_deal_webhook_catcher
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
@@ -52,9 +52,9 @@ class ProcessInitiation(MethodView):
             logger.debug(f"New process initiated: {data}")
             process_id = parse_and_write_to_db_new_processes(data)
         else:
-            # Get process_id and create a new stage
-            process_id = parse_payload_and_write_to_db(data, existing_process.id)
             logger.debug("Passing through to existing process")
+            process_id = parse_payload_and_write_to_db(data, existing_process.id)
+            
         
         return process_id, 201
 
@@ -117,7 +117,6 @@ class ProcessTermination(MethodView):
         return data
 
 
-
 def get_other_processes_for_student(student_hubspot_id, this_process_id):
     process_exists = ProcessModel.query.filter(
         ProcessModel.hubspot_id == student_hubspot_id,
@@ -133,7 +132,41 @@ def get_other_processes_for_student(student_hubspot_id, this_process_id):
         this_student.hubspot_current_deal_stage = active_stage
     else:
         this_student.hubspot_current_deal_stage = "Job Seeking"
+
+
+@blueprint.route('/manual_process', methods=['POST'])
+class ProcessTermination(MethodView):
+    """ Close process through hubspot workflow
+    https://app.hubspot.com/workflows/9484219/platform/flow/587156903/edit
+
+    Once a deal is closed (either closed won or closed lost, the process is terminated.
+
+    """
+    
+    def post(self):
+        data = request.get_json()
+        process_obj = ProcessModel(**data)
         
+        write_object_to_db(process_obj)
         
+        return process_obj.id, 201
+
+
+@blueprint.route('/manual_process_stages', methods=['POST'])
+class ProcessTermination(MethodView):
+    """ Close process through hubspot workflow
+    https://app.hubspot.com/workflows/9484219/platform/flow/587156903/edit
+
+    Once a deal is closed (either closed won or closed lost, the process is terminated.
+
+    """
+    
+    def post(self):
+        data = request.get_json()
+        stage_obj= StageModel(**data)
+        
+        write_object_to_db(stage_obj)
+        
+        return stage_obj.id, 201
 if __name__ == '__main__':
     pass
