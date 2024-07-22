@@ -31,4 +31,4 @@ def write_object_to_db(object_to_write):
     except SQLAlchemyError as e:
         logger.error(f"Error writing object to db: {str(e)}")
         db.session.rollback()
-        abort(500, message=str(e))
+        abort(400, message=str(e))
