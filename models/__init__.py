@@ -10,3 +10,4 @@ from models.student_school_masters_changes import StudentSchoolMasterChangesMode
 from models.student_cohort_changes import StudentCohortChangesModel
 from models.new_test_table import NewTestTableModel
 from models.student_new_payments import StudentNewPaymentModel
+from models.v3_pulse_table import V3DailyPulseModel
