@@ -32,11 +32,6 @@ class FirstPayment(MethodView):
         hubspot_id = str(data["hs_object_id"])
         existing_student = JobReadyStudentModel.query.filter(JobReadyStudentModel.hubspot_id == hubspot_id).first()
 
-        if existing_student:
-            student_id = existing_student.id
-        else:
-            student_id = hubspot_id
-
         existing_first_payment = StudentNewPaymentModel.query.filter(StudentNewPaymentModel.hubspot_id == hubspot_id).first()
 
         if existing_first_payment:
@@ -44,7 +39,6 @@ class FirstPayment(MethodView):
             return {"message": f"Student {existing_student} already exists"}, 201
 
         new_first_payment = {"hubspot_id": hubspot_id,
-                             "student_id":student_id,
                              "type_of_collection": data['type_of_collection'],
                              "amount": data['amount'],
                              }
@@ -54,7 +48,7 @@ class FirstPayment(MethodView):
 
         return str(new_first_payment['hubspot_id']), 201
 
-
+    
 if __name__ == '__main__':
     
     print(datetime.datetime.now())
