@@ -14,7 +14,7 @@ class ProcessModel(db.Model):
     hubspot_id = db.Column(db.String, nullable=True)
     # add constraint to make sure student_id is either student_id or job_ready or regular student
     student_ms_id = db.Column(db.String, nullable=True)
-    student_id = db.Column(db.String,  nullable=False)
+    student_id = db.Column(db.String,  nullable=True)
     
     domain = db.Column(db.String, nullable=True)
     
