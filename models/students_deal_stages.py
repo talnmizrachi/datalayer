@@ -9,7 +9,7 @@ class StudentStagesV3(db.Model):
     student_id = db.Column(db.String, nullable=True)
     hubspot_id = db.Column(db.String, nullable=False)
     stage = db.Column(db.String, nullable=False)
-    # company_if_rel = db.Column(db.String, nullable=True)
+    company_if_rel = db.Column(db.String, nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     
 
