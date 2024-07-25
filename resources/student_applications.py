@@ -34,35 +34,3 @@ class MethodTemplate(MethodView):
             db.session.commit()
             
         return information, 201
-
-
-@blueprint.route('/student_application_from_campus')
-class MethodTemplate(MethodView):
-    
-    def post(self):
-        data = request.get_json()
-        student_applied_dict = catch_student_application_from_campus(data, source="Campus")
-        information = {"student_id": student_applied_dict['student_id'], "job_id": student_applied_dict['job_id']}
-        
-        existing_application = StudentToJobApplication.query.filter_by(student_id=information['student_id'],
-                                                                       job_id=information['job_id']).first()
-        student_application_obj = StudentToJobApplication(**student_applied_dict)
-        if existing_application is None:
-            write_object_to_db(student_application_obj)
-        else:
-            for key, value in student_applied_dict.items():
-                setattr(existing_application, key, value)
-            db.session.commit()
-        return information, 201
-
-
-@blueprint.route('/manual_student_application')
-class MethodTemplate(MethodView):
-    
-    def post(self):
-        data = request.get_json()
-        application_obj = StudentToJobApplication(**data)
-        
-        write_object_to_db(application_obj)
-        
-        return application_obj.id, 201
