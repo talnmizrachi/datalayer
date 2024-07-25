@@ -2,7 +2,6 @@ from global_functions.general_functions import write_object_to_db
 from flask import request
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
-from platforms_webhooks_catchers.campus.catch_student_application import catch_student_application_from_campus
 from platforms_webhooks_catchers.zapier.catch_student_application import catch_student_application_from_zapier
 from models import StudentToJobApplication
 import os
