@@ -23,29 +23,3 @@ class JobReadyStudent(MethodView):
         logger.debug(f"data type: {type(data)}")
         job_ready_student_dict = onboard_function(data)
         return str(job_ready_student_dict['id']), 201
-
-
-@blueprint.route('/onboard_students', methods=['POST'])
-class JobReadyStudent(MethodView):
-    
-    def post(self):
-        data = request.get_json()
-        student_ids = []
-        for student in data:
-            job_ready_student_dict = onboard_function(student)
-            student_ids.append(job_ready_student_dict['id'])
-            
-        return {"ids": student_ids}, 201
-
-
-@blueprint.route('/auto_onboard_student_from_hubspot', methods=['POST'])
-class JobReadyStudent(MethodView):
-    
-    def post(self):
-        data = request.get_json()
-        student_ids = []
-        for student in data:
-            job_ready_student_dict = onboard_function(student)
-            student_ids.append(job_ready_student_dict['id'])
-            
-        return {"ids": student_ids}, 201

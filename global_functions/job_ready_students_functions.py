@@ -15,6 +15,7 @@ def check_if_student_has_id_from_legacy_mocks(_payload):
 def payload_to_job_ready_student_dict(payload):
 	existing_id = check_if_student_has_id_from_legacy_mocks(payload)
 
+	#keep this student_id - it'll keep consistency across past and present
 	job_ready_student_dict = {'id': existing_id.student_id if existing_id else str(uuid4().hex),
 	                          "student_ms_id": str(payload.get('student_ms_id')),
 	                          "hubspot_id": str(payload.get('hs_object_id')),
@@ -32,7 +33,6 @@ def payload_to_job_ready_student_dict(payload):
 	                          }
 
 	stage_dict = {
-		"student_id": job_ready_student_dict['id'],
 		"hubspot_id": job_ready_student_dict['hubspot_id'],
 		"stage": job_ready_student_dict['hubspot_current_deal_stage']
 	}

@@ -18,10 +18,10 @@ logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 blueprint = Blueprint("deals' change from hubspot", __name__, description="This_is_a_templated_blueprint")
 
 
-def change_last_deal_to_deal_with_relevance(this_student_id, current_deal):
+def change_last_deal_to_deal_with_relevance(hubspot_id, current_deal):
     valid_stages = ("First Interview Scheduled", "First Interview",
                     "Additional Interview", "Final Interview", "Job Offer Received")
-    stages = StudentStagesV3.query.filter_by(student_id=this_student_id).order_by(
+    stages = StudentStagesV3.query.filter_by(hubspot_id=hubspot_id).order_by(
         StudentStagesV3.created_at.desc()).all()
     
     if current_deal in ("Fraudulent", "Closed Lost - Job Not Secured"):
@@ -61,7 +61,7 @@ class JobReadyStudent(MethodView):
             return f"{this_student} id is missing from the job ready students.", 404
         
         this_stage = job_ready_student_dict.get("hubspot_current_deal_stage")
-        correct_stage = change_last_deal_to_deal_with_relevance(this_student.id, this_stage)
+        correct_stage = change_last_deal_to_deal_with_relevance(job_ready_student_dict['hubspot_id'], this_stage)
         
         if this_stage == "Closed Won - Job Secured":
             this_student.is_employed = True
@@ -71,9 +71,10 @@ class JobReadyStudent(MethodView):
         this_student.current_program = job_ready_student_dict.get('current_program')
         this_student.updated_timestamp = datetime.datetime.now()
         
-        stage_dict = {"student_id": this_student.id,
+        stage_dict = {
                       "hubspot_id": this_student.hubspot_id,
                       "stage": this_stage,
+                      "company_if_rel": job_ready_student_dict['company']
                       }
         student_stage_obj = StudentStagesV3(**stage_dict)
         write_object_to_db(student_stage_obj)
@@ -108,7 +109,7 @@ class JobReadyStudent(MethodView):
             response = {"message": f"Student doesn't exist", "student": data}
             return response, 202
         
-        stage_dict = {"student_id": this_student.id,
+        stage_dict = {
                       "hubspot_id": data['hubspot_id'],
                       "stage": id_to_name.get(int(data["deal_stage"])),
                       "created_at": convert_to_datetime(data['created_at']),
@@ -126,9 +127,9 @@ class JobReadyStudent(MethodView):
         if existing_entry is None:
             student_stage_obj = StudentStagesV3(**stage_dict)
             write_object_to_db(student_stage_obj)
-            response = {"message": f"Success", "student_id": this_student.id, "stage": stage_dict["stage"]}
+            response = {"message": f"Success", "hubspot_id": this_student.hubspot_id, "stage": stage_dict["stage"]}
         else:
             logger.info(f"Stage for {stage_dict['hubspot_id']} already listed with {stage_dict['stage']} on {stage_dict['created_at'].date()}")
-            response = {"message": f"Success with hold", "student_id": this_student.id, "stage": stage_dict["stage"]}
+            response = {"message": f"Success with hold", "hubspot_id": this_student.hubspot_id, "stage": stage_dict["stage"]}
             
         return response, 201
