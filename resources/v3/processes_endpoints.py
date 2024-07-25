@@ -1,5 +1,5 @@
-from global_functions.LoggingGenerator import Logger
 from global_functions.new_process_functions import *
+from global_functions.general_functions import delete_object_from_db
 from resources.v3.continue_process_functions import parse_payload_and_write_to_db
 from flask import request
 from flask.views import MethodView
@@ -44,13 +44,18 @@ class ProcessInitiation(MethodView):
         data = request.get_json()
         data["stage_date"] = utc_to_date(data.get("next_recruiting_step_date"))
         
-        existing_process = ProcessModel.query.filter_by(hubspot_id=str(data['hs_object_id']),
-                                                        job_title=data['job_title'],
-                                                        company_name=data['company']).first()
-        if existing_process is None:
+        existing_process = ProcessModel.query.filter_by(hubspot_id=str(data['hs_object_id'])).first()
+        last_active_stage = StageModel.query.filter_by(process_id=existing_process.id, is_pass="PENDING").first()
+
+        if existing_process is None and last_active_stage is None:
             # This is a new process
             logger.debug(f"New process initiated: {data}")
             process_id = parse_and_write_to_db_new_processes(data)
+        elif existing_process and last_active_stage is None:
+            delete_object_from_db(ProcessModel, existing_process)
+            data['id'] = existing_process.id
+            process_id = parse_and_write_to_db_new_processes(data)
+
         else:
             # Get process_id and create a new stage
             process_id = parse_payload_and_write_to_db(data, existing_process.id)

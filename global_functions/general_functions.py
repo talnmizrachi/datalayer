@@ -32,3 +32,20 @@ def write_object_to_db(object_to_write):
         logger.error(f"Error writing object to db: {str(e)}")
         db.session.rollback()
         abort(500, message=str(e))
+
+
+def delete_object_from_db(object_class, object_id):
+    try:
+        logger.debug(f"deleting object with id {object_id} from db")
+        obj = db.session.query(object_class).get(object_id)  # Replace MyObjectClass with the actual class name
+        if obj:
+            db.session.delete(obj)
+            db.session.commit()
+            logger.debug(f"object with id {object_id} successfully deleted")
+        else:
+            logger.error(f"object with id {object_id} not found")
+            abort(404, message="Object not found")
+    except SQLAlchemyError as e:
+        logger.error(f"Error deleting object from db: {str(e)}")
+        db.session.rollback()
+        abort(500, message=str(e))
