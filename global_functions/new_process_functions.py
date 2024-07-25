@@ -14,7 +14,7 @@ def split_process_and_stage_dict(payload_dict):
         if old_key in d:
             d[new_key] = d.pop(old_key)
         return d
-    process_keys = {"id", "student_id", "hubspot_id", "domain",
+    process_keys = {"id", "hubspot_id", "domain",
                     "company_name", "job_title", 'process_start_date',
                     'source_1', 'source_2'}
     
