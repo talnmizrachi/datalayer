@@ -25,6 +25,7 @@ class MethodTemplate(MethodView):
         existing_application = StudentToJobApplication.query.filter_by(student_id=information['student_id'],
                                                                        job_id=information['job_id']).first()
         student_application_obj = StudentToJobApplication(**student_applied_dict)
+        
         if existing_application is None:
             write_object_to_db(student_application_obj)
         else:
@@ -53,3 +54,15 @@ class MethodTemplate(MethodView):
                 setattr(existing_application, key, value)
             db.session.commit()
         return information, 201
+
+
+@blueprint.route('/manual_student_application')
+class MethodTemplate(MethodView):
+    
+    def post(self):
+        data = request.get_json()
+        application_obj = StudentToJobApplication(**data)
+        
+        write_object_to_db(application_obj)
+        
+        return application_obj.id, 201

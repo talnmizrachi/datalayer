@@ -7,7 +7,7 @@ class StudentToJobApplication(db.Model):
     
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid4().hex))
     job_id = db.Column(db.String, nullable=True, unique=False)
-    student_id = db.Column(db.String, nullable=False, unique=False)
+    student_id = db.Column(db.String, nullable=True, unique=False)
     job_published_timestamp = db.Column(db.DateTime, nullable=True)
     job_offered_to_student_timestamp = db.Column(db.DateTime)
     student_applied = db.Column(db.Boolean, nullable=True)
