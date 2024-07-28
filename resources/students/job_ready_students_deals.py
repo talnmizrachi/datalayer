@@ -1,5 +1,5 @@
 import datetime
-
+from global_functions.ignoring_constants import MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE
 import sqlalchemy
 
 from global_functions.LoggingGenerator import Logger
@@ -53,6 +53,11 @@ class JobReadyStudent(MethodView):
     
     def post(self):
         data = request.get_json()
+        
+        if data['hs_object_id'] in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
+            logger.info(f"Test student: {data['hs_object_id']} is a test student. Skipping the job ready update. 200 OK")
+            return {"message": f"Test students are ignored: {data['hs_object_id']}"}, 200
+        
         logger.info(f"Got a deal change:\t{data}")
         job_ready_student_dict = job_ready_catch_deal_stage(data)
         this_student = JobReadyStudentModel.query.filter_by(hubspot_id=job_ready_student_dict['hubspot_id']).first()
