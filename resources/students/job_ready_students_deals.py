@@ -74,7 +74,7 @@ class JobReadyStudent(MethodView):
         stage_dict = {
                       "hubspot_id": this_student.hubspot_id,
                       "stage": this_stage,
-                      "company_if_rel": job_ready_student_dict['company']
+                      "company_if_rel": job_ready_student_dict.get('company')
                       }
         student_stage_obj = StudentStagesV3(**stage_dict)
         write_object_to_db(student_stage_obj)
