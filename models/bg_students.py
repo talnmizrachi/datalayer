@@ -14,7 +14,7 @@ class BGStudentModel(db.Model):
     
     domain = db.Column(db.String, nullable=True)
     active_cohort = db.Column(db.String, nullable=True)
-    
+    hs_pipeline = db.Column(db.String, nullable=True)
     is_employed = db.Column(db.Boolean, nullable=False, default=False)
     
     student_owner = db.Column(db.String, nullable=True)

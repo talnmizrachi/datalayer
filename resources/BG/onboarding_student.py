@@ -23,19 +23,20 @@ def onboard_bg_function(data):
     
     job_ready_student_dict = {
             "enrolment_pipeline_stage": data['hs_pipeline_stage'],
-            "hubspot_id": data['hubspot_id'],
+            "hubspot_id": str(data['hubspot_id']),
             "first_name": data['firstname'],
             "last_name": data['lastname'],
             "domain": data['program'],
             "active_cohort": data['enrolment_cohort'],
-            "student_owner": data['hubspot_owner_id']
+            "student_owner": data['hubspot_owner_id'],
+            "hs_pipeline":data['hs_pipeline']
     }
     
     job_ready_student_object = BGStudentModel(**job_ready_student_dict)
 
     write_object_to_db(job_ready_student_object)
     
-    logger.info(f"Onboarded new student:\t{job_ready_student_dict['id']}")
+    logger.info(f"Onboarded new student:\t{job_ready_student_dict['hubspot_id']}")
     return job_ready_student_dict
 
 
