@@ -63,5 +63,5 @@ class NewBGStudent(MethodView):
             
         logger.debug(f"data type: {type(data)}")
         job_ready_student_dict = onboard_bg_function(data)
-        
-        return str(job_ready_student_dict['hubspot_id']), 201
+        logger.debug(f"Debugging problem - {job_ready_student_dict}")
+        return job_ready_student_dict, 201
