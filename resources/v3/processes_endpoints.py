@@ -44,7 +44,10 @@ class ProcessInitiation(MethodView):
         data = request.get_json()
         data["stage_date"] = utc_to_date(data.get("next_recruiting_step_date"))
         
-        existing_process = ProcessModel.query.filter_by(hubspot_id=str(data['hs_object_id'])).first()
+        existing_process = ProcessModel.query.filter_by(hubspot_id=str(data['hs_object_id']),
+                                                        company_name=data['company'],
+                                                        job_title=data['job_title']).first()
+        
         last_active_stage = StageModel.query.filter_by(process_id=existing_process.id, is_pass="PENDING").first()
 
         if existing_process is None and last_active_stage is None:
