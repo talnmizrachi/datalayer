@@ -40,7 +40,8 @@ class ProcessInitiation(MethodView):
             else:
                 # Return today's date plus 7 days
                 return datetime.utcnow().date() + timedelta(days=7)
-        
+
+        last_active_stage = None
         data = request.get_json()
         data["stage_date"] = utc_to_date(data.get("next_recruiting_step_date"))
         
