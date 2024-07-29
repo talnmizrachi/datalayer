@@ -28,7 +28,6 @@ def onboard_bg_function(data):
             "last_name": data['lastname'],
             "domain": data['program'],
             "active_cohort": data['enrolment_cohort'],
-            "is_employed": data['hs_last_modified'],
             "student_owner": data['hubspot_owner_id']
     }
     
@@ -45,11 +44,12 @@ class NewBGStudent(MethodView):
     
     def post(self):
         """
-        workflow url = https://app.hubspot.com/workflows/9484219/platform/flow/585666594
+        workflow url =
 
         :return:
         """
         data = request.get_json()
         logger.debug(f"data type: {type(data)}")
         job_ready_student_dict = onboard_bg_function(data)
+        
         return str(job_ready_student_dict['id']), 201
