@@ -35,7 +35,8 @@ def onboard_bg_function(data):
             "domain": data['program'],
             "active_cohort": data['enrolment_cohort'],
             "student_owner": data['hubspot_owner_id'],
-            "hs_pipeline": data['hs_pipeline']
+            "hs_pipeline": data['hs_pipeline'],
+            "is_job_ready": data['is_job_ready']
     }
     
     job_ready_student_object = BGStudentModel(**job_ready_student_dict)
