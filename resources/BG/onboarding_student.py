@@ -50,6 +50,10 @@ class NewBGStudent(MethodView):
         :return:
         """
         data = request.get_json()
+        if data['hubspot_id'] == "":
+            logger.debug(f"Hubspot ID is missing for BG student: {data}")
+            abort(400, description="Hubspot ID is required")
+            
         logger.debug(f"data type: {type(data)}")
         job_ready_student_dict = onboard_bg_function(data)
         
