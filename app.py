@@ -11,6 +11,7 @@ from resources.students.job_ready_students_owners import blueprint as student_ow
 from resources.students.job_ready_students_school_masters import blueprint as students_school_masters_blp
 from resources.students.job_ready_cohorts_changes import blueprint as cohorts_changes_blp
 from resources.v3.first_payment_logging import blueprint as first_payment_logging_blp
+from resources.BG.onboarding_student import blueprint as bg_students_blp
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 from global_functions.LoggingGenerator import Logger
@@ -46,6 +47,7 @@ def create_app(db_url=None):
     api.register_blueprint(students_school_masters_blp)
     api.register_blueprint(cohorts_changes_blp)
     api.register_blueprint(first_payment_logging_blp)
+    api.register_blueprint(bg_students_blp)
     
     return app
     

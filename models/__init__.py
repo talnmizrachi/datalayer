@@ -12,4 +12,5 @@ from models.new_test_table import NewTestTableModel
 from models.student_new_payments import StudentNewPaymentModel
 from models.v3_pulse_table import V3DailyPulseModel
 from models.another_payments_test_1 import AnotherNewPayments
+from models.bg_students import BGStudentModel
 
