@@ -16,7 +16,11 @@ def onboard_bg_function(data):
     logger.info(f"Onboarding BG student - {data}")
     
     is_existing = BGStudentModel.query.filter_by(hubspot_id=str(data['hubspot_id'])).first()
-    
+
+    if data['hubspot_id'] == "":
+        logger.info(f"Empty process - hubspot id is empty")
+        return {"id": None, "message": "Empty process - hubspot id is empty"}
+
     if is_existing is not None:
         logger.info(f"BG Student {data['hubspot_id']} is already onboarded")
         return {"id": data['hubspot_id'], "message": "BG Student is already onboarded"}
@@ -29,7 +33,7 @@ def onboard_bg_function(data):
             "domain": data['program'],
             "active_cohort": data['enrolment_cohort'],
             "student_owner": data['hubspot_owner_id'],
-            "hs_pipeline":data['hs_pipeline']
+            "hs_pipeline": data['hs_pipeline']
     }
     
     job_ready_student_object = BGStudentModel(**job_ready_student_dict)
