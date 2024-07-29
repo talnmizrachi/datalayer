@@ -24,9 +24,11 @@ def onboard_bg_function(data):
     if is_existing is not None:
         logger.info(f"BG Student {data['hubspot_id']} is already onboarded")
         return {"id": data['hubspot_id'], "message": "BG Student is already onboarded"}
-    
+
+    stages_dict = {"62780568":"Dropped", "62515535":"Active", "62780567":"Graduated"}
+
     job_ready_student_dict = {
-            "enrolment_pipeline_stage": data['hs_pipeline_stage'],
+            "enrolment_pipeline_stage": stages_dict.get(str(data['hs_pipeline_stage']), data['hs_pipeline_stage']),
             "hubspot_id": str(data['hubspot_id']),
             "first_name": data['firstname'],
             "last_name": data['lastname'],
