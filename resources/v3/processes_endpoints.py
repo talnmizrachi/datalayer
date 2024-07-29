@@ -48,7 +48,8 @@ class ProcessInitiation(MethodView):
                                                         company_name=data['company'],
                                                         job_title=data['job_title']).first()
         
-        last_active_stage = StageModel.query.filter_by(process_id=existing_process.id, is_pass="PENDING").first()
+        if existing_process:
+            last_active_stage = StageModel.query.filter_by(process_id=existing_process.id, is_pass="PENDING").first()
 
         if existing_process is None and last_active_stage is None:
             # This is a new process
