@@ -16,11 +16,23 @@ from resources.BG.change_in_attribute import blueprint as bg_students_change_in_
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 from global_functions.LoggingGenerator import Logger
+import sentry_sdk
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 
 
 def create_app(db_url=None):
+    sentry_sdk.init(
+        dsn="https://8578be764d8d0797ae52d1874117aee8@o4507679066292224.ingest.de.sentry.io/4507689973645392",
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        traces_sample_rate=1.0,
+        # Set profiles_sample_rate to 1.0 to profile 100%
+        # of sampled transactions.
+        # We recommend adjusting this value in production.
+        profiles_sample_rate=1.0,
+    )
+    
     app = Flask(__name__)
     load_dotenv()
     app.config["API_TITLE"] = "Datalayer endpoints V3"
