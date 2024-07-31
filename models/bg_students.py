@@ -7,7 +7,7 @@ class BGStudentModel(db.Model):
     
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid4().hex))
     enrolment_pipeline_stage = db.Column(db.String, nullable=True)
-    
+    stage_reason = db.Column(db.String, nullable=True)
     hubspot_id = db.Column(db.String, nullable=False, unique=True)
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
