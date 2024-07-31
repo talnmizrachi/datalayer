@@ -14,6 +14,7 @@ from resources.v3.first_payment_logging import blueprint as first_payment_loggin
 from resources.BG.onboarding_student import blueprint as bg_students_blp
 from resources.BG.change_in_attribute import blueprint as bg_students_change_in_attribute
 from resources.BG.student_got_a_job_update import blueprint as student_got_a_job_update_blp
+from resources.v3.updateing_tuition_after_discount import blueprint as updating_tuition_after_discount_blp
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 from global_functions.LoggingGenerator import Logger
@@ -56,7 +57,7 @@ def create_app(db_url=None):
     with app.app_context():
         db.create_all()
     migrate = Migrate(app, db)
-    
+
     api.register_blueprint(jr_students_blp)
     api.register_blueprint(new_process_init_blp)
     api.register_blueprint(mock_interview_details_blp)
@@ -69,6 +70,7 @@ def create_app(db_url=None):
     api.register_blueprint(bg_students_blp)
     api.register_blueprint(bg_students_change_in_attribute)
     api.register_blueprint(student_got_a_job_update_blp)
+    api.register_blueprint(updating_tuition_after_discount_blp)
     
     return app
     

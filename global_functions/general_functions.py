@@ -23,6 +23,14 @@ def read_typeform_answers(typeform_payload, typeform_questions_ids_dict):
     return new_dict
 
 
+def update_objects_in_session():
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        logger.error(f"Error writing object to db: {str(e)}")
+        db.session.rollback()
+        abort(400, message=str(e))
+
 def write_object_to_db(object_to_write):
     try:
         logger.debug(f"writing object to db: {object_to_write}")
