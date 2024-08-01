@@ -6,8 +6,9 @@ class BGStudentMSScoreModel(db.Model):
     __tablename__ = 'bg_students_ms_score'
     
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid4().hex))
-    date_of_review = db.Column(db.Date, nullable=False)
-    hubspot_id = db.Column(db.String, nullable=False), db.ForeignKey('bg_students.hubspot_id')
+    date_of_review = db.Column(db.Date, nullable=True)
+    corrected_date_of_review = db.Column(db.Date, nullable=False)
+    hubspot_id = db.Column(db.String, db.ForeignKey('bg_students.hubspot_id'), nullable=False)
     cohort = db.Column(db.String, nullable=False)
     domain = db.Column(db.String, nullable=False)
     instruction = db.Column(db.Integer, nullable=True)

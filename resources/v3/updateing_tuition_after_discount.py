@@ -28,7 +28,7 @@ class UpdatePayment(MethodView):
     
     def post(self):
         data = request.get_json()
-        hubspot_id = str(data["hs_object_id"])
+        hubspot_id = str(data["hubspot_id"])
 
         existing_first_payment = StudentNewPaymentModel.query.filter(StudentNewPaymentModel.hubspot_id == hubspot_id).first()
         if existing_first_payment is None:
