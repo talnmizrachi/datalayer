@@ -6,7 +6,7 @@ class BGStudentChangesModel(db.Model):
     __tablename__ = 'bg_student_changes'
     
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid4().hex))
-    hubspot_id = db.Column(db.String, nullable=False)
+    hubspot_id = db.Column(db.String, db.ForeignKey('bg_students.hubspot_id'), nullable=False)
     key = db.Column(db.String, nullable=True)
     from_value = db.Column(db.String, nullable=True)
     to_value = db.Column(db.String, nullable=True)
