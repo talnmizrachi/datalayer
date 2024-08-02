@@ -35,7 +35,7 @@ class UpdatePayment(MethodView):
             logger.error(f"Student {hubspot_id} is not in the payments table yet")
             return str('hubspot_id'), 201
 
-        logger.error(f"Changing amount from {existing_first_payment.amount} to {data['tuition_after_discount___usd_']}")
+        logger.info(f"Changing amount from {existing_first_payment.amount} to {data['tuition_after_discount___usd_']}")
         existing_first_payment.amount = data['tuition_after_discount___usd_']
 
         update_objects_in_session()
