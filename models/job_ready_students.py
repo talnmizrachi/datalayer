@@ -11,11 +11,10 @@ class JobReadyStudentModel(db.Model):
     
     domain = db.Column(db.String, nullable=True)
     active_cohort = db.Column(db.String, nullable=True)
-
-    student_country = db.Column(db.String, nullable=True)
-    student_state = db.Column(db.String, nullable=True)
-    student_city = db.Column(db.String, nullable=False)
     
+    student_first_name = db.Column(db.String, nullable=True)
+    student_last_name = db.Column(db.String, nullable=True)
+
     schoolmaster_id = db.Column(db.String, nullable=True)
     
     is_employed = db.Column(db.Boolean, nullable=False, default=False)
