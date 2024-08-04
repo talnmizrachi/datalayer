@@ -46,6 +46,8 @@ class JobReadyStudent(MethodView):
             
         this_student.student_owner = new_contact_owner['student_hubspot_owner_id']
         this_student.updated_timestamp = datetime.datetime.now()
+        this_student.student_first_name = data['firstname']
+        this_student.student_last_name = data['lastname']
         
         student_owner_change = StudentOwnerChangesModel(**new_contact_owner)
         write_object_to_db(student_owner_change)
