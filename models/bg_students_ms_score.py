@@ -19,3 +19,4 @@ class BGStudentMSScoreModel(db.Model):
     overall_experience = db.Column(db.Integer, nullable=True)
     ratio = db.Column(db.String, nullable=True)
     final_score = db.Column(db.Float, nullable=True)
+    created_at = db.Column(db.DateTime,  default=db.func.current_timestamp())

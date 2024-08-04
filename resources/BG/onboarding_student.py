@@ -4,7 +4,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from models import BGStudentModel
 import os
-from global_functions.general_functions import write_object_to_db
+from global_functions.general_functions import write_object_to_db, update_objects_in_session
 
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()

@@ -11,7 +11,7 @@ class BGStudentModel(db.Model):
     hubspot_id = db.Column(db.String, nullable=False, unique=True)
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
-    
+    email = db.Column(db.String, nullable=True, unique=True)
     domain = db.Column(db.String, nullable=True)
     active_cohort = db.Column(db.String, nullable=True)
     hs_pipeline = db.Column(db.String, nullable=True)
