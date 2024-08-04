@@ -31,7 +31,7 @@ def change_last_deal_to_deal_with_relevance(hubspot_id, current_deal):
             else:
                 return "Job Seeking"
     
-    if current_deal in ("Double"):
+    if current_deal in ("Double", "Closed Won - Got an Interview"):
         return "Closed Won - Got an Interview"
     
     return current_deal
@@ -68,7 +68,7 @@ class JobReadyStudent(MethodView):
         this_stage = job_ready_student_dict.get("hubspot_current_deal_stage")
         correct_stage = change_last_deal_to_deal_with_relevance(job_ready_student_dict['hubspot_id'], this_stage)
         
-        if this_stage == "Closed Won - Job Secured":
+        if correct_stage  == "Closed Won - Job Secured":
             this_student.is_employed = True
         
         this_student.hubspot_current_deal_stage = correct_stage
@@ -78,7 +78,7 @@ class JobReadyStudent(MethodView):
         
         stage_dict = {
                       "hubspot_id": this_student.hubspot_id,
-                      "stage": this_stage,
+                      "stage": correct_stage,
                       "company_if_rel": job_ready_student_dict.get('company')
                       }
         student_stage_obj = StudentStagesV3(**stage_dict)
@@ -101,7 +101,6 @@ class JobReadyStudent(MethodView):
             # Remove the timezone info
             dt_without_timezone = dt_with_timezone.replace(tzinfo=None)
             return dt_without_timezone
-        
         
         data = request.get_json()
         logger.info(f"Got a manual deal change:\t{data['created_at']}")
