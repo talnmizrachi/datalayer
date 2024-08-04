@@ -75,6 +75,8 @@ class JobReadyStudent(MethodView):
         this_student.student_owner = job_ready_student_dict.get('csa_fullname')
         this_student.current_program = job_ready_student_dict.get('current_program')
         this_student.updated_timestamp = datetime.datetime.now()
+        this_student.student_first_name = job_ready_student_dict.get('firstname')
+        this_student.student_last_name = job_ready_student_dict.get('lastname')
         
         stage_dict = {
                       "hubspot_id": this_student.hubspot_id,
