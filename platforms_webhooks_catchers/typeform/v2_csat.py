@@ -5,8 +5,15 @@ def process_form_response(payload):
     # Extract necessary fields from payload
     email = payload['form_response']['hidden']['email']
     submit_date = payload['form_response']['submitted_at']
-    answers = {answer['field']['ref']: answer['number'] if answer['type'] == 'number' else answer['choice']['label']
-               for answer in payload['form_response']['answers']}
+    
+    answers = {}
+    for answer in payload['form_response']['answers']:
+        if answer['type'] == 'number':
+            answers[answer['field']['ref']] = answer['number']
+        elif answer['type'] == 'choice':
+            answers[answer['field']['ref']] = answer['choice']['label']
+        elif answer['type'] == 'text':
+            answers[answer['field']['ref']] = answer['text']
     
     result = {
             'email': email,
@@ -16,6 +23,5 @@ def process_form_response(payload):
             "mentorship": answers.get('question_10'),
             "overall_experience": answers.get('question_12')
     }
-    
     
     return result
