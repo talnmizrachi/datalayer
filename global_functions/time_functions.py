@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 
-def last_thursday(date_str):
+def last_thursday_getter(date_str):
     # Convert string to datetime object
     date = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
     
