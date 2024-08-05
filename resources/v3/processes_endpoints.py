@@ -144,39 +144,5 @@ def get_other_processes_for_student(student_hubspot_id, this_process_id):
         this_student.hubspot_current_deal_stage = "Job Seeking"
 
 
-@blueprint.route('/manual_process', methods=['POST'])
-class ProcessTermination(MethodView):
-    """ Close process through hubspot workflow
-    https://app.hubspot.com/workflows/9484219/platform/flow/587156903/edit
-
-    Once a deal is closed (either closed won or closed lost, the process is terminated.
-
-    """
-    
-    def post(self):
-        data = request.get_json()
-        process_obj = ProcessModel(**data)
-        
-        write_object_to_db(process_obj)
-        
-        return process_obj.id, 201
-
-
-@blueprint.route('/manual_process_stages', methods=['POST'])
-class ProcessTermination(MethodView):
-    """ Close process through hubspot workflow
-    https://app.hubspot.com/workflows/9484219/platform/flow/587156903/edit
-
-    Once a deal is closed (either closed won or closed lost, the process is terminated.
-
-    """
-    
-    def post(self):
-        data = request.get_json()
-        stage_obj= StageModel(**data)
-        
-        write_object_to_db(stage_obj)
-        
-        return stage_obj.id, 201
 if __name__ == '__main__':
     pass
