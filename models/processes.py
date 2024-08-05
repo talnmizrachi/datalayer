@@ -16,7 +16,10 @@ class ProcessModel(db.Model):
     # add constraint to make sure student_id is either student_id or job_ready or regular student
     student_ms_id = db.Column(db.String, nullable=True)
     student_id = db.Column(db.String,  nullable=True)
-    
+
+    student_first_name = db.Column(db.String, nullable=True)
+    student_last_name = db.Column(db.String, nullable=True)
+
     domain = db.Column(db.String, nullable=True)
     
     company_name = db.Column(db.String, nullable=False)
