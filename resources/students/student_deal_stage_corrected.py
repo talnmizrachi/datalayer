@@ -17,6 +17,26 @@ blueprint = Blueprint("deals' change from hubspot - Second version", __name__,
                       description="This_is_a_templated_blueprint")
 
 
+def split_process_and_stage_dict(payload_dict):
+	def rename_key(d, old_key, new_key):
+		if old_key in d:
+			d[new_key] = d.pop(old_key)
+		return d
+
+	process_keys = {"id", "hubspot_id", "domain", 'hubspot_deal_id',
+	                "company_name", "job_title", 'process_start_date',
+	                'source_1', 'source_2'}
+
+	stage_keys = {"id", 'hubspot_deal_id', "stage_in_funnel", "type_of_stage", "deal_stage",
+	              "had_home_assignment", 'stage_date'}
+
+	process_dict = {k: v for k, v in payload_dict.items() if k in process_keys}
+	stage_dict = {k: v for k, v in payload_dict.items() if k in stage_keys}
+	rename_key(stage_dict, 'id', 'process_id')
+	stage_dict['id'] = str(uuid4().hex)
+
+	return process_dict, stage_dict
+
 def create_cohort_dict(this_student_hs_id_, active_cohort_):
 	cohort_dict = {
 		"hubspot_id": this_student_hs_id_,
@@ -46,7 +66,7 @@ def parse_incoming_getting_passing_pipeline(data):
 			"student_last_name": data.get('student_last_name'),
 			"schoolmaster_id": data.get('schoolmaster_id'),
 			"domain": data.get('domain'),
-			"deal_stage_name": deal_stage_dictionary.get(data['dealstage']),
+			"stage": deal_stage_dictionary.get(data['dealstage']),
 			"active_cohort": data.get('active_cohort'),
 			"student_owner": get_owner_name(data.get('student_owner', None)),
 			"current_program": data.get('bg___program')
@@ -56,7 +76,7 @@ def parse_incoming_getting_passing_pipeline(data):
 	# Passing Interviews
 	elif piepline == 95255387:
 
-		process_dict = {
+		pipeline_dict = {
 			"id": str(uuid4().hex),
 			"hubspot_deal_id": data.get('hubspot_deal_id'),
 			"hubspot_id": data.get('hubspot_id'),
@@ -65,19 +85,9 @@ def parse_incoming_getting_passing_pipeline(data):
 			"domain": data.get('domain'),
 			"company_name": data.get('company_name'),
 			"job_title": data.get('job_title'),
-			"process_start_date": datetime.date.today(),
-		}
-
-		pipeline_dict = {
-			"hubspot_id": data.get("hubspot_id"),
-			"domain": data.get("domain"),
-			"hubspot_deal_id": data.get("hubspot_deal_id"),
-			"student_last_name": data.get("student_last_name"),
+			"process_start_date": data.get('createdate'),
 			"next_recruiting_step_date": data.get("next_recruiting_step"),
-			"dealstage": data.get("dealstage"),
-			"job_title": data.get("job_title"),
-			"company_name": data.get("company"),
-			"student_first_name": data.get("student_first_name"),
+			"deal_stage": deal_stage_dictionary.get(data['dealstage']),
 			"next_recruiting_step_type": data.get("next_recruiting_step")
 		}
 
@@ -179,8 +189,10 @@ class JobReadyStudentDealChange(MethodView):
 			this_student.hubspot_current_deal_stage = this_stage
 			this_student.updated_timestamp = datetime.datetime.now()
 
-			process_obj = ProcessModel(**create_process_dict(this_student_hs_))
-			stage_obj = StudentStagesV3(**create_stage_dict(this_student_hs_id, this_stage))
+			process_dict, stage_dict = split_process_and_stage_dict(job_ready_student_dict)
+
+			process_obj = ProcessModel(**process_dict)
+			stage_obj = StudentStagesV3(**stage_dict)
 
 			# Check if process exists, if not - create a new process, and a new stage
 			...
