@@ -9,3 +9,4 @@ alembic==1.13.1
 gunicorn
 psycopg2
 sentry-sdk[flask]
+requests~=2.32.3
