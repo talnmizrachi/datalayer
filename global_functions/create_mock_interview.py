@@ -22,7 +22,7 @@ def create_mock_interview_line_for_stage_continue(stage_dict):
             "stage_id": stage_dict.get('id'),
             "stage_in_funnel": stage_dict.get('stage_in_funnel'),
             "type_of_stage": stage_dict.get('type_of_stage'),
-            "had_home_assignment": stage_dict.get('had_home_assignment'),
+            # "had_home_assignment": stage_dict.get('had_home_assignment'),
             "home_assignment_questions": stage_dict.get('home_assignment_questions'),
             "home_assignment_answers": stage_dict.get('home_assignment_answers'),
     }

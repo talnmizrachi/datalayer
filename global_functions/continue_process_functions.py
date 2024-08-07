@@ -41,16 +41,6 @@ def direct_payload_to_new_stage_in_process_dict(data):
     attrs['updated_at'] = datetime.now()
     # if the stage is a home assignment stage or the process had a home assignment,
     # add the questions and answers to the new stage
-    if current_success_stage.had_home_assignment:
-        attrs['home_assignment_questions'] = current_success_stage.home_assignment_questions
-        attrs['home_assignment_answers'] = current_success_stage.home_assignment_answers
-    elif is_home_assignment:
-        attrs['had_home_assignment'] = True
-        attrs['home_assignment_questions'] = data.get('home_assignment_questions')
-        attrs['home_assignment_answers'] = data.get('home_assignment_answers')
-    else:
-        attrs['home_assignment_questions'] = None
-        attrs['home_assignment_answers'] = None
     
     return attrs
 
@@ -104,16 +94,16 @@ def typeform_payload_to_new_stage_in_process_dict(data):
     attrs['updated_at'] = datetime.now()
     # if the stage is a home assignment stage or the process had a home assignment,
     # add the questions and answers to the new stage
-    if current_success_stage.had_home_assignment:
-        attrs['home_assignment_questions'] = current_success_stage.home_assignment_questions
-        attrs['home_assignment_answers'] = current_success_stage.home_assignment_answers
-    elif is_home_assignment:
-        attrs['had_home_assignment'] = True
-        attrs['home_assignment_questions'] = interim_stage_dict.get('home_assignment_questions')
-        attrs['home_assignment_answers'] = interim_stage_dict.get('home_assignment_answers')
-    else:
-        attrs['home_assignment_questions'] = None
-        attrs['home_assignment_answers'] = None
+    # if current_success_stage.had_home_assignment:
+    #     attrs['home_assignment_questions'] = current_success_stage.home_assignment_questions
+    #     attrs['home_assignment_answers'] = current_success_stage.home_assignment_answers
+    # elif is_home_assignment:
+    #     attrs['had_home_assignment'] = True
+    #     attrs['home_assignment_questions'] = interim_stage_dict.get('home_assignment_questions')
+    #     attrs['home_assignment_answers'] = interim_stage_dict.get('home_assignment_answers')
+    # else:
+    #     attrs['home_assignment_questions'] = None
+    #     attrs['home_assignment_answers'] = None
     
     return attrs
 

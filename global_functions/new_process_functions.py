@@ -19,7 +19,7 @@ def split_process_and_stage_dict(payload_dict):
                     'source_1', 'source_2'}
     
     stage_keys = {"id",'hubspot_deal_id', "stage_in_funnel",  "type_of_stage", "deal_stage",
-                  "had_home_assignment", 'stage_date'}
+                  'stage_date'}
     
     process_dict = {k: v for k, v in payload_dict.items() if k in process_keys}
     stage_dict = {k: v for k, v in payload_dict.items() if k in stage_keys}
@@ -68,7 +68,6 @@ def direct_payload_to_new_process_dict(direct_payload):
             "process_start_date": date.today(),
             "stage_in_funnel": "1st Stage",
             "type_of_stage": direct_payload.get("next_recruiting_step_type"),
-            "had_home_assignment": direct_payload.get("had_home_assignment", False),
             "stage_date": direct_payload.get("stage_date"),
             "deal_stage": deal_stage_verbal,
             "hubspot_deal_id": direct_payload.get('deal_object_id')

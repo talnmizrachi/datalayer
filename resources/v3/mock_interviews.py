@@ -60,7 +60,7 @@ def add_mock_interview_details_for_new_processes(_mock_int_dict):
     active_stage_funnel_location = active_stage.stage_in_funnel
     active_stage_type = active_stage.type_of_stage
     active_stage_date = active_stage.stage_date
-    active_stage_had_home_assignment = active_stage.had_home_assignment
+    # active_stage_had_home_assignment = active_stage.had_home_assignment
     
     # Find the Mock interview
     
@@ -81,7 +81,7 @@ def add_mock_interview_details_for_new_processes(_mock_int_dict):
     this_mock_object.stage_in_funnel = active_stage_funnel_location
     this_mock_object.type_of_stage = active_stage_type
     this_mock_object.stage_date = active_stage_date
-    this_mock_object.had_home_assignment = active_stage_had_home_assignment
+    # this_mock_object.had_home_assignment = active_stage_had_home_assignment
     
     return this_mock_object
 
