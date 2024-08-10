@@ -15,6 +15,7 @@ from resources.BG.onboarding_student import blueprint as bg_students_blp
 from resources.BG.change_in_attribute import blueprint as bg_students_change_in_attribute
 from resources.BG.student_got_a_job_update import blueprint as student_got_a_job_update_blp
 from resources.v3.updateing_tuition_after_discount import blueprint as updating_tuition_after_discount_blp
+from resources.students.student_deal_stage_corrected import blueprint as student_deal_stage_corrected_blp
 from resources.BG.student_csat_temp import blueprint as bg_students_ms_score
 from flask_migrate import Migrate
 from dotenv import load_dotenv
@@ -73,6 +74,7 @@ def create_app(db_url=None):
     api.register_blueprint(student_got_a_job_update_blp)
     api.register_blueprint(updating_tuition_after_discount_blp)
     api.register_blueprint(bg_students_ms_score)
+    api.register_blueprint(student_deal_stage_corrected_blp)
     
     return app
     
