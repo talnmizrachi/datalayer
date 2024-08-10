@@ -35,6 +35,7 @@ class ProcessModel(db.Model):
     
     source_1 = db.Column(db.String, nullable=True)
     source_2 = db.Column(db.String, nullable=True)
+    latest_stage = db.Column(db.String, nullable=True)
     
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp())
