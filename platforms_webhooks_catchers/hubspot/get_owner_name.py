@@ -17,8 +17,8 @@ def get_owner_name(user_id):
 	}
 
 	response = requests.get(url, headers=headers)
-
 	if response.status_code == 200:
+		logger.debug(f"Got Response from HubSpot")
 		owner_data = response.json()
 		owner_name = owner_data.get('firstName', '') + ' ' + owner_data.get('lastName', '')
 		return owner_name
