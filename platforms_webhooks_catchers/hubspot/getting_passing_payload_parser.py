@@ -2,6 +2,10 @@ from uuid import uuid4
 from global_functions.time_functions import utc_to_date
 from platforms_webhooks_catchers.hubspot.catch_job_ready_change_in_deal_stage import deal_stage_dict
 from platforms_webhooks_catchers.hubspot.get_owner_name import get_owner_name
+from global_functions.LoggingGenerator import Logger
+import os
+
+logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 
 
 def parse_incoming_getting_passing_pipeline(data):
@@ -10,7 +14,7 @@ def parse_incoming_getting_passing_pipeline(data):
     piepline = str(data.get("pipeline"))
     # Getting Interviews
     if piepline == "95522316":
-
+        logger.info(f"GETTING_PIPELINES: incoming_payload - {data}")
         pipeline_dict = {
                 "hubspot_id": str(data.get('hubspot_id')),
                 "student_first_name": data.get('student_first_name'),

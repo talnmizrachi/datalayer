@@ -40,7 +40,9 @@ class JobReadyStudentDealChange(MethodView):
         this_student_cohort = job_ready_student_dict.get("active_cohort")
         student_name = job_ready_student_dict.get('student_first_name')
         student_surname = job_ready_student_dict.get('student_last_name')
-        
+
+        logger.info(f"The student {student_name} {student_surname} from {this_student_cohort} is in the {this_stage} stage")
+
         this_student = JobReadyStudentModel.query.filter_by(hubspot_id=this_student_hs_id).first()
         
         if this_student is None:
