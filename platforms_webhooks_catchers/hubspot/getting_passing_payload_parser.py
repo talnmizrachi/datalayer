@@ -21,7 +21,7 @@ def parse_incoming_getting_passing_pipeline(data):
                 "student_last_name": data.get('student_last_name'),
                 "schoolmaster_id": data.get('schoolmaster_id'),
                 "domain": data.get('domain'),
-                "hubspot_current_deal_stage": deal_stage_dictionary.get(data['dealstage']),
+                "hubspot_current_deal_stage": deal_stage_dictionary.get(str(data['dealstage'])),
                 "active_cohort": data.get('active_cohort'),
                 "student_owner": get_owner_name(data.get('student_owner', None)),
                 "current_program": data.get('bg___program')
@@ -45,7 +45,7 @@ def parse_incoming_getting_passing_pipeline(data):
                 "job_title": data.get('job_title'),
                 "process_start_date": utc_to_date(data.get('createdate')),
                 "type_of_stage": data.get("next_recruiting_step_type"),
-                "deal_stage": deal_stage_dictionary.get(data['dealstage']),
+                "deal_stage": deal_stage_dictionary.get(str(data['dealstage'])),
                 "stage_date": utc_to_date(data.get("next_recruiting_step")),
                 "stage_in_funnel": "1st Stage",
         }
