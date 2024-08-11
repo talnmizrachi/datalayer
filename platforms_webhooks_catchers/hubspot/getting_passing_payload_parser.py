@@ -3,12 +3,14 @@ from global_functions.time_functions import utc_to_date
 from platforms_webhooks_catchers.hubspot.catch_job_ready_change_in_deal_stage import deal_stage_dict
 from platforms_webhooks_catchers.hubspot.get_owner_name import get_owner_name
 
+
 def parse_incoming_getting_passing_pipeline(data):
     pipeline_dict = {}
     deal_stage_dictionary = deal_stage_dict()
-    piepline = data.get("pipeline")
+    piepline = str(data.get("pipeline"))
     # Getting Interviews
-    if piepline == 95522316:
+    if piepline == "95522316":
+
         pipeline_dict = {
                 "hubspot_id": str(data.get('hubspot_id')),
                 "student_first_name": data.get('student_first_name'),
@@ -20,10 +22,13 @@ def parse_incoming_getting_passing_pipeline(data):
                 "student_owner": get_owner_name(data.get('student_owner', None)),
                 "current_program": data.get('bg___program')
         }
+        if "created_at" in data:
+            pipeline_dict["created_at"] = data.get("created_at")
+            pipeline_dict["updated_timestamp"] = data.get("created_at")
         return pipeline_dict
     
     # Passing Interviews
-    elif piepline == 95255387:
+    elif piepline == "95255387":
         
         pipeline_dict = {
                 "id": str(uuid4().hex),
@@ -42,7 +47,7 @@ def parse_incoming_getting_passing_pipeline(data):
         }
     
     # V3 Payments
-    elif piepline == 107256463:
+    elif piepline == "107256463":
         ...
     
     return pipeline_dict

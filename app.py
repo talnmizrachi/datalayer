@@ -17,6 +17,7 @@ from resources.BG.student_got_a_job_update import blueprint as student_got_a_job
 from resources.v3.updateing_tuition_after_discount import blueprint as updating_tuition_after_discount_blp
 from resources.students.student_deal_stage_corrected import blueprint as student_deal_stage_corrected_blp
 from resources.BG.student_csat_temp import blueprint as bg_students_ms_score
+from resources.students.jr_students_getting_interviews import blueprint as jr_students_getting_interviews_blp
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 from global_functions.LoggingGenerator import Logger
@@ -75,6 +76,7 @@ def create_app(db_url=None):
     api.register_blueprint(updating_tuition_after_discount_blp)
     api.register_blueprint(bg_students_ms_score)
     api.register_blueprint(student_deal_stage_corrected_blp)
+    api.register_blueprint(jr_students_getting_interviews_blp)
     
     return app
     
