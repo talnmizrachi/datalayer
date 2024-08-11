@@ -13,7 +13,7 @@ from platforms_webhooks_catchers.hubspot.getting_passing_payload_parser import p
 from global_functions.models_resources import create_stage_dict, create_cohort_dict
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
-blueprint = Blueprint("deals' change from hubspot - Second version", __name__,
+blueprint = Blueprint("getting interviews Blueprint", __name__,
                       description="This_is_a_templated_blueprint")
 
 
