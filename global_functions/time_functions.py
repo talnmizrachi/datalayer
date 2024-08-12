@@ -19,6 +19,8 @@ def last_thursday_getter(date_str):
 
     
 def utc_to_date(utc_timestamp):
+    if isinstance(utc_timestamp, str):
+        return utc_timestamp
     if utc_timestamp is not None:
         # Convert from milliseconds to seconds if necessary
         # This checks if the timestamp is far greater than typical Unix epoch time in seconds
