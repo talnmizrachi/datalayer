@@ -215,6 +215,7 @@ class JobReadyStudentDealChange(MethodView):
 			if other_process is None:
 				if this_student is not None:
 					this_student.hubspot_current_deal_stage = "Job Seeking"
+					update_objects_in_session()
 				else:
 					logger.info(
 						f"No other open processes found for {job_ready_student_dict['student_first_name']} {job_ready_student_dict['student_last_name']}")
@@ -222,9 +223,10 @@ class JobReadyStudentDealChange(MethodView):
 			else:
 				if this_student is not None:
 					this_student.hubspot_current_deal_stage = other_process.latest_stage
-					return {"message": f"passing_interviews: {this_stage} -  ({this_student_hs_id})"}
+					update_objects_in_session()
+					return {"message": f"passing_interviews: {this_stage} - ({this_student_hs_id})"}
 				else:
-					return {"message": f"passing_interviews: {this_stage} -  ({this_student_hs_id})"}
+					return {"message": f"passing_interviews: {this_stage} - ({this_student_hs_id})"}
 
 		if this_stage == "Special Cases":
 			update_student_stage(this_student, this_process, this_stage)
