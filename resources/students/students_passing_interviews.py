@@ -133,6 +133,8 @@ class JobReadyStudentDealChange(MethodView):
         this_student_hs_id = job_ready_student_dict.get("hubspot_id")
         this_process_company = job_ready_student_dict['company_name']
         this_process_title = job_ready_student_dict['job_title']
+        created_at = job_ready_student_dict.get("created_at")
+
         write_object_to_db(StudentStagesV3(**create_stage_dict(this_student_hs_id, this_stage, this_process_company)))
         
         # check if student, process, process stage exists
@@ -193,9 +195,12 @@ class JobReadyStudentDealChange(MethodView):
             past_stage.updated_at = datetime.datetime.now()
             this_process.process_end_date = datetime.date.today()
             this_process.is_process_active = False
-            this_process.updated_at = datetime.datetime.now()
             this_process.is_closed_won = False
             this_process.latest_stage = this_stage
+            if created_at is not None:
+                this_process.updated_at = datetime.datetime.now()
+            else:
+                this_process.updated_at = job_ready_student_dict['updated_timestamp']
             update_objects_in_session()
             
             # Check if the student has other open processes
