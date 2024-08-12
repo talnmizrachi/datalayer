@@ -186,7 +186,7 @@ class JobReadyStudentDealChange(MethodView):
 			return {"message": f"passing_interviews: {this_stage} -  ({this_student_hs_id})"}, 201
 
 		if this_stage == "Closed Won - Job Secured":
-			close_and_update_process_as_win(this_process, past_stage, this_student)
+			close_and_update_process_as_win(this_process, past_stage, this_student=this_student)
 			return {"message": f"passing_interviews: {this_stage} -  ({this_student_hs_id})"}, 201
 
 		if this_stage == 'Double':
