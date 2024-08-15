@@ -9,7 +9,7 @@ dummy_blueprint = Blueprint("Dummy webhook", __name__,
                       description="This_is_a_templated_blueprint")
 
 
-@dummy_blueprint.route('/passing_interviews', methods=['POST'])
+@dummy_blueprint.route('/dummy_webhook', methods=['POST'])
 class Dummy(MethodView):
     def post(self):
         logger.info(f"Dummy webhook triggered")
