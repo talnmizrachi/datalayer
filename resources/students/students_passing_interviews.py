@@ -99,9 +99,10 @@ def close_and_update_process_as_win(_this_process, _past_stage, new_stage=None):
     _this_process.updated_at = datetime.datetime.now()
     _this_process.process_end_date = datetime.datetime.now()
     logger.info(f"PASSING_INTERVIEWS: Closed won for {_past_stage}")
-    _past_stage.is_pass = "TRUE"
-    
-    _past_stage.updated_at = datetime.datetime.now()
+    if _past_stage is not None:
+        _past_stage.is_pass = "TRUE"
+        
+        _past_stage.updated_at = datetime.datetime.now()
     
     if new_stage is not None:
         new_stage.is_pass = "TRUE"
