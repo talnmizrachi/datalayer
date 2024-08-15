@@ -213,26 +213,26 @@ def create_new_process_and_stage(job_ready_student_dict_, write_to_db=True):
     return process_obj, stage_obj
 
     
-def close_and_update_process_as_win(_this_process, _past_stage, new_stage=None):
-    logger.info(f"PASSING_INTERVIEWS: updating_closed_won for {_this_process.student_first_name} {_this_process.student_last_name} in {_this_process.company_name} - {_this_process.job_title}")
-    _this_process.is_employed = True
-    _this_process.latest_stage = "Closed Won"
-    _this_process.is_closed_won = True
-    logger.info(f"PASSING_INTERVIEWS: thi process is active before {_this_process.is_process_active}")
-    _this_process.is_process_active = False
-    logger.info(f"PASSING_INTERVIEWS: thi process is active after {_this_process.is_process_active}")
-    _this_process.job_secured_date = datetime.datetime.now()
-    _this_process.updated_at = datetime.datetime.now()
-    _this_process.process_end_date = datetime.datetime.now()
-    logger.info(f"PASSING_INTERVIEWS: Closed won for {_past_stage}")
-    _past_stage.is_pass = "TRUE"
-    
-    _past_stage.updated_at = datetime.datetime.now()
-    
-    if new_stage is not None:
-        new_stage.is_pass = "TRUE"
-    
-    update_objects_in_session()
+# def close_and_update_process_as_win(_this_process, _past_stage, new_stage=None):
+#     logger.info(f"PASSING_INTERVIEWS: updating_closed_won for {_this_process.student_first_name} {_this_process.student_last_name} in {_this_process.company_name} - {_this_process.job_title}")
+#     _this_process.is_employed = True
+#     _this_process.latest_stage = "Closed Won"
+#     _this_process.is_closed_won = True
+#     logger.info(f"PASSING_INTERVIEWS: thi process is active before {_this_process.is_process_active}")
+#     _this_process.is_process_active = False
+#     logger.info(f"PASSING_INTERVIEWS: thi process is active after {_this_process.is_process_active}")
+#     _this_process.job_secured_date = datetime.datetime.now()
+#     _this_process.updated_at = datetime.datetime.now()
+#     _this_process.process_end_date = datetime.datetime.now()
+#     logger.info(f"PASSING_INTERVIEWS: Closed won for {_past_stage}")
+#     _past_stage.is_pass = "TRUE"
+#
+#     _past_stage.updated_at = datetime.datetime.now()
+#
+#     if new_stage is not None:
+#         new_stage.is_pass = "TRUE"
+#
+#     update_objects_in_session()
 
 
 @blueprint.route('/deal_stage_change_passing_interviews', methods=['POST'])

@@ -114,6 +114,7 @@ def close_and_update_process_as_win(_this_process, _past_stage, new_stage=None, 
 		this_student.hubspot_current_deal_stage = "Closed Won"
 
 	update_objects_in_session()
+	
  
 def close_and_update_process_as_win(_this_process, _past_stage, new_stage=None):
     logger.info(f"PASSING_INTERVIEWS: updating_closed_won for {_this_process.student_first_name} {_this_process.student_last_name} in {_this_process.company_name} - {_this_process.job_title}")
@@ -209,7 +210,7 @@ class JobReadyStudentDealChange(MethodView):
 			return {"message": f"passing_interviews: {this_stage} -  ({this_student_hs_id})"}, 201
 
 		if this_stage == "Closed Won - Job Secured":
-			close_and_update_process_as_win(this_process, past_stage, this_student=this_student)
+			close_and_update_process_as_win(this_process, past_stage, new_stage=None, this_student=this_student)
 			return {"message": f"passing_interviews: {this_stage} -  ({this_student_hs_id})"}, 201
 
 		if this_stage == 'Double':
