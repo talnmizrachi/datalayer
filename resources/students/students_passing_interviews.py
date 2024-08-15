@@ -116,7 +116,6 @@ def close_and_update_process_as_win(_this_process, _past_stage, new_stage=None, 
 	update_objects_in_session()
 	
  
-
 @blueprint.route('/passing_interviews', methods=['POST'])
 class JobReadyStudentDealChange(MethodView):
 	"""

@@ -2,6 +2,7 @@ from flask import Flask
 import os
 from db import db
 from flask_smorest import Api
+from resources.general.dummwebhook import dummy_blueprint as dummy_webhook_blp
 from resources.students.job_ready_students_onboarding import blueprint as jr_students_blp
 from resources.v3.processes_endpoints import blueprint as new_process_init_blp
 from resources.v3.mock_interviews import blueprint as mock_interview_details_blp
@@ -79,6 +80,7 @@ def create_app(db_url=None):
     api.register_blueprint(student_deal_stage_corrected_blp)
     api.register_blueprint(jr_students_getting_interviews_blp)
     api.register_blueprint(students_passing_interviews_blp)
+    api.register_blueprint(dummy_webhook_blp)
     
     return app
     
