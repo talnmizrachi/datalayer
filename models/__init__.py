@@ -26,5 +26,4 @@ from models.marketing_ga_kw_performance import MarketingGoogleAdsKeywordPerforma
 from models.marketing_ga_account_performance_by_hour import MarketingGoogleAdsAccountPerformanceByHour
 from models.support_intercom_conversations import IntercomReportConversations
 from models.support_intercom_report_contacts import IntercomReportContacts
-
-
+from models.marketing_bg_mql_students import MarketingMqlStudentsModel
