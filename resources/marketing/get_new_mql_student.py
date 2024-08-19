@@ -23,7 +23,7 @@ class NewMqlStudent(MethodView):
             logger.info(f"Skipping the job ready update. 200 OK")
             return {"message": f"Test students are ignored: {data['hubspot_id']}"}, 200
         
-        existing_student = MarketingMqlStudentsModel.query.filter_by(hubspot_id=data['hubspot_id']).first()
+        existing_student = MarketingMqlStudentsModel.query.filter_by(hubspot_id=str(data['hubspot_id'])).first()
         if existing_student is not None:
             return {"message": 'MQL student already exists'}, 200
         
