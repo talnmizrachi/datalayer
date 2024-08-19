@@ -28,6 +28,7 @@ class NewMqlStudent(MethodView):
             return {"message": 'MQL student already exists'}, 200
         
         data['hubspot_created_at'] = utc_to_date(data['hubspot_created_at'])
+        data['date_mql_entered'] = utc_to_date(data['date_mql_entered'])
         new_mql_obj = MarketingMqlStudentsModel(**data)
         write_object_to_db(new_mql_obj)
         
