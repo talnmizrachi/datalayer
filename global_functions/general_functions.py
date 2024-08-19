@@ -2,7 +2,10 @@ from db import db
 from sqlalchemy.exc import SQLAlchemyError
 from flask_smorest import abort
 from global_functions.LoggingGenerator import Logger
+from models import StudentStagesV3
 import os
+from flask import jsonify
+from sqlalchemy import and_, func
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 
@@ -31,11 +34,41 @@ def update_objects_in_session():
         db.session.rollback()
         abort(400, message=str(e))
 
+
+# def write_object_to_db(object_to_write):
+#     try:
+#         logger.debug(f"writing object to db: {object_to_write}")
+#         db.session.add(object_to_write)
+#         db.session.commit()
+#     except SQLAlchemyError as e:
+#         logger.error(f"Error writing object to db: {str(e)}")
+#         db.session.rollback()
+#         abort(400, message=str(e))
+
+
 def write_object_to_db(object_to_write):
     try:
         logger.debug(f"writing object to db: {object_to_write}")
+
+        # Check if object_to_write is an instance of StudentStagesV3
+        if isinstance(object_to_write, StudentStagesV3):
+            # Check for existing record with the same constraints
+            existing_record = db.session.query(StudentStagesV3).filter(
+                StudentStagesV3.hubspot_id == object_to_write.hubspot_id,
+                StudentStagesV3.stage == object_to_write.stage,
+                StudentStagesV3.company_if_rel == object_to_write.company_if_rel,
+                func.date(StudentStagesV3.created_at) == func.date(object_to_write.created_at)
+            ).first()
+
+            if existing_record:
+                logger.debug("Duplicate record found, doing nothing.")
+                return jsonify({"message": "Record already exists."}), 200
+
+        # If no matching record, add the new object to the DB
         db.session.add(object_to_write)
         db.session.commit()
+        return jsonify({"message": "Object successfully written to the database."}), 200
+
     except SQLAlchemyError as e:
         logger.error(f"Error writing object to db: {str(e)}")
         db.session.rollback()
