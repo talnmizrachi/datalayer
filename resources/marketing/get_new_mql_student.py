@@ -14,7 +14,7 @@ blueprint = Blueprint("A new MQL student has entered", __name__,
 
 
 @blueprint.route('/log_new_mql_student', methods=['POST'])
-class Dummy(MethodView):
+class NewMqlStudent(MethodView):
     def post(self):
         
         data = request.get_json()
@@ -22,6 +22,10 @@ class Dummy(MethodView):
         if data['hubspot_id'] in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
             logger.info(f"Skipping the job ready update. 200 OK")
             return {"message": f"Test students are ignored: {data['hubspot_id']}"}, 200
+        
+        existing_student = MarketingMqlStudentsModel.query.filter_by(hubspot_id=data['hubspot_id']).first()
+        if existing_student is not None:
+            return {"message": 'MQL student already exists'}, 200
         
         data['hubspot_created_at'] = utc_to_date(data['hubspot_created_at'])
         new_mql_obj = MarketingMqlStudentsModel(**data)
