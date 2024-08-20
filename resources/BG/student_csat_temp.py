@@ -23,7 +23,6 @@ class NewBGStudent(MethodView):
         :return:
         """
         data = request.get_json()
-        logger.info(data)
         payload = process_form_response(data)
         
         existing_student = BGStudentModel.query.filter_by(email=str(payload['email'])).first()
