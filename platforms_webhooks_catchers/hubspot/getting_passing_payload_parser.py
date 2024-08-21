@@ -29,6 +29,7 @@ def parse_incoming_getting_passing_pipeline(data):
         if "created_at" in data:
             pipeline_dict["created_at"] = data.get("created_at")
             pipeline_dict["updated_timestamp"] = data.get("created_at")
+
         return pipeline_dict
     
     # Passing Interviews
@@ -44,7 +45,7 @@ def parse_incoming_getting_passing_pipeline(data):
                 "company_name": data.get('company_name'),
                 "job_title": data.get('job_title'),
                 "process_start_date": utc_to_date(data.get('createdate')),
-                "type_of_stage": data.get("next_recruiting_step_type"),
+                "type_of_stage": data.get("next_recruiting_step_type", "General (HR + Tech) - default"),
                 "deal_stage": deal_stage_dictionary.get(str(data['dealstage'])),
                 "stage_date": utc_to_date(data.get("next_recruiting_step_date")),
                 "stage_in_funnel": "1st Stage",
@@ -52,6 +53,7 @@ def parse_incoming_getting_passing_pipeline(data):
         if "created_at" in data:
             pipeline_dict["created_at"] = data.get("created_at")
             pipeline_dict["updated_timestamp"] = data.get("created_at")
+            
         return pipeline_dict
     
     # V3 Payments
