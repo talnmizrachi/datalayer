@@ -19,7 +19,7 @@ class NewMqlStudent(MethodView):
         
         data = request.get_json()
         
-        if data['hubspot_id'] in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
+        if str(data['hubspot_id']) in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
             logger.info(f"Skipping the job ready update. 200 OK")
             return {"message": f"Test students are ignored: {data['hubspot_id']}"}, 200
         
