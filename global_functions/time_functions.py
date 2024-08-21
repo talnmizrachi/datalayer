@@ -29,4 +29,4 @@ def utc_to_date(utc_timestamp):
         return datetime.utcfromtimestamp(utc_timestamp).date()
     else:
         # Return today's date plus 7 days
-        return datetime.utcnow().date() + timedelta(days=7)
+        return None

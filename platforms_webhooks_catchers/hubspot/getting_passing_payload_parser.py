@@ -4,6 +4,8 @@ from platforms_webhooks_catchers.hubspot.catch_job_ready_change_in_deal_stage im
 from platforms_webhooks_catchers.hubspot.get_owner_name import get_owner_name
 from global_functions.LoggingGenerator import Logger
 import os
+from datetime import datetime, timedelta
+
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 
@@ -34,7 +36,7 @@ def parse_incoming_getting_passing_pipeline(data):
     
     # Passing Interviews
     elif piepline == "95255387":
-        
+        seven_days = (datetime.utcnow().date() + timedelta(days=7)).strftime("%Y-%m-%d")
         pipeline_dict = {
                 "id": str(uuid4().hex),
                 "hubspot_deal_id": str(data.get('hubspot_deal_id')),
@@ -47,7 +49,7 @@ def parse_incoming_getting_passing_pipeline(data):
                 "process_start_date": utc_to_date(data.get('createdate')),
                 "type_of_stage": data.get("next_recruiting_step_type", "General (HR + Tech) - default"),
                 "deal_stage": deal_stage_dictionary.get(str(data['dealstage'])),
-                "stage_date": utc_to_date(data.get("next_recruiting_step_date")),
+                "stage_date": utc_to_date(data.get("next_recruiting_step_date", seven_days)),
                 "stage_in_funnel": "1st Stage",
         }
         if "created_at" in data:
