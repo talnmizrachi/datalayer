@@ -19,6 +19,10 @@ class MarketingMqlStudentsModel(db.Model):
     utm_term = db.Column(db.String)
     
     date_mql_entered = db.Column(db.DateTime)
+    date_sql_entered = db.Column(db.DateTime)
+    date_bg_enrolled_entered = db.Column(db.DateTime)
+    date_submitted_typeform_entered = db.Column(db.DateTime)
+    
     hubspot_created_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     
