@@ -1,4 +1,5 @@
 import os
+from dateutil import parser
 from global_functions.LoggingGenerator import Logger
 from datetime import datetime, timedelta
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
@@ -30,3 +31,14 @@ def utc_to_date(utc_timestamp):
     else:
         # Return today's date plus 7 days
         return None
+
+
+def infer_and_transform_date(date_str, to_format='%b-%Y'):
+    try:
+        # Use dateutil's parser to automatically parse the date string
+        parsed_date = parser.parse(date_str)
+        # Transform the date to the desired format MMM-YYYY
+        formatted_date = parsed_date.strftime(to_format)
+        return formatted_date
+    except ValueError:
+        return "Invalid date format"
