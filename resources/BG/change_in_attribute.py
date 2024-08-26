@@ -7,6 +7,7 @@ import os
 from sqlalchemy.exc import SQLAlchemyError
 from db import db
 from global_functions.general_functions import write_object_to_db
+from resources.BG.onboarding_student import onboard_bg_function
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 
@@ -44,7 +45,11 @@ class NewBGStudent(MethodView):
 
 		if existing_student is None:
 			logger.debug(f"Student is missing (BG Change bg student): {data}")
-			abort(400, description="Hubspot ID is required")
+			try:
+				onboard_bg_function(data)
+			except Exception as e:
+				logger.error(f"Error onboarding student: {e}")
+				abort(400, description="Hubspot ID is required")
 
 		job_ready_student_dict = get_existing_student_dictionary(data)
 		logger.info(job_ready_student_dict)
