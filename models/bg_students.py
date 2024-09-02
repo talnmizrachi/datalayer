@@ -16,7 +16,8 @@ class BGStudentModel(db.Model):
     active_cohort = db.Column(db.String, nullable=True)
     hs_pipeline = db.Column(db.String, nullable=True)
     is_employed = db.Column(db.Boolean, nullable=False, default=False)
-    
+    plan_duration = db.Column(db.String, nullable=True)
+
     student_owner = db.Column(db.String, nullable=True)
 
     is_job_ready = db.Column(db.String, nullable=True)

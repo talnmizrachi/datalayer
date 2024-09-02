@@ -37,7 +37,8 @@ def onboard_bg_function(data):
             "student_owner": data['hubspot_owner_id'],
             "hs_pipeline": data['hs_pipeline'],
             "is_job_ready": data['is_job_ready'],
-            "email": data['email']
+            "email": data['email'],
+            "plan_duration": data['plan_duration'],
     }
     
     job_ready_student_object = BGStudentModel(**job_ready_student_dict)
