@@ -23,7 +23,8 @@ def get_existing_student_dictionary(data):
 		"enrolment_pipeline_stage": stages_dict.get(str(data['hs_pipeline_stage']), data['hs_pipeline_stage']),
 		"hubspot_id": str(data['hubspot_id']),
 		"active_cohort": data['enrolment_cohort'],
-		"is_job_ready": data['is_job_ready']
+		"is_job_ready": data['is_job_ready'],
+		"plan_duration": data['plan_duration'],
 	}
 
 	return job_ready_student_dict
