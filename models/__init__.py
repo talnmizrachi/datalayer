@@ -29,3 +29,4 @@ from models.support_intercom_report_contacts import IntercomReportContacts
 from models.marketing_bg_mql_students import MarketingMqlStudentsModel
 from models.marketing_tiktok_auction_ads_campaign_basic_daily import TiktokAuctionAdsCampaignBasicDaily
 from models.marketing_tiktok_campaign_names import TiktokCampaigns
+from models.past_v3_students import JobReadyStudentsLegacy

@@ -11,7 +11,7 @@ class StageModel(db.Model):
     stage_in_funnel = db.Column(db.String, nullable=False)
     type_of_stage = db.Column(db.String, nullable=True)
     is_pass = db.Column(db.String, nullable=False, default="PENDING")
-    stage_date = db.Column(db.Date, nullable=False)
+    stage_date = db.Column(db.Date, nullable=True)
     deal_stage = db.Column(db.String, nullable=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp())
