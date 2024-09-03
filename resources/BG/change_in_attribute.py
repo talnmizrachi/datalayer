@@ -4,7 +4,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from models import BGStudentModel, BGStudentChangesModel
 import os
-from sqlalchemy.exc import SQLAlchemyError
+from global_functions.ignoring_constants import MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE
 from db import db
 from global_functions.general_functions import write_object_to_db
 from resources.BG.onboarding_student import onboard_bg_function
@@ -41,6 +41,9 @@ class NewBGStudent(MethodView):
 		"""
 		logger.info("hello")
 		data = request.get_json()
+		if data['hubspot_id'] in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
+			return {"message": "Hubspot ID is a Master School employee"}, 201
+
 		logger.info(data)
 		existing_student = BGStudentModel.query.filter_by(hubspot_id=str(data['hubspot_id'])).first()
 
