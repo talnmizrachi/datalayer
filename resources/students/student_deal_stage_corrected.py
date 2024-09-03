@@ -350,6 +350,9 @@ class JobReadyStudentDealChange(MethodView):
             update_student_stage(this_student, this_process, this_stage)
             past_stage.is_pass = "CANCELLED"
             this_process.latest_stage = this_stage
+            this_process.updated_at = datetime.datetime.now()
+            this_process.process_end_date = datetime.date.today()
+            this_process.is_process_active = False
             update_objects_in_session()
             return {"message": f"passing_interviews: {this_stage} -  ({this_student_hs_id})"}
         
