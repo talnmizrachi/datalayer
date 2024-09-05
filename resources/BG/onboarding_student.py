@@ -1,3 +1,4 @@
+from global_functions.ignoring_constants import MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE
 from global_functions.LoggingGenerator import Logger
 from global_functions.time_functions import infer_and_transform_date
 from flask import request
@@ -16,7 +17,8 @@ def onboard_bg_function(data):
     logger.info(f"Onboarding BG student - {data}")
     
     is_existing = BGStudentModel.query.filter_by(hubspot_id=str(data['hubspot_id'])).first()
-    
+
+    #This shouldn't happen - the term to get into this function is
     if data['hubspot_id'] == "":
         logger.info(f"Empty process - hubspot id is empty")
         return {"id": None, "message": "Empty process - hubspot id is empty"}
@@ -59,10 +61,14 @@ class NewBGStudent(MethodView):
         :return:
         """
         data = request.get_json()
+
+        if data['hubspot_id'] in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
+            return {"message": "Hubspot ID is a Master School employee"}, 201
+
         if data['hubspot_id'] == "":
             logger.debug(f"Hubspot ID is missing for BG student: {data}")
             abort(400, description="Hubspot ID is required")
-        
+
         logger.debug(f"data type: {type(data)}")
         job_ready_student_dict = onboard_bg_function(data)
         logger.debug(f"Debugging problem - {job_ready_student_dict}")

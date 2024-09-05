@@ -1,4 +1,5 @@
 from global_functions.LoggingGenerator import Logger
+from global_functions.time_functions import infer_and_transform_date
 from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
@@ -22,7 +23,7 @@ def get_existing_student_dictionary(data):
 	job_ready_student_dict = {
 		"enrolment_pipeline_stage": stages_dict.get(str(data['hs_pipeline_stage']), data['hs_pipeline_stage']),
 		"hubspot_id": str(data['hubspot_id']),
-		"active_cohort": data['enrolment_cohort'],
+		"active_cohort": infer_and_transform_date(data['enrolment_cohort']),
 		"is_job_ready": data['is_job_ready'],
 		"plan_duration": data['plan_duration'],
 	}
@@ -39,7 +40,6 @@ class NewBGStudent(MethodView):
 
 		:return:
 		"""
-		logger.info("hello")
 		data = request.get_json()
 		if data['hubspot_id'] in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
 			return {"message": "Hubspot ID is a Master School employee"}, 201

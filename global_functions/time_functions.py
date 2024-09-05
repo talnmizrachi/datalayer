@@ -34,6 +34,8 @@ def utc_to_date(utc_timestamp):
 
 
 def infer_and_transform_date(date_str, to_format='%b-%Y'):
+    if date_str is None:
+        return None
     try:
         # Use dateutil's parser to automatically parse the date string
         parsed_date = parser.parse(date_str)
