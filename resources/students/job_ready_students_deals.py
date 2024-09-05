@@ -1,10 +1,7 @@
 import datetime
-from global_functions.ignoring_constants import MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE
 import sqlalchemy
-
 from global_functions.LoggingGenerator import Logger
-from db import db
-from global_functions.general_functions import write_object_to_db
+from global_functions.general_functions import write_object_to_db, is_candidate_ms_employee
 from platforms_webhooks_catchers.hubspot.catch_job_ready_change_in_deal_stage import job_ready_catch_deal_stage, \
     deal_stage_dict
 from flask import request
@@ -53,9 +50,8 @@ class JobReadyStudent(MethodView):
     
     def post(self):
         data = request.get_json()
-        
-        if data['hs_object_id'] in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
-            logger.info(f"Test student: {data['hs_object_id']} is a test student. Skipping the job ready update. 200 OK")
+
+        if is_candidate_ms_employee(data):
             return {"message": f"Test students are ignored: {data['hs_object_id']}"}, 200
         
         logger.info(f"Got a deal change:\t{data}")

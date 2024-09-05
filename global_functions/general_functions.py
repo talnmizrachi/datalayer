@@ -2,6 +2,7 @@ from db import db
 from sqlalchemy.exc import SQLAlchemyError
 from flask_smorest import abort
 from global_functions.LoggingGenerator import Logger
+from global_functions.ignoring_constants import MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE
 from models import StudentStagesV3
 import os
 from flask import jsonify
@@ -90,3 +91,7 @@ def delete_object_from_db(object_class, object_id):
         logger.error(f"Error deleting object from db: {str(e)}")
         db.session.rollback()
         abort(500, message=str(e))
+
+
+def is_candidate_ms_employee(data_obj):
+    return str(data_obj['hubspot_id']) in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE or data_obj['email'].find('masterschool') > -1

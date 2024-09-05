@@ -1,9 +1,8 @@
 import datetime
 from sqlalchemy import and_
-from global_functions.ignoring_constants import MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE
 from uuid import uuid4
 from global_functions.LoggingGenerator import Logger
-from global_functions.general_functions import write_object_to_db, update_objects_in_session
+from global_functions.general_functions import write_object_to_db, update_objects_in_session, is_candidate_ms_employee
 from global_functions.time_functions import utc_to_date
 from platforms_webhooks_catchers.hubspot.catch_job_ready_change_in_deal_stage import deal_stage_dict
 from platforms_webhooks_catchers.hubspot.get_owner_name import get_owner_name
@@ -134,14 +133,14 @@ def parse_incoming_getting_passing_pipeline(data):
 class JobReadyStudentDealChange(MethodView):
     
     def post(self):
-        logger.info(f"GETTING_INTERVIEWS: Hello world")
         data = request.get_json()
+
+        if is_candidate_ms_employee(data):
+            return {"message": f"Test students are ignored: {data['hubspot_id']}"}, 200
+
         known_stages = ("Job Ready", "1st CSA Meeting Conducted", "Material Ready", "Job Seeking",
                         "Contacted by Employer", "Closed Lost - Ghost", "Closed Won - Got an Interview")
-        if data['hubspot_id'] in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
-            logger.info(f"Skipping the job ready update. 200 OK")
-            return {"message": f"Test students are ignored: {data['hubspot_id']}"}, 200
-        
+
         logger.info(f"GETTING_INTERVIEWS: incoming_payload - {data['hubspot_id']}")
         
         job_ready_student_dict = parse_incoming_getting_passing_pipeline(data)
@@ -244,9 +243,8 @@ class JobReadyStudentDealChange(MethodView):
     
     def post(self):
         data = request.get_json()
-        
-        if data['hubspot_id'] in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
-            logger.info(f"Skipping the job ready update. 200 OK")
+
+        if is_candidate_ms_employee(data):
             return {"message": f"Test students are ignored: {data['hubspot_id']}"}, 200
         
         past_stage_in_funnel = "1st Stage"

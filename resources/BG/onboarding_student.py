@@ -1,4 +1,3 @@
-from global_functions.ignoring_constants import MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE
 from global_functions.LoggingGenerator import Logger
 from global_functions.time_functions import infer_and_transform_date
 from flask import request
@@ -6,7 +5,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from models import BGStudentModel
 import os
-from global_functions.general_functions import write_object_to_db, update_objects_in_session
+from global_functions.general_functions import write_object_to_db, is_candidate_ms_employee
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 
@@ -61,8 +60,7 @@ class NewBGStudent(MethodView):
         :return:
         """
         data = request.get_json()
-
-        if data['hubspot_id'] in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
+        if is_candidate_ms_employee(data):
             return {"message": "Hubspot ID is a Master School employee"}, 201
 
         if data['hubspot_id'] == "":

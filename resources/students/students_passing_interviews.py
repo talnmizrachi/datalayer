@@ -1,9 +1,8 @@
 import datetime
 from sqlalchemy import and_
-from global_functions.ignoring_constants import MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE
 from uuid import uuid4
 from global_functions.LoggingGenerator import Logger
-from global_functions.general_functions import write_object_to_db, update_objects_in_session
+from global_functions.general_functions import write_object_to_db, update_objects_in_session, is_candidate_ms_employee
 from global_functions.models_resources import create_cohort_dict, create_stage_dict
 from platforms_webhooks_catchers.hubspot.getting_passing_payload_parser import parse_incoming_getting_passing_pipeline
 from flask import request
@@ -102,7 +101,7 @@ def close_and_update_process_as_win(_this_process, _past_stage, new_stage=None, 
 	if _past_stage is not None:
 		logger.info(f"PASSING_INTERVIEWS: Closed won for {_past_stage}")
 		_past_stage.is_pass = "TRUE"
-	
+
 		_past_stage.updated_at = datetime.datetime.now()
 
 	if new_stage is not None:
@@ -114,20 +113,16 @@ def close_and_update_process_as_win(_this_process, _past_stage, new_stage=None, 
 		this_student.hubspot_current_deal_stage = "Closed Won"
 
 	update_objects_in_session()
-	
- 
+
+
 @blueprint.route('/passing_interviews', methods=['POST'])
 class JobReadyStudentDealChange(MethodView):
-	"""
-    Workflow URL - https://app.hubspot.com/workflows/9484219/platform/flow/587156903/edit
-
-    """
+	"""Workflow URL - https://app.hubspot.com/workflows/9484219/platform/flow/587156903/edit"""
 
 	def post(self):
 		data = request.get_json()
 
-		if data['hubspot_id'] in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
-			logger.info(f"Skipping the job ready update. 200 OK")
+		if is_candidate_ms_employee(data):
 			return {"message": f"Test students are ignored: {data['hubspot_id']}"}, 200
 
 		past_stage_in_funnel = "1st Stage"
