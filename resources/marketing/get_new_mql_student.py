@@ -1,10 +1,11 @@
 from global_functions.LoggingGenerator import Logger
-from global_functions.general_functions import write_object_to_db, update_objects_in_session, is_candidate_ms_employee
+from global_functions.general_functions import write_object_to_db, update_objects_in_session
 from global_functions.time_functions import utc_to_date
 from flask import request
 from models import MarketingMqlStudentsModel
 from flask.views import MethodView
 from flask_smorest import Blueprint
+from global_functions.ignoring_constants import MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE
 import os
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
@@ -17,7 +18,9 @@ class NewMqlStudent(MethodView):
     def post(self):
         
         data = request.get_json()
-        if is_candidate_ms_employee(data):
+        
+        if str(data['hubspot_id']) in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
+            logger.info(f"Skipping the job ready update. 200 OK")
             return {"message": f"Test students are ignored: {data['hubspot_id']}"}, 200
         
         existing_student = MarketingMqlStudentsModel.query.filter_by(hubspot_id=str(data['hubspot_id'])).first()
