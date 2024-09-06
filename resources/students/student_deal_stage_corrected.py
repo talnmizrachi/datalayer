@@ -1,8 +1,9 @@
 import datetime
 from sqlalchemy import and_
+from global_functions.ignoring_constants import MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE
 from uuid import uuid4
 from global_functions.LoggingGenerator import Logger
-from global_functions.general_functions import write_object_to_db, update_objects_in_session, is_candidate_ms_employee
+from global_functions.general_functions import write_object_to_db, update_objects_in_session
 from global_functions.time_functions import utc_to_date
 from platforms_webhooks_catchers.hubspot.catch_job_ready_change_in_deal_stage import deal_stage_dict
 from platforms_webhooks_catchers.hubspot.get_owner_name import get_owner_name
@@ -133,14 +134,14 @@ def parse_incoming_getting_passing_pipeline(data):
 class JobReadyStudentDealChange(MethodView):
     
     def post(self):
+        logger.info(f"GETTING_INTERVIEWS: Hello world")
         data = request.get_json()
-
-        if is_candidate_ms_employee(data):
-            return {"message": f"Test students are ignored: {data['hubspot_id']}"}, 200
-
         known_stages = ("Job Ready", "1st CSA Meeting Conducted", "Material Ready", "Job Seeking",
                         "Contacted by Employer", "Closed Lost - Ghost", "Closed Won - Got an Interview")
-
+        if data['hubspot_id'] in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
+            logger.info(f"Skipping the job ready update. 200 OK")
+            return {"message": f"Test students are ignored: {data['hubspot_id']}"}, 200
+        
         logger.info(f"GETTING_INTERVIEWS: incoming_payload - {data['hubspot_id']}")
         
         job_ready_student_dict = parse_incoming_getting_passing_pipeline(data)
@@ -212,26 +213,26 @@ def create_new_process_and_stage(job_ready_student_dict_, write_to_db=True):
     return process_obj, stage_obj
 
     
-# def close_and_update_process_as_win(_this_process, _past_stage, new_stage=None):
-#     logger.info(f"PASSING_INTERVIEWS: updating_closed_won for {_this_process.student_first_name} {_this_process.student_last_name} in {_this_process.company_name} - {_this_process.job_title}")
-#     _this_process.is_employed = True
-#     _this_process.latest_stage = "Closed Won"
-#     _this_process.is_closed_won = True
-#     logger.info(f"PASSING_INTERVIEWS: thi process is active before {_this_process.is_process_active}")
-#     _this_process.is_process_active = False
-#     logger.info(f"PASSING_INTERVIEWS: thi process is active after {_this_process.is_process_active}")
-#     _this_process.job_secured_date = datetime.datetime.now()
-#     _this_process.updated_at = datetime.datetime.now()
-#     _this_process.process_end_date = datetime.datetime.now()
-#     logger.info(f"PASSING_INTERVIEWS: Closed won for {_past_stage}")
-#     _past_stage.is_pass = "TRUE"
-#
-#     _past_stage.updated_at = datetime.datetime.now()
-#
-#     if new_stage is not None:
-#         new_stage.is_pass = "TRUE"
-#
-#     update_objects_in_session()
+def close_and_update_process_as_win(_this_process, _past_stage, new_stage=None):
+    logger.info(f"PASSING_INTERVIEWS: updating_closed_won for {_this_process.student_first_name} {_this_process.student_last_name} in {_this_process.company_name} - {_this_process.job_title}")
+    _this_process.is_employed = True
+    _this_process.latest_stage = "Closed Won"
+    _this_process.is_closed_won = True
+    logger.info(f"PASSING_INTERVIEWS: thi process is active before {_this_process.is_process_active}")
+    _this_process.is_process_active = False
+    logger.info(f"PASSING_INTERVIEWS: thi process is active after {_this_process.is_process_active}")
+    _this_process.job_secured_date = datetime.datetime.now()
+    _this_process.updated_at = datetime.datetime.now()
+    _this_process.process_end_date = datetime.datetime.now()
+    logger.info(f"PASSING_INTERVIEWS: Closed won for {_past_stage}")
+    _past_stage.is_pass = "TRUE"
+    
+    _past_stage.updated_at = datetime.datetime.now()
+    
+    if new_stage is not None:
+        new_stage.is_pass = "TRUE"
+    
+    update_objects_in_session()
 
 
 @blueprint.route('/deal_stage_change_passing_interviews', methods=['POST'])
@@ -243,8 +244,9 @@ class JobReadyStudentDealChange(MethodView):
     
     def post(self):
         data = request.get_json()
-
-        if is_candidate_ms_employee(data):
+        
+        if data['hubspot_id'] in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
+            logger.info(f"Skipping the job ready update. 200 OK")
             return {"message": f"Test students are ignored: {data['hubspot_id']}"}, 200
         
         past_stage_in_funnel = "1st Stage"
@@ -348,9 +350,6 @@ class JobReadyStudentDealChange(MethodView):
             update_student_stage(this_student, this_process, this_stage)
             past_stage.is_pass = "CANCELLED"
             this_process.latest_stage = this_stage
-            this_process.updated_at = datetime.datetime.now()
-            this_process.process_end_date = datetime.date.today()
-            this_process.is_process_active = False
             update_objects_in_session()
             return {"message": f"passing_interviews: {this_stage} -  ({this_student_hs_id})"}
         
