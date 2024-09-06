@@ -95,7 +95,8 @@ def delete_object_from_db(object_class, object_id):
 
 def is_candidate_ms_employee(data_obj):
     is_ms_employee = str(data_obj['hubspot_id']) in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE
-    is_ms_employee_2 = data_obj['email'].find('masterschool') > -1
+    is_ms_employee_2 = data_obj.get('email',"None").find('masterschool') > -1
+    
     is_domain_relevant = data_obj['program'].lower().find('mentor training')>-1
     is_domain_relevant_2 = data_obj['program'].lower().find('partner Training')>-1
 
