@@ -30,3 +30,6 @@ from models.marketing_bg_mql_students import MarketingMqlStudentsModel
 from models.marketing_tiktok_auction_ads_campaign_basic_daily import TiktokAuctionAdsCampaignBasicDaily
 from models.marketing_tiktok_campaign_names import TiktokCampaigns
 from models.past_v3_students import JobReadyStudentsLegacy
+from models.v2_csat_collection import CSATSubmitted
+from models.v2_nps_survey_event import NPSSurveyEvent
+from models.v3_students import V3Students

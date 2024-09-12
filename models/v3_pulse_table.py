@@ -25,4 +25,4 @@ class V3DailyPulseModel(db.Model):
     quarterly_cumulative_placements = db.Column(db.Integer, default=0)
     quarterly_placements_revenue = db.Column(db.BigInteger, default=0)
     updated_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
-  
+
