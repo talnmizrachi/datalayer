@@ -33,3 +33,5 @@ from models.past_v3_students import JobReadyStudentsLegacy
 from models.v2_csat_collection import CSATSubmitted
 from models.v2_nps_survey_event import NPSSurveyEvent
 from models.v3_students import V3Students
+from models.v2_ms_scores import V2MSScore
+from models.active_hs_v2_students import ActiveCTStudentsTal1
