@@ -48,7 +48,7 @@ class NewBGStudent(MethodView):
 		if existing_student is None:
 			logger.debug(f"Student is missing (BG Change bg student): {data}")
 			try:
-				jr_student = onboard_bg_function(data)
+				onboard_bg_function(data)
 				return str(data['hubspot_id']), 207
 			except Exception as e:
 				logger.error(f"Error onboarding student: {e}")
