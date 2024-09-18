@@ -17,6 +17,7 @@ class BGStudentModel(db.Model):
     hs_pipeline = db.Column(db.String, nullable=True)
     is_employed = db.Column(db.Boolean, nullable=False, default=False)
     plan_duration = db.Column(db.String, nullable=True)
+    plan_location = db.Column(db.String, nullable=True)
 
     student_owner = db.Column(db.String, nullable=True)
 

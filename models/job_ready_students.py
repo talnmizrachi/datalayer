@@ -25,4 +25,3 @@ class JobReadyStudentModel(db.Model):
 
     current_program = db.Column(db.String, default='deferred')
     hubspot_current_deal_stage = db.Column(db.String, nullable=True)
-    plan_location = db.Column(db.String, nullable=True)
