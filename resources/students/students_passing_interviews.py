@@ -194,8 +194,9 @@ class JobReadyStudentDealChange(MethodView):
 			# Update process as closed, and stage as closed
 			logger.info("Closed lost or Fraud, update existing process for failure")
 			logger.debug(f"Unhandled stage: {past_stage}")
-			past_stage.is_pass = "CANCELLED"
-			past_stage.updated_at = datetime.datetime.now()
+			if past_stage is not None:
+				past_stage.is_pass = "CANCELLED"
+				past_stage.updated_at = datetime.datetime.now()
 			this_process.process_end_date = datetime.date.today()
 			this_process.is_process_active = False
 			this_process.is_closed_won = False

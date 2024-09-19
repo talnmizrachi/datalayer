@@ -304,10 +304,19 @@ class JobReadyStudentDealChange(MethodView):
         
         if this_stage == "Closed Won - Job Secured":
             close_and_update_process_as_win(this_process, past_stage)
-            return {"message": f"passing_interviews: {this_stage} -  ({this_student_hs_id})"}, 201
+            return {"message": f"passing_interviews: {this_stage} - ({this_student_hs_id})"}, 201
         
         if this_stage == 'Double':
-            return {"message": f"passing_interviews: {this_stage} -  ({this_student_hs_id})"}
+            this_process.is_process_active = False
+            this_process.updated_at = datetime.datetime.now()
+            this_process.is_closed_won = False
+            this_process.latest_stage = "Double"
+            if past_stage is not None:
+                past_stage.is_pass = "TRUE"
+                past_stage.updated_at = datetime.datetime.now()
+            update_objects_in_session()
+
+            return {"message": f"passing_interviews: {this_stage} - ({this_student_hs_id})"}
         
         logger.debug(f"Unhandled stage: {past_stage}")
         if this_stage in ("Closed Lost - Job Not Secured", "Fraudulent"):
