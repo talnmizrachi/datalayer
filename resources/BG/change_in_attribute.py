@@ -24,7 +24,7 @@ def get_existing_student_dictionary(data):
 		"enrolment_pipeline_stage": stages_dict.get(str(data['hs_pipeline_stage']), data['hs_pipeline_stage']),
 		"hubspot_id": str(data['hubspot_id']),
 		"active_cohort": infer_and_transform_date(data['enrolment_cohort']),
-		"is_job_ready": True if data['is_job_ready'].lower().find('true') else False,
+		"is_job_ready": True if str(data['is_job_ready']).lower().find('true') else False,
 		"plan_duration": data['plan_duration'],
 	}
 
