@@ -202,7 +202,10 @@ class JobReadyStudentDealChange(MethodView):
 			this_process.is_closed_won = False
 			this_process.latest_stage = this_stage
 			this_process.updated_at = datetime.datetime.now()
-
+			
+			logger.info(this_process.__dict__)
+			logger.info(this_process.__dict__())
+			
 			update_objects_in_session()
 
 			# Check if the student has other open processes
