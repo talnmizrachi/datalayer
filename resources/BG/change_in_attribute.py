@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from global_functions.LoggingGenerator import Logger
 from global_functions.time_functions import infer_and_transform_date
 from flask import request
@@ -68,7 +70,8 @@ class NewBGStudent(MethodView):
 
 				change_object = BGStudentChangesModel(**change_dict)
 				setattr(existing_student, key, value)
-
+				existing_student.updated_timestamp = datetime.now()
+				
 				write_object_to_db(change_object)
 
 		return str(job_ready_student_dict['hubspot_id']), 201
