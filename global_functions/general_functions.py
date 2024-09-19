@@ -99,7 +99,7 @@ def is_candidate_ms_employee(data_obj):
     
     is_domain_relevant = data_obj.get('program', "None").lower().find('mentor training')>-1
     is_domain_relevant_2 = data_obj.get('program', "None").lower().find('partner Training')>-1
-    is_domain_relevant_3 = data_obj.get('domain', "None").lower().find('mentor training') > -1
+    is_domain_relevant_3 = str(data_obj.get('domain', "None")).lower().find('mentor training') > -1
 
     return any([is_ms_employee, is_ms_employee_2, is_domain_relevant, is_domain_relevant_2,is_domain_relevant_3])
 
