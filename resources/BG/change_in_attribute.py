@@ -15,13 +15,17 @@ logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 blueprint = Blueprint('Change an attribute for a BG student', __name__, description="This_is_a_templated_blueprint")
 
 
-def get_existing_student_dictionary(data):
+def get_existing_student_dictionary(data, _existing_student):
 	logger.info(f"Onboarding BG student - {data}")
 
 	stages_dict = {"62780568": "Dropped", "62515535": "Active", "62780567": "Graduated"}
-
+	if data.get('hs_pipline_stage') is None:
+		current_stage = _existing_student.enrolment_pipeline_stage
+	else:
+		current_stage = stages_dict.get(str(data['hs_pipeline_stage']), data['hs_pipeline_stage'])
+		
 	job_ready_student_dict = {
-		"enrolment_pipeline_stage": stages_dict.get(str(data['hs_pipeline_stage']), data['hs_pipeline_stage']),
+		"enrolment_pipeline_stage": current_stage,
 		"hubspot_id": str(data['hubspot_id']),
 		"active_cohort": infer_and_transform_date(data['enrolment_cohort']),
 		"is_job_ready": True if str(data['is_job_ready']).lower().find('true') else False,
