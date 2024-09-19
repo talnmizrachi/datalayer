@@ -21,7 +21,7 @@ class BGStudentModel(db.Model):
 
     student_owner = db.Column(db.String, nullable=True)
 
-    is_job_ready = db.Column(db.String, nullable=True)
+    is_job_ready = db.Column(db.Boolean, default=False)
 
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_timestamp = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
