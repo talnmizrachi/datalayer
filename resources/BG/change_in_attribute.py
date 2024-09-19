@@ -60,7 +60,7 @@ class NewBGStudent(MethodView):
 				logger.error(f"Error onboarding student: {e}")
 				abort(400, description="Hubspot ID is required")
 
-		job_ready_student_dict = get_existing_student_dictionary(data)
+		job_ready_student_dict = get_existing_student_dictionary(data, existing_student)
 		logger.info(job_ready_student_dict)
 		for key, value in job_ready_student_dict.items():
 			# Using getattr and setattr to get and set attributes
