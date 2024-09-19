@@ -204,7 +204,6 @@ class JobReadyStudentDealChange(MethodView):
 			this_process.updated_at = datetime.datetime.now()
 			
 			logger.info(this_process.__dict__)
-			logger.info(this_process.__dict__())
 			
 			update_objects_in_session()
 
