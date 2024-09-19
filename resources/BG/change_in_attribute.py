@@ -19,6 +19,7 @@ def get_existing_student_dictionary(data, _existing_student):
 	logger.info(f"Onboarding BG student - {data}")
 
 	stages_dict = {"62780568": "Dropped", "62515535": "Active", "62780567": "Graduated"}
+
 	if data.get('hs_pipline_stage') is None:
 		current_stage = _existing_student.enrolment_pipeline_stage
 	else:
@@ -28,7 +29,7 @@ def get_existing_student_dictionary(data, _existing_student):
 		"enrolment_pipeline_stage": current_stage,
 		"hubspot_id": str(data['hubspot_id']),
 		"active_cohort": infer_and_transform_date(data['enrolment_cohort']),
-		"is_job_ready": True if str(data['is_job_ready']).lower().find('true') else False,
+		"is_job_ready": True if str(data['is_job_ready']).lower().find('true')>-1 else False,
 		"plan_duration": data['plan_duration'],
 	}
 

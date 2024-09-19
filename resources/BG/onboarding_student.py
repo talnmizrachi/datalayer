@@ -37,7 +37,7 @@ def onboard_bg_function(data):
             "active_cohort": infer_and_transform_date(data['enrolment_cohort'], '%b-%Y'),
             "student_owner": data['hubspot_owner_id'],
             "hs_pipeline": data['hs_pipeline'],
-            "is_job_ready": True if str(data['is_job_ready']).lower().find('true') else False,
+            "is_job_ready": True if str(data['is_job_ready']).lower().find('true')>-1 else False,
             "email": data['email'],
             "plan_duration": data['plan_duration'],
     }
