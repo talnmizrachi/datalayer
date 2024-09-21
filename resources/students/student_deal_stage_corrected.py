@@ -1,9 +1,10 @@
+from global_constants import V3_PASSING_INTERVIEWS_DEAL_PROCESS_KEYS, V3_PASSING_INTERVIEWS_DEAL_STAGE_IN_PROCESS_KEYS
 import datetime
 from sqlalchemy import and_
-from global_functions.ignoring_constants import MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE
 from uuid import uuid4
 from global_functions.LoggingGenerator import Logger
-from global_functions.general_functions import write_object_to_db, update_objects_in_session
+from global_functions.general_functions import write_object_to_db, update_objects_in_session, \
+    hubspot_id_in_known_ignorable_tuple_of_ms_employees
 from global_functions.time_functions import utc_to_date
 from platforms_webhooks_catchers.hubspot.catch_job_ready_change_in_deal_stage import deal_stage_dict
 from platforms_webhooks_catchers.hubspot.get_owner_name import get_owner_name
@@ -46,15 +47,9 @@ def split_process_and_stage_dict(payload_dict):
         if old_key in d:
             d[new_key] = d.pop(old_key)
         return d
-    
-    process_keys = {"id", "hubspot_id", "domain", 'hubspot_deal_id',
-                    "company_name", "job_title", 'process_start_date','student_first_name', 'student_last_name',
-                    'source_1', 'source_2'}
-    
-    stage_keys = {"id", 'hubspot_deal_id', "stage_in_funnel", "type_of_stage", "deal_stage", 'stage_date'}
-    
-    process_dict = {k: v for k, v in payload_dict.items() if k in process_keys}
-    stage_dict = {k: v for k, v in payload_dict.items() if k in stage_keys}
+
+    process_dict = {k: v for k, v in payload_dict.items() if k in V3_PASSING_INTERVIEWS_DEAL_PROCESS_KEYS}
+    stage_dict = {k: v for k, v in payload_dict.items() if k in V3_PASSING_INTERVIEWS_DEAL_STAGE_IN_PROCESS_KEYS}
     rename_key(stage_dict, 'id', 'process_id')
     
     stage_dict['id'] = str(uuid4().hex)
@@ -69,7 +64,6 @@ def create_cohort_dict(this_student_hs_id_, active_cohort_):
     cohort_dict = {
             "hubspot_id": this_student_hs_id_,
             "student_cohort": active_cohort_
-        
     }
     return cohort_dict
 
@@ -86,6 +80,7 @@ def create_stage_dict(this_student_hs_id_, this_stage_, company_=None):
 
 
 def parse_incoming_getting_passing_pipeline(data):
+    logger.info(f"Parsing incoming data from getting passing, Received data: {data}")
     pipeline_dict = {}
     deal_stage_dictionary = deal_stage_dict()
     piepline = data.get("pipeline")
@@ -132,14 +127,14 @@ def parse_incoming_getting_passing_pipeline(data):
 
 @blueprint.route('/deal_stage_change_getting_interviews', methods=['POST'])
 class JobReadyStudentDealChange(MethodView):
-    
+    ## UNUSED - LAST 7 DAYS, 20.SEP.2024
     def post(self):
         logger.info(f"GETTING_INTERVIEWS: Hello world")
         data = request.get_json()
         known_stages = ("Job Ready", "1st CSA Meeting Conducted", "Material Ready", "Job Seeking",
                         "Contacted by Employer", "Closed Lost - Ghost", "Closed Won - Got an Interview")
-        if data['hubspot_id'] in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
-            logger.info(f"Skipping the job ready update. 200 OK")
+
+        if hubspot_id_in_known_ignorable_tuple_of_ms_employees(data):
             return {"message": f"Test students are ignored: {data['hubspot_id']}"}, 200
         
         logger.info(f"GETTING_INTERVIEWS: incoming_payload - {data['hubspot_id']}")
@@ -241,16 +236,14 @@ class JobReadyStudentDealChange(MethodView):
     Workflow URL - https://app.hubspot.com/workflows/9484219/platform/flow/587156903/edit
 
     """
-    
+    # USED - LAST 7 DAYS, 20.SEP.2024
     def post(self):
+        logger.debug("PASSING_INTERVIEWS: Hello world - is this being used?")
         data = request.get_json()
-        
-        if data['hubspot_id'] in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
-            logger.info(f"Skipping the job ready update. 200 OK")
+        if hubspot_id_in_known_ignorable_tuple_of_ms_employees(data):
             return {"message": f"Test students are ignored: {data['hubspot_id']}"}, 200
-        
-        past_stage_in_funnel = "1st Stage"
-        past_stage, new_stage_obj = None, None
+         
+        past_stage, new_stage_obj, past_stage_in_funnel = None, None, "1st Stage"
         
         job_ready_student_dict = parse_incoming_getting_passing_pipeline(data)
         logger.info(f"PASSING_INTERVIEWS: incoming_payload - job_ready_student_dict")

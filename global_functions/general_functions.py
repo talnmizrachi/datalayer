@@ -22,7 +22,8 @@ def read_typeform_answers(typeform_payload, typeform_questions_ids_dict):
             new_dict['student_firstname'] = " ".join(name_parts[:-1])
             new_dict['student_lastname'] = name_parts[-1]
             continue
-        value = answer.get('choice', {}).get('other') or answer.get('choice', {}).get('label', answer.get(answer['type']))
+        value = answer.get('choice', {}).get('other') or answer.get('choice', {}).get('label',
+                                                                                      answer.get(answer['type']))
         new_dict[key] = value
     return new_dict
 
@@ -50,7 +51,7 @@ def update_objects_in_session():
 def write_object_to_db(object_to_write):
     try:
         logger.debug(f"writing object to db: {object_to_write}")
-
+        
         # Check if object_to_write is an instance of StudentStagesV3
         if isinstance(object_to_write, StudentStagesV3):
             # Check for existing record with the same constraints
@@ -60,16 +61,16 @@ def write_object_to_db(object_to_write):
                 StudentStagesV3.company_if_rel == object_to_write.company_if_rel,
                 func.date(StudentStagesV3.created_at) == func.date(object_to_write.created_at)
             ).first()
-
+            
             if existing_record:
                 logger.debug("Duplicate record found, doing nothing.")
                 return jsonify({"message": "Record already exists."}), 200
-
+        
         # If no matching record, add the new object to the DB
         db.session.add(object_to_write)
         db.session.commit()
         return jsonify({"message": "Object successfully written to the database."}), 200
-
+    
     except SQLAlchemyError as e:
         logger.error(f"Error writing object to db: {str(e)}")
         db.session.rollback()
@@ -93,23 +94,39 @@ def delete_object_from_db(object_class, object_id):
         abort(500, message=str(e))
 
 
-def is_candidate_ms_employee(data_obj):
-    is_ms_employee = str(data_obj['hubspot_id']) in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE
-    is_ms_employee_2 = data_obj.get('email',"None").find('masterschool') > -1
-    
-    is_domain_relevant = data_obj.get('program', "None").lower().find('mentor training')>-1
-    is_domain_relevant_2 = data_obj.get('program', "None").lower().find('partner Training')>-1
-    is_domain_relevant_3 = str(data_obj.get('domain', "None")).lower().find('mentor training') > -1
+def hubspot_id_in_known_ignorable_tuple_of_ms_employees(_data_obj):
+    if str(_data_obj['hubspot_id']) in MASTERSCHOOL_EMPLOYEE_HUBSPOT_TUPLE:
+        logger.info(f"Skipping the job ready update. 200 OK")
+        return True
 
-    return any([is_ms_employee, is_ms_employee_2, is_domain_relevant, is_domain_relevant_2,is_domain_relevant_3])
+
+def get_stringed_values_for_known_keys(_data_obj):
+    program = str(_data_obj.get('program', "None").lower())
+    domain = str(_data_obj.get('domain', "None").lower())
+    email = str(_data_obj.get('email', "None").lower())
+    
+    return program, domain, email
+
+
+def is_candidate_ms_employee(data_obj):
+    
+    stringed_program, stringed_domain, stringed_email = get_stringed_values_for_known_keys(data_obj)
+    
+    is_ms_employee = hubspot_id_in_known_ignorable_tuple_of_ms_employees(data_obj)
+    is_ms_employee_2 = stringed_email.find('masterschool') > -1
+
+    is_domain_relevant = stringed_program.find('mentor training') > -1
+    is_domain_relevant_2 = stringed_program.find('partner Training') > -1
+    is_domain_relevant_3 = stringed_domain.find('mentor training') > -1
+    
+    return any([is_ms_employee, is_ms_employee_2, is_domain_relevant, is_domain_relevant_2, is_domain_relevant_3])
 
 
 if __name__ == '__main__':
-
     d = {
-        'hubspot_id':1,
-        'email': 'sda@ads.com',
-        'program':'Mentor TrainIng'
+            'hubspot_id': 1,
+            'email': 'sda@ads.com',
+            'program': 'Mentor TrainIng'
     }
-
+    
     print(is_candidate_ms_employee(d))

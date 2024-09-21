@@ -1,3 +1,4 @@
+from global_constants import V2_ENROLLMENT_STATUS_DEAL_STAGE_MAPPING
 from global_functions.LoggingGenerator import Logger
 from global_functions.time_functions import infer_and_transform_date
 from flask import request
@@ -26,10 +27,8 @@ def onboard_bg_function(data):
         logger.info(f"BG Student {data['hubspot_id']} is already onboarded")
         return {"id": data['hubspot_id'], "message": "BG Student is already onboarded"}
     
-    stages_dict = {"62780568": "Dropped", "62515535": "Active", "62780567": "Graduated"}
-    
     job_ready_student_dict = {
-            "enrolment_pipeline_stage": stages_dict.get(str(data['hs_pipeline_stage']), data['hs_pipeline_stage']),
+            "enrolment_pipeline_stage": V2_ENROLLMENT_STATUS_DEAL_STAGE_MAPPING.get(str(data['hs_pipeline_stage']), data['hs_pipeline_stage']),
             "hubspot_id": str(data['hubspot_id']),
             "first_name": data['firstname'],
             "last_name": data['lastname'],
@@ -71,3 +70,29 @@ class NewBGStudent(MethodView):
         job_ready_student_dict = onboard_bg_function(data)
         logger.debug(f"Debugging problem - {job_ready_student_dict}")
         return job_ready_student_dict, 201
+
+
+
+if __name__ == '__main__':
+    def test(data):
+        job_ready_student_dict = {
+                "enrolment_pipeline_stage": V2_ENROLLMENT_STATUS_DEAL_STAGE_MAPPING.get(str(data['hs_pipeline_stage']), data['hs_pipeline_stage']),
+                "hubspot_id": str(data['hubspot_id']),
+                "first_name": data['firstname'],
+                "last_name": data['lastname'],
+                "domain": data['program'],
+                "active_cohort": infer_and_transform_date(data['enrolment_cohort'], '%b-%Y'),
+                "student_owner": data['hubspot_owner_id'],
+                "hs_pipeline": data['hs_pipeline'],
+                "is_job_ready": True if str(data['is_job_ready']).lower().find('true')>-1 else False,
+                "email": data['email'],
+                "plan_duration": data['plan_duration'],
+        }
+        
+        return job_ready_student_dict
+    
+    print(test({'hubspot_id': '123', 'firstname': 'John', 'lastname': 'Doe',
+                'program': 'MS', 'enrolment_cohort': 'Oct-2020',
+                'hs_pipeline_stage': '62780568', 'hubspot_owner_id': '123456789',
+                'is_job_ready': 'True', 'email': 'john','hs_pipeline':'hs_pipeline',
+                "plan_duration":"8 Months"}))

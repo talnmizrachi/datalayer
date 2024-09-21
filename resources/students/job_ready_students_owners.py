@@ -43,11 +43,11 @@ class JobReadyStudent(MethodView):
         if (new_contact_owner['student_hubspot_owner_id'].isspace() or
                 new_contact_owner['student_hubspot_owner_id'] in ("None", "undefined")):
             new_contact_owner['student_hubspot_owner_id'] = None
-            
-        this_student.student_owner = new_contact_owner['student_hubspot_owner_id']
+        
+        for msg in ["student_hubspot_owner_id", "firstname", "lastname"]:
+            setattr(this_student, msg, data.get(msg))
+
         this_student.updated_timestamp = datetime.datetime.now()
-        this_student.student_first_name = data['firstname']
-        this_student.student_last_name = data['lastname']
         
         student_owner_change = StudentOwnerChangesModel(**new_contact_owner)
         write_object_to_db(student_owner_change)

@@ -64,7 +64,7 @@ class JobReadyStudent(MethodView):
         this_stage = job_ready_student_dict.get("hubspot_current_deal_stage")
         correct_stage = change_last_deal_to_deal_with_relevance(job_ready_student_dict['hubspot_id'], this_stage)
         
-        if correct_stage  == "Closed Won - Job Secured":
+        if correct_stage == "Closed Won - Job Secured":
             this_student.is_employed = True
         
         this_student.hubspot_current_deal_stage = correct_stage

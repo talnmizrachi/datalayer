@@ -1,3 +1,4 @@
+from global_constants import V3_PASSING_INTERVIEWS_DEAL_PROCESS_KEYS, V3_PASSING_INTERVIEWS_DEAL_STAGE_IN_PROCESS_KEYS
 import datetime
 from sqlalchemy import and_
 from uuid import uuid4
@@ -45,14 +46,8 @@ def split_process_and_stage_dict(payload_dict):
 			d[new_key] = d.pop(old_key)
 		return d
 
-	process_keys = {"id", "hubspot_id", "domain", 'hubspot_deal_id',
-	                "company_name", "job_title", 'process_start_date', 'student_first_name', 'student_last_name',
-	                'source_1', 'source_2'}
-
-	stage_keys = {"id", 'hubspot_deal_id', "stage_in_funnel", "type_of_stage", "deal_stage", 'stage_date'}
-
-	process_dict = {k: v for k, v in payload_dict.items() if k in process_keys}
-	stage_dict = {k: v for k, v in payload_dict.items() if k in stage_keys}
+	process_dict = {k: v for k, v in payload_dict.items() if k in V3_PASSING_INTERVIEWS_DEAL_PROCESS_KEYS}
+	stage_dict = {k: v for k, v in payload_dict.items() if k in V3_PASSING_INTERVIEWS_DEAL_STAGE_IN_PROCESS_KEYS}
 	rename_key(stage_dict, 'id', 'process_id')
 
 	stage_dict['id'] = str(uuid4().hex)

@@ -29,7 +29,6 @@ def utc_to_date(utc_timestamp):
             utc_timestamp /= 1000
         return datetime.utcfromtimestamp(utc_timestamp).date()
     else:
-        # Return today's date plus 7 days
         return None
 
 

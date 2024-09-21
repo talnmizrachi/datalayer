@@ -1,5 +1,5 @@
+from global_constants import V2_ENROLLMENT_STATUS_DEAL_STAGE_MAPPING
 from datetime import datetime
-
 from global_functions.LoggingGenerator import Logger
 from global_functions.time_functions import infer_and_transform_date
 from flask import request
@@ -18,12 +18,10 @@ blueprint = Blueprint('Change an attribute for a BG student', __name__, descript
 def get_existing_student_dictionary(data, _existing_student):
 	logger.info(f"Onboarding BG student - {data}")
 
-	stages_dict = {"62780568": "Dropped", "62515535": "Active", "62780567": "Graduated"}
-
 	if data.get('hs_pipline_stage') is None:
 		current_stage = _existing_student.enrolment_pipeline_stage
 	else:
-		current_stage = stages_dict.get(str(data['hs_pipeline_stage']), data['hs_pipeline_stage'])
+		current_stage = V2_ENROLLMENT_STATUS_DEAL_STAGE_MAPPING.get(str(data['hs_pipeline_stage']), data['hs_pipeline_stage'])
 		
 	job_ready_student_dict = {
 		"enrolment_pipeline_stage": current_stage,

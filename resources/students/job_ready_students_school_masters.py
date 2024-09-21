@@ -42,11 +42,11 @@ class JobReadyStudent(MethodView):
         if (new_contact_schoolmaster['student_hubspot_schoolmaster_id'].isspace() or
                 new_contact_schoolmaster['student_hubspot_schoolmaster_id'] in ("None", "undefined")):
             new_contact_schoolmaster['student_hubspot_schoolmaster_id'] = None
-            
-        this_student.schoolmaster_id = new_contact_schoolmaster['student_hubspot_schoolmaster_id']
+        
+        for i in ['student_hubspot_schoolmaster_id', 'firstname', 'lastname']:
+            setattr(this_student, i, data.get(i))
+
         this_student.updated_timestamp = datetime.datetime.now()
-        this_student.student_first_name = data['firstname']
-        this_student.student_last_name = data['lastname']
         
         student_schoolmaster_change = StudentSchoolMasterChangesModel(**new_contact_schoolmaster)
         write_object_to_db(student_schoolmaster_change)
