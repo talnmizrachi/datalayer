@@ -101,9 +101,9 @@ def hubspot_id_in_known_ignorable_tuple_of_ms_employees(_data_obj):
 
 
 def get_stringed_values_for_known_keys(_data_obj):
-    program = str(_data_obj.get('program', "None").lower())
-    domain = str(_data_obj.get('domain', "None").lower())
-    email = str(_data_obj.get('email', "None").lower())
+    program = str(_data_obj.get('program', "None")).lower()
+    domain = str(_data_obj.get('domain', "None")).lower()
+    email = str(_data_obj.get('email', "None")).lower()
     
     return program, domain, email
 
