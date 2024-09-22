@@ -17,3 +17,7 @@ V2_ENROLLMENT_STATUS_DEAL_STAGE_MAPPING: Dict[str, str] = {
     "62515535": "Active",
     "62780567": "Graduated"
 }
+
+V2_OC2FP_STATUS_DEAL_STAGE_MAPPING: Dict[str, str] = {
+    "161070366": "Closed won",
+ "161070367": "Closed lost"}

@@ -5,6 +5,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint
 from models import V2OC2FPStatus
 import os
+from global_constants import V2_OC2FP_STATUS_DEAL_STAGE_MAPPING
 from global_functions.general_functions import write_object_to_db, is_candidate_ms_employee
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
@@ -29,7 +30,7 @@ def orientation_course_result(data):
 		"closed_lost_reason": data['closed_lost_reason'],
 		"enrollment_cohort": infer_and_transform_date(data['enrollment_cohort']),
 		"bg_disapproval_reason": data['bg_disapproval_reason'],
-		"dealstage": data['dealstage'],
+		"dealstage": V2_OC2FP_STATUS_DEAL_STAGE_MAPPING.get(str(data['dealstage'])),
 		"closed_date": utc_to_date(data['close_date']),
 	}
 
