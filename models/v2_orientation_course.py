@@ -9,7 +9,7 @@ class V2OC2FPStatus(db.Model):
     first_name = db.Column(db.String)
     last_name = db.Column(db.String)
     closed_lost_reason = db.Column(db.String)
-    enrollment_cohort = db.Column(db.Date)
+    enrollment_cohort = db.Column(db.String)
     bg_disapproval_reason = db.Column(db.String)
     dealstage = db.Column(db.String)
     closed_date = db.Column(db.Date)
