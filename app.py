@@ -21,6 +21,7 @@ from resources.BG.student_csat_temp import blueprint as bg_students_ms_score
 from resources.students.students_passing_interviews import blueprint as students_passing_interviews_blp
 from resources.students.jr_students_getting_interviews import blueprint as jr_students_getting_interviews_blp
 from resources.marketing.get_new_mql_student import blueprint as get_new_mql_student_blp
+from resources.BG.orientation_course_results import blueprint as orientation_course_results_blp
 # from resources.static_pages.heatmap_test import heatmap_bp
 from flask_migrate import Migrate
 from dotenv import load_dotenv
@@ -84,6 +85,7 @@ def create_app(db_url=None):
     api.register_blueprint(students_passing_interviews_blp)
     api.register_blueprint(dummy_webhook_blp)
     api.register_blueprint(get_new_mql_student_blp)
+    api.register_blueprint(orientation_course_results_blp)
     # api.register_blueprint(heatmap_bp)
     
     return app
