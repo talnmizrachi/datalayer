@@ -40,9 +40,10 @@ class NewMqlStudent(MethodView):
         if student_record is not None:
             for date_data in MARKETING_MQL_DATE_OBJECTS:
                 setattr(student_record, date_data, utc_to_date(data[date_data]))
-
-            setattr(student_record, "lp_variant", data.get("lpvariant"))
-
+            try:
+                setattr(student_record, "lp_variant", data.get("lpvariant"))
+            except KeyError:
+                logger.debug(f"Missing 'lpvariant' in data: {data}")
             update_objects_in_session()
             return {"message": 'MQL student exists - updateing'}, 200
 
