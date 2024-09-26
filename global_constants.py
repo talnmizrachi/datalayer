@@ -21,3 +21,6 @@ V2_ENROLLMENT_STATUS_DEAL_STAGE_MAPPING: Dict[str, str] = {
 V2_OC2FP_STATUS_DEAL_STAGE_MAPPING: Dict[str, str] = {
     "161070366": "Closed won",
  "161070367": "Closed lost"}
+
+MARKETING_MQL_DATE_OBJECTS = ['hubspot_created_at', 'date_mql_entered', 'date_sql_entered', 'date_bg_enrolled_entered',
+                       'date_submitted_typeform_entered']

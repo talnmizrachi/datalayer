@@ -36,3 +36,5 @@ from models.v3_students import V3Students
 from models.v2_ms_scores import V2MSScore
 from models.active_hs_v2_students import ActiveCTStudentsTal1
 from models.v2_orientation_course import V2OC2FPStatus
+from models.marketing_fb_ads_campaigns import FacebookFbAdsCampaigns
+from models.marketing_fb_ads_insight_report_basic import FacebookFbAdsInsightReportBasic

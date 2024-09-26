@@ -17,6 +17,7 @@ class MarketingMqlStudentsModel(db.Model):
     utm_content = db.Column(db.String)
     utm_id = db.Column(db.String)
     utm_term = db.Column(db.String)
+    lp_variant = db.Column(db.String)
     
     date_mql_entered = db.Column(db.DateTime)
     date_sql_entered = db.Column(db.DateTime)
