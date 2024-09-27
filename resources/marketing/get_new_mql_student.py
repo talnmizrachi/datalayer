@@ -41,7 +41,7 @@ class NewMqlStudent(MethodView):
             for date_data in MARKETING_MQL_DATE_OBJECTS:
                 setattr(student_record, date_data, utc_to_date(data[date_data]))
             try:
-                setattr(student_record, "lp_variant", data.get("lpvariant"))
+                setattr(student_record, "lp_variant", data.get("lp_variant"))
             except KeyError:
                 logger.debug(f"Missing 'lpvariant' in data: {data}")
             update_objects_in_session()
