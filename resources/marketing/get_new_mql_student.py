@@ -8,6 +8,7 @@ from models import MarketingMqlStudentsModel
 from flask.views import MethodView
 from flask_smorest import Blueprint
 import os
+from uuid import uuid4
 
 logger = Logger(os.path.basename(__file__).split('.')[0]).get_logger()
 blueprint = Blueprint("A new MQL student has entered", __name__,
@@ -31,27 +32,32 @@ class NewMqlStudent(MethodView):
         HTTP status code: 200 if the operation is successful, 400 if the request data is invalid.
         """
         data = request.get_json()
-
-        if hubspot_id_in_known_ignorable_tuple_of_ms_employees(data):
-            return {"message": f"Test students are ignored: {data['hubspot_id']}"}, 200
-
-        student_record = MarketingMqlStudentsModel.query.filter_by(hubspot_id=str(data['hubspot_id'])).first()
-
-        if student_record is not None:
-            for date_data in MARKETING_MQL_DATE_OBJECTS:
-                setattr(student_record, date_data, utc_to_date(data[date_data]))
-            try:
-                setattr(student_record, "lp_variant", data.get("lp_variant"))
-            except KeyError:
-                logger.debug(f"Missing 'lpvariant' in data: {data}")
-            update_objects_in_session()
-            return {"message": 'MQL student exists - updateing'}, 200
-
-        if student_record is None:
-            for date_data in MARKETING_MQL_DATE_OBJECTS:
-                data[date_data] = utc_to_date(data[date_data])
-
-            new_mql_obj = MarketingMqlStudentsModel(**data)
-            write_object_to_db(new_mql_obj)
-
-            return {"message": 'New MQL student'}, 200
+        try:
+            if hubspot_id_in_known_ignorable_tuple_of_ms_employees(data):
+                return {"message": f"Test students are ignored: {data['hubspot_id']}"}, 200
+    
+            student_record = MarketingMqlStudentsModel.query.filter_by(hubspot_id=str(data['hubspot_id'])).first()
+    
+            if student_record is not None:
+                for date_data in MARKETING_MQL_DATE_OBJECTS:
+                    setattr(student_record, date_data, utc_to_date(data[date_data]))
+                try:
+                    setattr(student_record, "lp_variant", data.get("lp_variant"))
+                except KeyError:
+                    logger.debug(f"Missing 'lpvariant' in data: {data}")
+                update_objects_in_session()
+                return {"message": 'MQL student exists - updateing'}, 200
+    
+            if student_record is None:
+                for date_data in MARKETING_MQL_DATE_OBJECTS:
+                    data[date_data] = utc_to_date(data[date_data])
+    
+                new_mql_obj = MarketingMqlStudentsModel(**data)
+                write_object_to_db(new_mql_obj)
+    
+                return {"message": 'New MQL student'}, 200
+        except Exception as e:
+            error_id = uuid4().__str__()
+            logger.error(f"Error ID: {error_id} - Error handling POST request: {str(e)}")
+            logger.info(f"Error ID: {error_id} - Request data : {data}")
+            return {"message": f"Error handling POST request: {str(e)}"}, 400
