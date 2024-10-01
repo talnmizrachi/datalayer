@@ -1,4 +1,6 @@
 import datetime
+
+from global_constants import GETTING_INTERVIEW_KNOWN_STAGES
 from global_functions.LoggingGenerator import Logger
 from global_functions.general_functions import write_object_to_db, is_candidate_ms_employee
 from flask import request
@@ -24,9 +26,6 @@ class JobReadyStudentDealChange(MethodView):
         if is_candidate_ms_employee(data):
             return {"message": f"Test students are ignored: {this_student_hs_id}"}, 200
 
-        known_stages = {
-            "Job Ready", "1st CSA Meeting Conducted", "Material Ready", "Job Seeking",
-            "Contacted by Employer", "Closed Lost - Ghost", "Closed Won - Got an Interview"}
         logger.info(f"GETTING_INTERVIEWS: incoming_payload - {this_student_hs_id}")
 
         job_ready_student_dict = parse_incoming_getting_passing_pipeline(data)
@@ -55,10 +54,11 @@ class JobReadyStudentDealChange(MethodView):
 
             return {"message": f"getting_interviews: {this_stage} -  ({this_student_hs_id})"}, 201
 
-        if this_stage in known_stages:
+        if this_stage in GETTING_INTERVIEW_KNOWN_STAGES:
             # Update deal in the deal stages, update last stage in JobReadyStudentModel
             this_student.hubspot_current_deal_stage = this_stage
             this_student.updated_timestamp = datetime.datetime.now()
+            this_student.student_owner = job_ready_student_dict.get("student_owner")
             stage_obj = StudentStagesV3(**create_stage_dict(this_student_hs_id, this_stage))
 
             write_object_to_db(stage_obj)

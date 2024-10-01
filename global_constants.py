@@ -24,3 +24,8 @@ V2_OC2FP_STATUS_DEAL_STAGE_MAPPING: Dict[str, str] = {
 
 MARKETING_MQL_DATE_OBJECTS = ['hubspot_created_at', 'date_mql_entered', 'date_sql_entered', 'date_bg_enrolled_entered',
                        'date_submitted_typeform_entered']
+
+
+GETTING_INTERVIEW_KNOWN_STAGES: Set[str] = {
+            "Job Ready", "1st CSA Meeting Conducted", "Material Ready", "Job Seeking",
+            "Contacted by Employer", "Closed Lost - Ghost", "Closed Won - Got an Interview"}
