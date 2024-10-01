@@ -55,6 +55,7 @@ class JobReadyStudentDealChange(MethodView):
             return {"message": f"getting_interviews: {this_stage} -  ({this_student_hs_id})"}, 201
 
         if this_stage in GETTING_INTERVIEW_KNOWN_STAGES:
+
             # Update deal in the deal stages, update last stage in JobReadyStudentModel
             this_student.hubspot_current_deal_stage = this_stage
             this_student.updated_timestamp = datetime.datetime.now()
