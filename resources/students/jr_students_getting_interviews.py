@@ -52,12 +52,12 @@ class JobReadyStudentDealChange(MethodView):
             logger.info(
                 f"GETTING_INTERVIEWS: {student_name} {student_surname} - {this_stage} - ({this_student_hs_id}) Created")
 
-            return {"message": f"getting_interviews: {this_stage} -  ({this_student_hs_id})"}, 201
+            return {"message": f"getting_interviews: {this_stage} - ({this_student_hs_id})"}, 201
 
         if this_stage in GETTING_INTERVIEW_KNOWN_STAGES:
-            if this_student.student_first_name is None or this_student.student_last_name is None:
-                this_student.student_first_name = job_ready_student_dict.get("student_first_name")
-                this_student.student_last_name = job_ready_student_dict.get("student_last_name")
+            for property in job_ready_student_dict:
+                if getattr(this_student, property) is None:
+                    setattr(this_student, property, job_ready_student_dict.get(property))
 
             # Update deal in the deal stages, update last stage in JobReadyStudentModel
             this_student.hubspot_current_deal_stage = this_stage
