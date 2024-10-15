@@ -47,7 +47,7 @@ class FacebookFbAdsInsightReportBasic(db.Model):
     _unique_outbound_clicks_ctr = db.Column(db.JSON)
     _rivery_last_update = db.Column(db.DateTime)
     _rivery_river_id = db.Column(db.String)
-    _rivery_run_id = db.Column(db.String),
+    _rivery_run_id = db.Column(db.String)
 
     __table_args__ = (
         db.Index('idx_rivery__86770e08', '_campaign_id', '_date_start', '_ad_id', '_adset_id', '_account_id'),
