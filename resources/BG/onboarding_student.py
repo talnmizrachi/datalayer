@@ -83,7 +83,7 @@ def onboard_bg_function_2(data):
             
     }
     
-    job_ready_student_object = BGStudentModel(**job_ready_student_dict)
+    job_ready_student_object = BGStudentModel2(**job_ready_student_dict)
     
     write_object_to_db(job_ready_student_object)
     
