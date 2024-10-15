@@ -122,6 +122,7 @@ def is_candidate_ms_employee(data_obj):
     return any([is_ms_employee, is_ms_employee_2, is_domain_relevant, is_domain_relevant_2, is_domain_relevant_3])
 
 
+
 if __name__ == '__main__':
     d = {
             'hubspot_id': 1,
