@@ -22,6 +22,9 @@ def get_existing_student_dictionary(data, _existing_student):
 		current_stage = _existing_student.enrolment_pipeline_stage
 	else:
 		current_stage = V2_ENROLLMENT_STATUS_DEAL_STAGE_MAPPING.get(str(data['hs_pipeline_stage']), data['hs_pipeline_stage'])
+	
+	if data.get('enrollment_id') != _existing_student.enrollment_id:
+		logger.warning(f"Enrollment ID mismatch: {data['enrollment_id']} vs {_existing_student.enrollment_id} for student {data['hubspot_id']}")
 		
 	job_ready_student_dict = {
 		"enrolment_pipeline_stage": current_stage,

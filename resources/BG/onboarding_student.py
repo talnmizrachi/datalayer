@@ -39,6 +39,7 @@ def onboard_bg_function(data):
             "is_job_ready": True if str(data['is_job_ready']).lower().find('true')>-1 else False,
             "email": data['email'],
             "plan_duration": data['plan_duration'],
+            'enrollment_id': data.get('enrollment_id')
     }
     
     job_ready_student_object = BGStudentModel(**job_ready_student_dict)
