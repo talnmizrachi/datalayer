@@ -38,3 +38,7 @@ from models.active_hs_v2_students import ActiveCTStudentsTal1
 from models.v2_orientation_course import V2OC2FPStatus
 from models.marketing_fb_ads_campaigns import FacebookFbAdsCampaigns
 from models.marketing_fb_ads_insight_report_basic import FacebookFbAdsInsightReportBasic
+from models.marketing_tiktok_ads_daily import TiktokAuctionAdsBasicDaily
+from models._v2_oc_stats_from_rnd import V2OcStatsFromRnd
+from models._v2_oc_stats_combined import V2OcStatsCombined
+from models.csat_survey_event import CSATSurveyEvent
