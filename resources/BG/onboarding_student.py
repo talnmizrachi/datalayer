@@ -1,6 +1,6 @@
 from global_constants import V2_ENROLLMENT_STATUS_DEAL_STAGE_MAPPING
 from global_functions.LoggingGenerator import Logger
-from global_functions.time_functions import infer_and_transform_date
+from global_functions.time_functions import infer_and_transform_date, utc_to_date
 from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
@@ -79,7 +79,7 @@ def onboard_bg_function_2(data):
             "plan_duration": data['plan_duration'],
             'enrollment_id': data.get('enrollment_id'),
             'source': data.get('source'),
-            "object_modified": data.get('hs_lastmodifieddate')
+            "object_modified": utc_to_date(data.get('hs_lastmodifieddate'))
             
     }
     
