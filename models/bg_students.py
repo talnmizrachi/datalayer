@@ -18,7 +18,7 @@ class BGStudentModel(db.Model):
     is_employed = db.Column(db.Boolean, nullable=False, default=False)
     plan_duration = db.Column(db.String, nullable=True)
     plan_location = db.Column(db.String, nullable=True)
-
+    enrollment_id = db.Column(db.String, nullable=True)
     student_owner = db.Column(db.String, nullable=True)
 
     is_job_ready = db.Column(db.Boolean, default=False)
