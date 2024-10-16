@@ -25,6 +25,7 @@ class BGStudentModel2(db.Model):
     is_employed = db.Column(db.Boolean, nullable=False, default=False)
 
     student_owner = db.Column(db.String, nullable=True)
+    is_job_ready_text = db.Column(db.String, default=False)
     is_job_ready = db.Column(db.Boolean, default=False)
 
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
