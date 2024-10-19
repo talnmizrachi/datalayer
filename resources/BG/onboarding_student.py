@@ -127,7 +127,7 @@ def onboard_bg_function_from_enrollment(data, source='enrollment'):
     logger.info(f"Onboarding BG student - {data}")
     
     is_existing = BGStudentModel2.query.filter_by(hubspot_id=str(data['hubspot_id'])).first()
-    
+    logger.info(f"Onboarding BG student from enrollment - {data['hubspot_id']} - from {source}")
     if source == 'enrollment':
         job_ready_student_dict = parse_hubspot_data_from_enrollment(data)
     elif source == 'deal':
@@ -186,14 +186,8 @@ class NewBGStudent(MethodView):
             logger.debug(f"Hubspot ID is missing for BG student: {data}")
             abort(400, description="Hubspot ID is required")
         
-        data_source = data['source']
-        
-        if data_source == 'enrollment':
-            job_ready_student_dict = onboard_bg_function_from_enrollment(data)
-        elif data_source == 'deal':
-            ...
-        else:
-            ...
+        job_ready_student_dict = onboard_bg_function_from_enrollment(data, data['source'])
+
         logger.debug(f"Debugging problem - {job_ready_student_dict}")
         return job_ready_student_dict, 201
 
