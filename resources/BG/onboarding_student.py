@@ -93,7 +93,7 @@ def parse_hubspot_data_from_deal(data):
             "email": data['email'],
             "plan_duration": data['plan_duration'],
             'enrollment_id': None,
-            'source': "Deal",
+            'source': data.get('source'),
             'plan_location': "DE" if data.get('preferred_start_date') != "Enrolled US Student" else "US",
             "object_modified": utc_to_date(data.get('hs_lastmodifieddate'))
     }
