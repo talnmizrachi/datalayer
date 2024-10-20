@@ -15,7 +15,9 @@ V3_PASSING_INTERVIEWS_DEAL_STAGE_IN_PROCESS_KEYS: Set[str] = {
 V2_ENROLLMENT_STATUS_DEAL_STAGE_MAPPING: Dict[str, str] = {
     "62780568": "Dropped",
     "62515535": "Active",
-    "62780567": "Graduated"
+    "62780567": "Graduated",
+    "62780569": "Hiatus",
+    "62780570": "School Change",
 }
 
 V2_OC2FP_STATUS_DEAL_STAGE_MAPPING: Dict[str, str] = {

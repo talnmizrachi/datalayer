@@ -123,11 +123,11 @@ def update_object_in_db(existing_student, dict_with_new_info, update_model_logge
     return f"Updating {existing_student.hubspot_id}"
 
 
-def onboard_bg_function_from_enrollment(data, source='enrollment'):
+def onboard_bg_function_deal_or_enrollment(data, source='enrollment'):
     logger.info(f"Onboarding BG student - {data}")
     
     is_existing = BGStudentModel2.query.filter_by(hubspot_id=str(data['hubspot_id'])).first()
-    logger.info(f"Onboarding BG student from enrollment - {data['hubspot_id']} - from {source}")
+    logger.info(f"Onboarding BG student - {data['hubspot_id']} - from {source}")
     if source == 'enrollment':
         job_ready_student_dict = parse_hubspot_data_from_enrollment(data)
     elif source == 'deal':
@@ -186,7 +186,7 @@ class NewBGStudent(MethodView):
             logger.debug(f"Hubspot ID is missing for BG student: {data}")
             abort(400, description="Hubspot ID is required")
         
-        job_ready_student_dict = onboard_bg_function_from_enrollment(data, data['source'])
+        job_ready_student_dict = onboard_bg_function_deal_or_enrollment(data, data['source'])
 
         logger.debug(f"Debugging problem - {job_ready_student_dict}")
         return job_ready_student_dict, 201
