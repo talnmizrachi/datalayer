@@ -54,7 +54,51 @@ def onboard_bg_function(data):
     return job_ready_student_dict
 
 
-def parse_hubspot_data_from_enrollment(data):
+def parse_hubspot_data_from_payload(data, some_obj, source):
+    # Common fields
+    job_ready_student_dict = {
+        "hubspot_id": str(data['hubspot_id']),
+        "first_name": data.get('firstname'),
+        "last_name": data.get('lastname'),
+        "domain": data.get('program'),
+        "student_owner": get_owner_name(data.get('hubspot_owner_id')),
+        "hs_pipeline": data.get('hs_pipeline'),
+        "email": data['email'],
+        "plan_duration": data['plan_duration'],
+        "source": data.get('source'),
+        "plan_location": "DE" if data.get('preferred_start_date') != "Enrolled US Student" else "US",
+        "object_modified": utc_to_date(data.get('hs_lastmodifieddate'))
+    }
+
+    # Source-specific fields
+    if source == "enrollment":
+        job_ready_student_dict.update({
+            "enrolment_pipeline_stage": V2_ENROLLMENT_STATUS_DEAL_STAGE_MAPPING.get(str(data['hs_pipeline_stage']),
+                                                                                    data['hs_pipeline_stage']),
+            "active_cohort": infer_and_transform_date(data['cohort'], to_format='%b-%Y'),
+            "is_job_ready_text": str(data['is_job_ready']),
+            "is_job_ready": "yes" in str(data['is_job_ready']).lower(),
+            "enrollment_id": data.get('enrollment_id')
+        })
+    elif source == "deal":
+        job_ready_student_dict.update({
+            "enrolment_pipeline_stage": "Closed Won",
+            "active_cohort": infer_and_transform_date(data['enrolment_cohort'], to_format='%b-%Y'),
+            "is_job_ready_text": "No",
+            "is_job_ready": False,
+            "enrollment_id": None
+        })
+    else:
+        job_ready_student_dict = {}
+
+    # Add `id` field if `some_obj` is provided
+    if some_obj is not None:
+        job_ready_student_dict['id'] = some_obj.id
+
+    return job_ready_student_dict
+
+def parse_hubspot_data_from_enrollment(data, some_obj):
+    
     job_ready_student_dict = {
             "enrolment_pipeline_stage": V2_ENROLLMENT_STATUS_DEAL_STAGE_MAPPING.get(str(data['hs_pipeline_stage']),
                                                                                     data['hs_pipeline_stage']),
@@ -74,11 +118,12 @@ def parse_hubspot_data_from_enrollment(data):
             'plan_location': "DE" if data.get('preferred_start_date') != "Enrolled US Student" else "US",
             "object_modified": utc_to_date(data.get('hs_lastmodifieddate'))
     }
-    
+    if some_obj is not None:
+        job_ready_student_dict['id'] = some_obj.id
     return job_ready_student_dict
 
 
-def parse_hubspot_data_from_deal(data):
+def parse_hubspot_data_from_deal(data, some_obj):
     job_ready_student_dict = {
             "enrolment_pipeline_stage": "Closed Won",
             "hubspot_id": str(data['hubspot_id']),
@@ -97,7 +142,8 @@ def parse_hubspot_data_from_deal(data):
             'plan_location': "DE" if data.get('preferred_start_date') != "Enrolled US Student" else "US",
             "object_modified": utc_to_date(data.get('hs_lastmodifieddate'))
     }
-    
+    if some_obj is not None:
+        job_ready_student_dict['id'] = some_obj.id
     return job_ready_student_dict
 
 
@@ -127,14 +173,7 @@ def onboard_bg_function_deal_or_enrollment(data, source='enrollment'):
     logger.info(f"Onboarding BG student - {data}")
     
     is_existing = BGStudentModel2.query.filter_by(hubspot_id=str(data['hubspot_id'])).first()
-    if is_existing is None:
-        logger.info(f"Onboarding new BG student - {data['hubspot_id']} - from {source}")
-        if source == 'enrollment':
-            job_ready_student_dict = parse_hubspot_data_from_enrollment(data)
-        elif source == 'deal':
-            job_ready_student_dict = parse_hubspot_data_from_deal(data)
-        else:
-            abort(400, description="Invalid source - either 'enrollment' or 'deal'")
+    job_ready_student_dict = parse_hubspot_data_from_payload(data, is_existing, source)
     
     if is_existing is not None:
         logger.info(f"Existing BG student for updating - {is_existing}")
