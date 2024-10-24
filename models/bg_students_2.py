@@ -30,5 +30,7 @@ class BGStudentModel2(db.Model):
 
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     object_modified = db.Column(db.DateTime, nullable=False) #the timestamp the record actually was modified
-    updated_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
+    updated_timestamp = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
 
+    def __str__(self):
+        return f"{self.hubspot_id}, {self.first_name} {self.last_name}, {self.domain}"

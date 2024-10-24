@@ -127,15 +127,17 @@ def onboard_bg_function_deal_or_enrollment(data, source='enrollment'):
     logger.info(f"Onboarding BG student - {data}")
     
     is_existing = BGStudentModel2.query.filter_by(hubspot_id=str(data['hubspot_id'])).first()
-    logger.info(f"Onboarding BG student - {data['hubspot_id']} - from {source}")
-    if source == 'enrollment':
-        job_ready_student_dict = parse_hubspot_data_from_enrollment(data)
-    elif source == 'deal':
-        job_ready_student_dict = parse_hubspot_data_from_deal(data)
-    else:
-        abort(400, description="Invalid source - either 'enrollment' or 'deal'")
-        
+    if is_existing is None:
+        logger.info(f"Onboarding new BG student - {data['hubspot_id']} - from {source}")
+        if source == 'enrollment':
+            job_ready_student_dict = parse_hubspot_data_from_enrollment(data)
+        elif source == 'deal':
+            job_ready_student_dict = parse_hubspot_data_from_deal(data)
+        else:
+            abort(400, description="Invalid source - either 'enrollment' or 'deal'")
+    
     if is_existing is not None:
+        logger.info(f"Existing BG student for updating - {is_existing}")
         msg = update_object_in_db(is_existing, job_ready_student_dict)
         return {"id": data['hubspot_id'], "message": msg}
     
@@ -177,9 +179,10 @@ class NewBGStudent(MethodView):
 
         :return:
         """
-        logger.info("Onboarding BG student")
+        logger.info("Incoming - onboarding BG student")
         data = request.get_json()
         if is_candidate_ms_employee(data):
+            logger.debug(f"Hubspot ID is a Master School employee - {data['hubspot_id']}")
             return {"message": "Hubspot ID is a Master School employee"}, 201
         
         if data['hubspot_id'] == "":
@@ -188,7 +191,6 @@ class NewBGStudent(MethodView):
         
         job_ready_student_dict = onboard_bg_function_deal_or_enrollment(data, data['source'])
 
-        logger.debug(f"Debugging problem - {job_ready_student_dict}")
         return job_ready_student_dict, 201
 
 
