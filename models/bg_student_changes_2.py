@@ -10,6 +10,7 @@ class BGStudentChangesModel2(db.Model):
     key = db.Column(db.String, nullable=True)
     from_value = db.Column(db.String, nullable=True)
     to_value = db.Column(db.String, nullable=True)
+    object_modified = db.Column(db.DateTime, nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
 

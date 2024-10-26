@@ -152,16 +152,18 @@ def update_object_in_db(existing_student, dict_with_new_info, update_model_logge
     
     for key, value in dict_with_new_info.items():
         # Using getattr and setattr to get and set attributes
-        if getattr(existing_student, key) != value:
+        if getattr(existing_student, key) != value and key != "object_modified":
             change_dict = {
                     "hubspot_id": existing_student.hubspot_id,
                     "key": key,
                     "from_value": getattr(existing_student, key),
-                    "to_value": value
+                    "to_value": value,
+                    "object_modified": dict_with_new_info['object_modified']
             }
             logger.info(f"Updating student: {existing_student.hubspot_id} - {key}: {change_dict['from_value']} -> {value}")
             setattr(existing_student, key, value)
             change_object = update_model_logger(**change_dict)
+            existing_student.object_modified = dict_with_new_info['object_modified']
             existing_student.updated_timestamp = datetime.now()
             
             write_object_to_db(change_object)
