@@ -6,7 +6,7 @@ from global_functions.time_functions import infer_and_transform_date, utc_to_dat
 from flask import request
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
-from models import BGStudentModel, BGStudentModel2, BGStudentChangesModel
+from models import BGStudentModel, BGStudentModel2, BGStudentChangesModel2
 import os
 from global_functions.general_functions import write_object_to_db, is_candidate_ms_employee
 from platforms_webhooks_catchers.hubspot.get_owner_name import get_owner_name
@@ -147,7 +147,7 @@ def parse_hubspot_data_from_deal(data, some_obj):
     return job_ready_student_dict
 
 
-def update_object_in_db(existing_student, dict_with_new_info, update_model_logger=BGStudentChangesModel):
+def update_object_in_db(existing_student, dict_with_new_info, update_model_logger=BGStudentChangesModel2):
     assert existing_student is not None, "Object to update cannot be None"
     
     for key, value in dict_with_new_info.items():

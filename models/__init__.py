@@ -43,3 +43,4 @@ from models._v2_oc_stats_from_rnd import V2OcStatsFromRnd
 from models._v2_oc_stats_combined import V2OcStatsCombined
 from models.csat_survey_event import CSATSurveyEvent
 from models.bg_students_2 import BGStudentModel2
+from models.bg_student_changes_2 import BGStudentChangesModel2
